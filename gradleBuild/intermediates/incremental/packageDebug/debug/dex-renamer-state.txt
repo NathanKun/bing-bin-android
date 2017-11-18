@@ -1,0 +1,4 @@
+#Wed Nov 15 11:26:18 CET 2017
+base.0=/Users/YU/Development/trash_classification/tensorflow-for-poets-2/android/gradleBuild/intermediates/transforms/dexMerger/debug/19
+renamed.0=classes.dex
+file.0=/Users/YU/Development/trash_classification/tensorflow-for-poets-2/android/gradleBuild/intermediates/transforms/dexMerger/debug/19/classes.dex
