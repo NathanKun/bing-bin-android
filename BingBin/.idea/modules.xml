@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BingBin.iml" filepath="$PROJECT_DIR$/BingBin.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartloginlibrary/smartloginlibrary.iml" filepath="$PROJECT_DIR$/smartloginlibrary/smartloginlibrary.iml" />
     </modules>
   </component>
 </project>
