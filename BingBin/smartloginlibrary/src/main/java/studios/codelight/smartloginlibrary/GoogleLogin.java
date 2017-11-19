@@ -9,15 +9,21 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.Task;
 
 import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.util.Constants;
 import studios.codelight.smartloginlibrary.util.SmartLoginException;
 import studios.codelight.smartloginlibrary.util.UserUtil;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Copyright (c) 2016 Codelight Studios
@@ -27,22 +33,23 @@ import studios.codelight.smartloginlibrary.util.UserUtil;
 public class GoogleLogin extends SmartLogin {
     @Override
     public void login(@NonNull SmartLoginConfig config) {
-        GoogleApiClient apiClient = config.getGoogleApiClient();
+        GoogleSignInClient mGoogleSignInClient = config.getGoogleSignInClient();
         Activity activity = config.getActivity();
 
-        if (apiClient == null) {
+        if (mGoogleSignInClient == null) {
+            // Configure sign-in to request the user's ID, email address, and basic
+            // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .requestProfile()
                     .build();
 
-            apiClient = new GoogleApiClient.Builder(activity)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build();
+            // Build a GoogleSignInClient with the options specified by gso.
+             mGoogleSignInClient = GoogleSignIn.getClient(activity, gso);
         }
 
         ProgressDialog progress = ProgressDialog.show(activity, "", activity.getString(R.string.logging_holder), true);
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(apiClient);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         activity.startActivityForResult(signInIntent, Constants.GOOGLE_LOGIN_REQUEST);
         progress.dismiss();
     }
@@ -69,7 +76,7 @@ public class GoogleLogin extends SmartLogin {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data, SmartLoginConfig config) {
-        ProgressDialog progress = ProgressDialog.show(config.getActivity(), "", config.getActivity().getString(R.string.getting_data), true);
+        /*ProgressDialog progress = ProgressDialog.show(config.getActivity(), "", config.getActivity().getString(R.string.getting_data), true);
         GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
         Log.d("GOOGLE SIGN IN", "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -85,6 +92,31 @@ public class GoogleLogin extends SmartLogin {
             // Signed out, show unauthenticated UI.
             progress.dismiss();
             config.getCallback().onLoginFailure(new SmartLoginException("Google login failed", LoginType.Google));
+        }*/
+        ProgressDialog progress = ProgressDialog.show(config.getActivity(), "", config.getActivity().getString(R.string.getting_data), true);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == Constants.GOOGLE_LOGIN_REQUEST) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> completedTask = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+                Log.d("GOOGLE SIGN IN", "handleSignInResult: success");
+
+                SmartGoogleUser googleUser = UserUtil.populateGoogleUser(account);
+                // Save the user
+                UserSessionManager.setUserSession(config.getActivity(), googleUser);
+                config.getCallback().onLoginSuccess(googleUser);
+                progress.dismiss();
+            } catch (ApiException e) {
+                // The ApiException status code indicates the detailed failure reason.
+                // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+                progress.dismiss();
+                config.getCallback().onLoginFailure(new SmartLoginException("Google login failed", LoginType.Google));
+            }
         }
     }
 }

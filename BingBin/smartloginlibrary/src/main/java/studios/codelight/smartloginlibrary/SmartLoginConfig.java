@@ -3,6 +3,7 @@ package studios.codelight.smartloginlibrary;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class SmartLoginConfig {
 
     private String facebookAppId;
     private ArrayList<String> facebookPermissions;
-    private GoogleApiClient googleApiClient;
+    private GoogleSignInClient googleSignInClient;
     private Activity activity;
     private SmartLoginCallbacks callback;
 
@@ -33,12 +34,12 @@ public class SmartLoginConfig {
         return callback;
     }
 
-    public GoogleApiClient getGoogleApiClient() {
-        return googleApiClient;
+    public GoogleSignInClient getGoogleSignInClient() {
+        return googleSignInClient;
     }
 
-    public void setGoogleApiClient(GoogleApiClient googleApiClient) {
-        this.googleApiClient = googleApiClient;
+    public void setGoogleSignInClient(GoogleSignInClient googleSignInClient) {
+        this.googleSignInClient = googleSignInClient;
     }
 
     public String getFacebookAppId() {
