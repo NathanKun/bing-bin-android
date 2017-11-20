@@ -16,6 +16,8 @@ public class SmartUser {
     private int gender;
     private String profileLink;
 
+    private String avatarUrl;
+
     public SmartUser() {
     }
 
@@ -91,6 +93,10 @@ public class SmartUser {
         this.profileLink = profileLink;
     }
 
+    public String getAvatarUrl() { return avatarUrl; }
+
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+
     @Override
     public String toString() {
         return "SmartUser{" +
@@ -103,6 +109,7 @@ public class SmartUser {
                 ", birthday='" + birthday + '\'' +
                 ", gender=" + gender +
                 ", profileLink='" + profileLink + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
                 '}';
     }
 }

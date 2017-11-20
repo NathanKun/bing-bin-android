@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -16,8 +19,12 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
@@ -59,7 +66,53 @@ public class FacebookLogin extends SmartLogin {
                         SmartFacebookUser facebookUser = UserUtil.populateFacebookUser(jsonObject, loginResult.getAccessToken());
                         // Save the user
                         UserSessionManager.setUserSession(activity, facebookUser);
-                        callback.onLoginSuccess(facebookUser);
+
+                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    private SmartFacebookUser fbUser;
+
+                                    public GraphRequest.GraphJSONObjectCallback init (SmartFacebookUser fbUser) {
+                                        this.fbUser = fbUser;
+                                        return this;
+                                    }
+
+                                    @Override
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
+                                        Log.v("LoginActivity", response.toString());
+                                        try {
+                                            JSONObject graphObject = (JSONObject)response.getJSONObject();
+                                            fbUser.setUsername(graphObject.getString("name"));
+                                            fbUser.setEmail(graphObject.getString("email"));
+
+                                            fbUser.setAvatarUrl(graphObject.getJSONObject("picture")
+                                                    .getJSONObject("data").getString("url"));
+                                            // TODO: get avatar from url and upload image to server, get avatar link
+
+                                            URL imageURL = null;
+                                            try {
+                                                imageURL = new URL(fbUser.getAvatarUrl());
+                                            } catch (MalformedURLException e) {
+                                                e.printStackTrace();
+                                            }
+                                            Bitmap bitmap = null;
+                                            try {
+                                                bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        callback.onLoginSuccess(fbUser);
+                                    }
+                                }.init(facebookUser));
+
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id,name,email,picture");
+                        request.setParameters(parameters);
+                        request.executeAsync();
+
+                        //callback.onLoginSuccess(facebookUser);
                     }
                 });
                 request.executeAsync();
