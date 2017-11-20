@@ -103,7 +103,7 @@ public class GoogleLogin extends SmartLogin {
 
             try {
                 GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-                Log.d("GOOGLE SIGN IN", "handleSignInResult: success");
+                Log.d("GOOGLE SIGN IN", " success");
 
                 SmartGoogleUser googleUser = UserUtil.populateGoogleUser(account);
                 // Save the user

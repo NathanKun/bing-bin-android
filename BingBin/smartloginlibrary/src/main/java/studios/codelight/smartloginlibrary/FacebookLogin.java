@@ -87,19 +87,6 @@ public class FacebookLogin extends SmartLogin {
                                             fbUser.setAvatarUrl(graphObject.getJSONObject("picture")
                                                     .getJSONObject("data").getString("url"));
                                             // TODO: get avatar from url and upload image to server, get avatar link
-
-                                            URL imageURL = null;
-                                            try {
-                                                imageURL = new URL(fbUser.getAvatarUrl());
-                                            } catch (MalformedURLException e) {
-                                                e.printStackTrace();
-                                            }
-                                            Bitmap bitmap = null;
-                                            try {
-                                                bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }

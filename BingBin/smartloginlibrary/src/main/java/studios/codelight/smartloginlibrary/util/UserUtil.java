@@ -32,6 +32,7 @@ public class UserUtil {
         if (account.getAccount() != null) {
             googleUser.setUsername(account.getAccount().name);
         }
+        googleUser.setAvatarUrl(account.getPhotoUrl().toString());
 
         //return the populated google user
         return googleUser;

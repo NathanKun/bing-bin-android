@@ -1,10 +1,12 @@
 package studios.codelight.smartloginlibrary.users;
 
+import java.io.Serializable;
+
 /**
  * Copyright (c) 2016 Codelight Studios
  * Created by Kalyan on 9/23/2015.
  */
-public class SmartUser {
+public class SmartUser implements Serializable{
 
     private String userId;
     private String username;

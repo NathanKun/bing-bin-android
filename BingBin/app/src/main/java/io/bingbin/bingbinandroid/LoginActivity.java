@@ -10,17 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import io.bingbin.bingbinandroid.tensorflow.env.Logger;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
 import studios.codelight.smartloginlibrary.SmartLoginCallbacks;
@@ -45,6 +37,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     SmartLoginConfig config;
     SmartLogin smartLogin;
 
+
     CallbackManager callbackManager;
 
     @Override
@@ -54,11 +47,11 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         bindViews();
         setListeners();
 
+        // config smart login
         config = new SmartLoginConfig(this, this);
         config.setFacebookAppId(getString(R.string.facebook_app_id));
         config.setFacebookPermissions(null); // use default
         config.setGoogleSignInClient(mGoogleSignInClient);
-
     }
 
     @Override
@@ -73,9 +66,9 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         if (currentUser != null) {
             Log.d("Smart Login", "Logged in user: " + currentUser.toString());
             if (currentUser instanceof SmartFacebookUser)
-                Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser)currentUser).getProfileName());
-            if (currentUser instanceof  SmartGoogleUser)
-                Log.d("Smart Login", "Facebook ProfileName: " + ((SmartGoogleUser)currentUser).getDisplayName());
+                Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser) currentUser).getProfileName());
+            if (currentUser instanceof SmartGoogleUser)
+                Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
             facebookLoginButton.setVisibility(View.GONE);
             googleLoginButton.setVisibility(View.GONE);
             customSigninButton.setVisibility(View.GONE);
@@ -83,6 +76,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             emailEditText.setVisibility(View.GONE);
             passwordEditText.setVisibility(View.GONE);
             logoutButton.setVisibility(View.VISIBLE);
+
+            toMainActivity();
         } else {
             facebookLoginButton.setVisibility(View.VISIBLE);
             googleLoginButton.setVisibility(View.VISIBLE);
@@ -145,7 +140,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 if (currentUser != null) {
                     if (currentUser instanceof SmartFacebookUser) {
                         smartLogin = SmartLoginFactory.build(LoginType.Facebook);
-                    } else if(currentUser instanceof SmartGoogleUser) {
+                    } else if (currentUser instanceof SmartGoogleUser) {
                         smartLogin = SmartLoginFactory.build(LoginType.Google);
                     } else {
                         smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
@@ -193,5 +188,11 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         SmartUser user = new SmartUser();
         user.setEmail(emailEditText.getText().toString());
         return user;
+    }
+
+    private void toMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("user", currentUser);
+        startActivity(intent);
     }
 }

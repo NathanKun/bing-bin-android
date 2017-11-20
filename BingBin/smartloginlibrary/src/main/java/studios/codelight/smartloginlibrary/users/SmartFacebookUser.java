@@ -2,13 +2,15 @@ package studios.codelight.smartloginlibrary.users;
 
 import com.facebook.AccessToken;
 
+import java.io.Serializable;
+
 /**
  * Copyright (c) 2016 Codelight Studios
  * Created by Kalyan on 9/23/2015.
  */
-public class SmartFacebookUser extends SmartUser {
+public class SmartFacebookUser extends SmartUser implements Serializable {
     private String profileName;
-    private AccessToken accessToken;
+    private transient AccessToken accessToken;
 
     public SmartFacebookUser() {
     }
