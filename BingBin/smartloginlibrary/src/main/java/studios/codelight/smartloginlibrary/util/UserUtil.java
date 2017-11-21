@@ -30,7 +30,8 @@ public class UserUtil {
         googleUser.setIdToken(account.getIdToken());
         googleUser.setUserId(account.getId());
         if (account.getAccount() != null) {
-            googleUser.setUsername(account.getAccount().name);
+            // googleUser.setUsername(account.getAccount().name);
+            googleUser.setUsername(account.getDisplayName());
         }
         googleUser.setAvatarUrl(account.getPhotoUrl().toString());
 

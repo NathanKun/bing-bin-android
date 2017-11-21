@@ -64,15 +64,15 @@ public class FacebookLogin extends SmartLogin {
                     public void onCompleted(JSONObject jsonObject, GraphResponse response) {
                         progress.dismiss();
                         SmartFacebookUser facebookUser = UserUtil.populateFacebookUser(jsonObject, loginResult.getAccessToken());
-                        // Save the user
-                        UserSessionManager.setUserSession(activity, facebookUser);
 
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                                 new GraphRequest.GraphJSONObjectCallback() {
                                     private SmartFacebookUser fbUser;
+                                    private Activity act;
 
-                                    public GraphRequest.GraphJSONObjectCallback init (SmartFacebookUser fbUser) {
+                                    public GraphRequest.GraphJSONObjectCallback init (SmartFacebookUser fbUser, Activity act) {
                                         this.fbUser = fbUser;
+                                        this.act = act;
                                         return this;
                                     }
 
@@ -86,13 +86,16 @@ public class FacebookLogin extends SmartLogin {
 
                                             fbUser.setAvatarUrl(graphObject.getJSONObject("picture")
                                                     .getJSONObject("data").getString("url"));
+
+                                            // Save the user
+                                            UserSessionManager.setUserSession(act, fbUser);
+                                            callback.onLoginSuccess(fbUser);
                                             // TODO: get avatar from url and upload image to server, get avatar link
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
-                                        callback.onLoginSuccess(fbUser);
                                     }
-                                }.init(facebookUser));
+                                }.init(facebookUser, activity));
 
                         Bundle parameters = new Bundle();
                         parameters.putString("fields", "id,name,email,picture");

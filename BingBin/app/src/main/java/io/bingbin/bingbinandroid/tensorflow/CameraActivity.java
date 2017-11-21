@@ -52,7 +52,6 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
-    LOGGER.d("onCreate " + this);
     super.onCreate(null);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

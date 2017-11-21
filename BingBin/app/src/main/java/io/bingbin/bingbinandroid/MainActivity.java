@@ -2,33 +2,35 @@ package io.bingbin.bingbinandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.bingbin.bingbinandroid.tensorflow.ClassifierActivity;
 import io.bingbin.bingbinandroid.utils.BottomNavigationViewHelper;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
+import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
 import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SmartUser currentUser;
+    private boolean doubleBackToExitPressedOnce;
+    private ViewPagerAdapter adapter;
     private ViewPager viewPager;
     private BottomNavigationView navigation;
     private MenuItem menuItem;
 
+    // bottom navigation listner
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -49,12 +51,14 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    // fragment viewpager listner
     private ViewPager.OnPageChangeListener onPageChangeListner = (new ViewPager.OnPageChangeListener() {
+        // 滚动过程中会不断触发
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
         }
 
+        // 滚动结束后触发
         @Override
         public void onPageSelected(int position) {
             if (menuItem != null) {
@@ -64,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
             }
             menuItem = navigation.getMenu().getItem(position);
             menuItem.setChecked(true);
+
+            // check is camera fragment selected
+            // start Camera Activity
+            if(position == 0) {
+                startActivity(new Intent(MainActivity.this, ClassifierActivity.class));
+            }
         }
 
         @Override
@@ -71,42 +81,50 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
-    private void setupViewPager(ViewPager viewPager) {    // 获取 View 并加入 List
-        List<View> views = new ArrayList<View>();
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        views.add(inflater.inflate(R.layout.fragment_home, null));
-        views.add(inflater.inflate(R.layout.fragment_camera, null));
-        views.add(inflater.inflate(R.layout.fragment_user, null));
-
-        ViewPagerAdapter adapter = new ViewPagerAdapter(views, this);
-        viewPager.setAdapter(adapter);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = getIntent();
-        SmartUser currentUser = (SmartUser)intent.getSerializableExtra("user");
+        currentUser = UserSessionManager.getCurrentUser(this);
         Log.d("SmartUser", currentUser.toString());
         if (currentUser instanceof SmartFacebookUser)
             Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser) currentUser).getProfileName());
         if (currentUser instanceof SmartGoogleUser)
             Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
 
-        viewPager = findViewById(R.id.viewpager);
-        viewPager.addOnPageChangeListener(onPageChangeListner);
-        setupViewPager(viewPager);
-
-        navigation = findViewById(R.id.navigation);
-        BottomNavigationViewHelper.disableShiftMode(navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_home);
-
         // init Fresco
         Fresco.initialize(this);
+
+        // init viewpager
+        viewPager = findViewById(R.id.viewpager);
+        viewPager.addOnPageChangeListener(onPageChangeListner);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+
+        // init bottom navigation
+        navigation = findViewById(R.id.navigation);
+        BottomNavigationViewHelper.disableShiftMode(navigation);
+        navigation.setSelectedItemId(R.id.navigation_home);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
     }
 
+    // back twice to exit
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+    }
+
+    public SmartUser getCurrentUser() {
+        return currentUser;
+    }
 }
