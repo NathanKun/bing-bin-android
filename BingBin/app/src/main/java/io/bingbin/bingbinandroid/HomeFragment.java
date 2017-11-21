@@ -1,12 +1,29 @@
 package io.bingbin.bingbinandroid;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import java.io.File;
+import java.util.List;
+
+import io.bingbin.bingbinandroid.tensorflow.Classifier;
+import io.bingbin.bingbinandroid.tensorflow.TensorFlowImageClassifier;
+import io.bingbin.bingbinandroid.tensorflow.env.ImageUtils;
+import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 
 
 /**
@@ -71,4 +88,16 @@ public class HomeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Button btn = getActivity().findViewById(R.id.button2);
+
+
+        File imgFile = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/IMG_20171121_221622.jpg");
+        btn.setOnClickListener(view -> ClassifyHelper.Classify(getActivity(), imgFile));
+    }
+
+
 }
