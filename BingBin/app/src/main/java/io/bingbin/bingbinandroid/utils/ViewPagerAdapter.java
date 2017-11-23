@@ -34,7 +34,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return CameraFragment.newInstance();
             case 1:
-                return HomeFragment.newInstance("1", "Page # 2");
+                return HomeFragment.newInstance();
             case 2:
                 return UserFragment.newInstance();
             default:

@@ -35,5 +35,7 @@
     <string name="title_user">我</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_homefragment">Home fragment</string>
+    <string name="camera_camerafragment">Camera fragment</string>
+    <string name="camerafragment_camera_icon">camera icon</string>
 </resources>

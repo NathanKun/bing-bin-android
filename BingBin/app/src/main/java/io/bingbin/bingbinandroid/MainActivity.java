@@ -73,7 +73,13 @@ public class MainActivity extends AppCompatActivity {
             // start Camera Activity
             if(position == 0) {
                 startActivity(new Intent(MainActivity.this, ClassifierActivity.class));
+                // back to home
+                MainActivity.this.runOnUiThread(() -> {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> navigation.setSelectedItemId(R.id.navigation_home), 500);
+                });
             }
+            Log.d("menu","" + position);
         }
 
         @Override
@@ -105,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
         // init bottom navigation
         navigation = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(navigation);
-        navigation.setSelectedItemId(R.id.navigation_home);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setSelectedItemId(R.id.navigation_home);
 
     }
 

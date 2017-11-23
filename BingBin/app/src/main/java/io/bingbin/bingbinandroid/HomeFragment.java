@@ -1,14 +1,16 @@
 package io.bingbin.bingbinandroid;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,9 +23,9 @@ import java.io.File;
 import java.util.List;
 
 import io.bingbin.bingbinandroid.tensorflow.Classifier;
-import io.bingbin.bingbinandroid.tensorflow.TensorFlowImageClassifier;
-import io.bingbin.bingbinandroid.tensorflow.env.ImageUtils;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -32,14 +34,8 @@ import io.bingbin.bingbinandroid.utils.ClassifyHelper;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private final int GALLERY_PICTURE = 233;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -49,31 +45,20 @@ public class HomeFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment HomeFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
@@ -92,12 +77,49 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Button btn = getActivity().findViewById(R.id.button2);
 
+        Button btnGallery = getActivity().findViewById(R.id.btn_gallery);
+        btnGallery.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, GALLERY_PICTURE);
+        });
 
-        File imgFile = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/IMG_20171121_221622.jpg");
-        btn.setOnClickListener(view -> ClassifyHelper.Classify(getActivity(), imgFile));
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK
+                && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+
+            if (cursor == null || cursor.getCount() < 1) {
+                return; // no cursor or no record. DO YOUR ERROR HANDLING
+            }
+
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+
+            if (columnIndex < 0) // no column index
+                return; // DO YOUR ERROR HANDLING
+
+            String picturePath = cursor.getString(columnIndex);
+
+            cursor.close(); // close cursor
+
+            Log.d("picturePath", picturePath);
+
+            File imgFile = new File(picturePath);
+            ((ImageView) getActivity().findViewById(R.id.imageView)).setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+            List<Classifier.Recognition> results = ClassifyHelper.Classify(getActivity(), imgFile);
+            String resultStr = "";
+            for(Classifier.Recognition r : results) {
+                resultStr += r.getTitle() + " : " + r.getConfidence();
+            }
+        }
+    }
 
 }

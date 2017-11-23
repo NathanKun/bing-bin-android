@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -31,7 +30,7 @@ public class ClassifyHelper {
     private static final String MODEL_FILE = "file:///android_asset/graph.pb";
     private static final String LABEL_FILE = "file:///android_asset/labels.txt";
 
-    public static void Classify(Activity activity, File imgFile) {
+    public static List<Classifier.Recognition> Classify(Activity activity, File imgFile) {
 
         int previewHeight, previewWidth, sensorOrientation;
 
@@ -71,5 +70,6 @@ public class ClassifyHelper {
         // 识别
         final List<Classifier.Recognition> results = classifier.recognizeImage(croppedBitmap);
         Log.d("result", results.toString());
+        return results;
     }
 }

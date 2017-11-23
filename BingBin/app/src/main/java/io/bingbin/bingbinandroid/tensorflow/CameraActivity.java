@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.annotation.NonNull;
 import android.util.Size;
 import android.view.KeyEvent;
 import android.view.WindowManager;
@@ -121,7 +122,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
 
   @Override
   public void onRequestPermissionsResult(
-      final int requestCode, final String[] permissions, final int[] grantResults) {
+          final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
     switch (requestCode) {
       case PERMISSIONS_REQUEST: {
         if (grantResults.length > 0
@@ -136,11 +137,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
   }
 
   private boolean hasPermission() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    } else {
-      return true;
-    }
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED;
   }
 
   private void requestPermission() {
@@ -155,12 +152,7 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
   protected void setFragment() {
     final Fragment fragment =
         CameraConnectionFragment.newInstance(
-            new CameraConnectionFragment.ConnectionCallback() {
-              @Override
-              public void onPreviewSizeChosen(final Size size, final int rotation) {
-                CameraActivity.this.onPreviewSizeChosen(size, rotation);
-              }
-            },
+                CameraActivity.this::onPreviewSizeChosen,
             this,
             getLayoutId(),
             getDesiredPreviewFrameSize());
@@ -189,14 +181,14 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
   }
 
   public void requestRender() {
-    final OverlayView overlay = (OverlayView) findViewById(R.id.debug_overlay);
+    final OverlayView overlay = findViewById(R.id.debug_overlay);
     if (overlay != null) {
       overlay.postInvalidate();
     }
   }
 
   public void addCallback(final OverlayView.DrawCallback callback) {
-    final OverlayView overlay = (OverlayView) findViewById(R.id.debug_overlay);
+    final OverlayView overlay = findViewById(R.id.debug_overlay);
     if (overlay != null) {
       overlay.addCallback(callback);
     }

@@ -34,7 +34,7 @@ import java.util.Vector;
 
 /** A classifier specialized to label images using TensorFlow. */
 public class TensorFlowImageClassifier implements Classifier {
-  private static final String TAG = "TensorFlowImageClassifier";
+  private static final String TAG = "TFImageClassifier";
 
   // Only return this many results with at least this confidence.
   private static final int MAX_RESULTS = 3;

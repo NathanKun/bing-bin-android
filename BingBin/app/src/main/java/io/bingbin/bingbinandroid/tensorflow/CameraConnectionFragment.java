@@ -16,6 +16,7 @@
 
 package io.bingbin.bingbinandroid.tensorflow;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -63,6 +64,7 @@ import java.util.concurrent.TimeUnit;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.tensorflow.env.Logger;
 
+@SuppressLint("ValidFragment")
 public class CameraConnectionFragment extends Fragment {
     private static final Logger LOGGER = new Logger();
 
@@ -232,6 +234,7 @@ public class CameraConnectionFragment extends Fragment {
 
     private final ConnectionCallback cameraConnectionCallback;
 
+    @SuppressLint("ValidFragment")
     private CameraConnectionFragment(
             final ConnectionCallback connectionCallback,
             final OnImageAvailableListener imageListener,
@@ -429,6 +432,7 @@ public class CameraConnectionFragment extends Fragment {
     /**
      * Opens the camera specified by {@link CameraConnectionFragment#cameraId}.
      */
+    @SuppressLint("MissingPermission")
     private void openCamera(final int width, final int height) {
         setUpCameraOutputs(width, height);
         configureTransform(width, height);
