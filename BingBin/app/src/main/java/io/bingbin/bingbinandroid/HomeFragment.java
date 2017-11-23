@@ -1,25 +1,25 @@
 package io.bingbin.bingbinandroid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import io.bingbin.bingbinandroid.tensorflow.Classifier;
@@ -37,6 +37,8 @@ public class HomeFragment extends Fragment {
 
     private final int GALLERY_PICTURE = 233;
 
+    private Activity activity;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -48,13 +50,14 @@ public class HomeFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
+        return new HomeFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = getActivity();
+        assert activity != null;
     }
 
     @Override
@@ -77,49 +80,60 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        Button btnGallery = getActivity().findViewById(R.id.btn_gallery);
+        Button btnGallery = activity.findViewById(R.id.btn_gallery);
         btnGallery.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, GALLERY_PICTURE);
         });
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK
                 && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
 
-            if (cursor == null || cursor.getCount() < 1) {
-                return; // no cursor or no record. DO YOUR ERROR HANDLING
-            }
-
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-
-            if (columnIndex < 0) // no column index
-                return; // DO YOUR ERROR HANDLING
-
-            String picturePath = cursor.getString(columnIndex);
-
-            cursor.close(); // close cursor
-
-            Log.d("picturePath", picturePath);
-
-            File imgFile = new File(picturePath);
-            ((ImageView) getActivity().findViewById(R.id.imageView)).setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
-            List<Classifier.Recognition> results = ClassifyHelper.Classify(getActivity(), imgFile);
-            String resultStr = "";
-            for(Classifier.Recognition r : results) {
-                resultStr += r.getTitle() + " : " + r.getConfidence();
-            }
+            Uri imgUri = data.getData();
+            File imgFile = uriToFile(imgUri);
+            recognitionFile(imgFile);
         }
     }
 
+    public void recognitionFile(File imgFile) {
+        String imgPath = imgFile != null ? imgFile.getPath() : null;
+
+        // show image selected
+        ((ImageView) activity.findViewById(R.id.imageView)).setImageBitmap(BitmapFactory.decodeFile(imgPath));
+
+        // get result
+        List<Classifier.Recognition> results = ClassifyHelper.Classify(activity, imgFile);
+
+        // show result
+        StringBuilder resultStr = new StringBuilder();
+        for (Classifier.Recognition r : results) {
+            resultStr.append(r.getTitle()).append(" : ").append(r.getConfidence());
+        }
+        TextView textViewResult = activity.findViewById(R.id.textView_result);
+        textViewResult.setText(resultStr.toString());
+    }
+
+    private File uriToFile(Uri uri) {
+        try {
+            InputStream input = activity.getContentResolver().openInputStream(uri);
+            File file = new File(activity.getCacheDir(), "cacheFileAppeal.srl");
+            OutputStream output = new FileOutputStream(file);
+            byte[] buffer = new byte[4 * 1024]; // or other buffer size
+            int read;
+
+            assert input != null;
+            while ((read = input.read(buffer)) != -1) {
+                output.write(buffer, 0, read);
+            }
+            output.flush();
+            input.close();
+            return file;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

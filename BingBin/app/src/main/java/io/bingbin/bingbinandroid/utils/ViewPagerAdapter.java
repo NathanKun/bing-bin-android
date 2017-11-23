@@ -1,21 +1,18 @@
 package io.bingbin.bingbinandroid.utils;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.view.View;
+import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import java.util.List;
-
-import io.bingbin.bingbinandroid.CameraFragment;
+import io.bingbin.bingbinandroid.CameraBlankFragment;
 import io.bingbin.bingbinandroid.HomeFragment;
 import io.bingbin.bingbinandroid.UserFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    private static int NUM_ITEMS = 3;
+    private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     public ViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
@@ -24,7 +21,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     // Returns total number of pages
     @Override
     public int getCount() {
-        return NUM_ITEMS;
+        return 3;
     }
 
     // Returns the fragment to display for that page
@@ -32,7 +29,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return CameraFragment.newInstance();
+                return CameraBlankFragment.newInstance();
             case 1:
                 return HomeFragment.newInstance();
             case 2:
@@ -48,4 +45,23 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return "Page " + position;
     }
 
+
+
+    @NonNull
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        Fragment fragment = (Fragment) super.instantiateItem(container, position);
+        registeredFragments.put(position, fragment);
+        return fragment;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        registeredFragments.remove(position);
+        super.destroyItem(container, position, object);
+    }
+
+    public Fragment getRegisteredFragment(int position) {
+        return registeredFragments.get(position);
+    }
 }

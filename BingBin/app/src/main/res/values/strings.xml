@@ -38,4 +38,6 @@
     <string name="home_homefragment">Home fragment</string>
     <string name="camera_camerafragment">Camera fragment</string>
     <string name="camerafragment_camera_icon">camera icon</string>
+    <string name="btn_gallary">gallary</string>
+    <string name="imageview_preview_description">preview image for recognition</string>
 </resources>

@@ -64,6 +64,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             if (currentUser instanceof SmartGoogleUser)
                 Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
             toMainActivity();
+        } else {
+            //Toast.makeText(this, "ERROR", Toast.LENGTH_LONG).show();
         }
     }
 

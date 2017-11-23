@@ -1,8 +1,8 @@
 package io.bingbin.bingbinandroid;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,22 +11,22 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CameraFragment#newInstance} factory method to
+ * Use the {@link CameraBlankFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CameraFragment extends Fragment {
+public class CameraBlankFragment extends Fragment {
 
-    public CameraFragment() {
+    public CameraBlankFragment() {
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment CameraFragment.
+     * @return A new instance of fragment CameraBlankFragment.
      */
-    public static CameraFragment newInstance() {
-        CameraFragment fragment = new CameraFragment();
+    public static CameraBlankFragment newInstance() {
+        CameraBlankFragment fragment = new CameraBlankFragment();
         return fragment;
     }
 
@@ -38,7 +38,7 @@ public class CameraFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_camera, container, false);
