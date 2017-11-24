@@ -17,7 +17,4 @@
 
 <resources>
     <string name="app_name">BingBin</string>
-    <string name="activity_name_classification">BingBin Classify</string>
-    <string name="activity_name_detection">BingBin Detect</string>
-    <string name="activity_name_stylize">BingBin Stylize</string>
 </resources>

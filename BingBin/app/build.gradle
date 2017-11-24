@@ -2,19 +2,29 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'BingBinKey'
+            keyPassword 'bingbin'
+            storeFile file('D:/GitRes/BingBin_Android/GoogleStore/bingbinkey.jds')
+            storePassword 'bingbin'
+        }
+    }
     compileSdkVersion 27
+    buildToolsVersion '27.0.1'
     defaultConfig {
         applicationId "io.bingbin.bingbinandroid"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 1
-        versionName "0.1"
+        versionCode 2
+        versionName "0.1.1"
     }
     buildTypes {
         release {
             minifyEnabled false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
         debug {
             minifyEnabled false
@@ -24,7 +34,6 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '27.0.1'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -39,17 +48,19 @@ dependencies {
     implementation 'com.android.support:customtabs:27.0.1'
     implementation 'com.android.support:design:27.0.1'
     implementation 'com.android.support:support-v4:27.0.1'
+    implementation 'com.android.support:recyclerview-v7:27.0.1'
+    implementation 'com.android.support:support-v13:27.0.1'
+    implementation 'com.android.support:recyclerview-v7:27.0.1'
+    implementation 'com.android.support:support-media-compat:27.0.1'
     implementation 'com.facebook.android:facebook-login:4.28.0'
+    implementation 'com.facebook.fresco:fresco:1.5.0'
+    implementation 'com.facebook.fresco:webpsupport:1.5.0'
     implementation 'com.loopj.android:android-async-http:1.4.9'
     implementation 'org.jsoup:jsoup:1.10.1'
     implementation 'org.tensorflow:tensorflow-android:1.2.0-preview'
-    implementation 'com.facebook.fresco:fresco:1.5.0'
-    implementation 'com.facebook.fresco:webpsupport:1.5.0'
-    implementation project(':smartloginlibrary')
     implementation 'com.android.support:support-v4:27.0.1'
-    implementation 'com.github.florent37:camerafragment:1.0.7'
-    annotationProcessor 'com.jakewharton:butterknife:7.0.1'
-    implementation 'com.jakewharton:butterknife:7.0.1'
+    implementation 'com.afollestad:material-camera:0.4.4'
+    implementation project(':smartloginlibrary')
 }
 
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
@@ -59,4 +70,6 @@ assert file(project.ext.ASSET_DIR + "/labels.txt").exists()
 
 repositories {
     google()
+    jcenter()
+    maven { url "https://dl.bintray.com/drummer-aidan/maven" }
 }

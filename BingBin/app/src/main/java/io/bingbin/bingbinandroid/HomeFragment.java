@@ -35,9 +35,7 @@ import static android.app.Activity.RESULT_OK;
  */
 public class HomeFragment extends Fragment {
 
-    private final int GALLERY_PICTURE = 233;
-
-    private Activity activity;
+    private MainActivity activity;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -56,7 +54,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = getActivity();
+        activity = (MainActivity) getActivity();
         assert activity != null;
     }
 
@@ -83,19 +81,8 @@ public class HomeFragment extends Fragment {
         Button btnGallery = activity.findViewById(R.id.btn_gallery);
         btnGallery.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(intent, GALLERY_PICTURE);
+            activity.startActivityForResult(intent, activity.GALLERY_PICTURE);
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK
-                && null != data) {
-
-            Uri imgUri = data.getData();
-            File imgFile = uriToFile(imgUri);
-            recognitionFile(imgFile);
-        }
     }
 
     public void recognitionFile(File imgFile) {
@@ -116,7 +103,7 @@ public class HomeFragment extends Fragment {
         textViewResult.setText(resultStr.toString());
     }
 
-    private File uriToFile(Uri uri) {
+    File uriToFile(Uri uri) {
         try {
             InputStream input = activity.getContentResolver().openInputStream(uri);
             File file = new File(activity.getCacheDir(), "cacheFileAppeal.srl");

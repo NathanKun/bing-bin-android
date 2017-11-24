@@ -1,39 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_camera"
-    android:orientation="vertical">
+    tools:context="io.bingbin.bingbinandroid.CameraBlankFragment">
 
-    <FrameLayout
-        android:id="@+id/cameraBlank"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <RelativeLayout
-        android:id="@+id/cameraLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <!--android:background="#82000000"-->
-        <com.github.florent37.camerafragment.widgets.FlashSwitchView
-            android:id="@+id/flash_switch_view"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/record_button"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="16dp" />
-
-        <com.github.florent37.camerafragment.widgets.RecordButton
-            android:id="@+id/record_button"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="88dp" />
-
-    </RelativeLayout>
-</FrameLayout>
+    <ImageView
+        android:id="@+id/img_camera"
+        android:layout_width="177dp"
+        android:layout_height="197dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/camera_icon"
+        android:src="@drawable/ic_camera_alt_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>
