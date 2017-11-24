@@ -21,6 +21,7 @@ public class CameraPhotoActivity extends AppCompatActivity {
         new MaterialCamera(this)
                 .audioDisabled(true)
                 .stillShot()
+                .allowRetry(true)
                 .start(CAMERA_RQ);
     }
 

@@ -27,7 +27,7 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int PERMISSIONS_REQUEST_CAMERA = 2333;
+    private final int PERMISSIONS_REQUEST = 2333;
     private final int CAMERA_ACTIVITY = 23333;
     protected final int GALLERY_PICTURE = 233;
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     final Handler handler = new Handler();
                     handler.postDelayed(() -> navigation.setSelectedItemId(R.id.navigation_home), 500);
                 });
-                startActivityForResult(new Intent(MainActivity.this, CameraPhotoActivity.class), CAMERA_ACTIVITY);
+                startRealCameraActivity();
             }
         }
 
@@ -145,29 +145,29 @@ public class MainActivity extends AppCompatActivity {
         return adapter;
     }
 
-    private void startCameraFragment() {
+    private void startRealCameraActivity() {
         // check and request permission
-        if (ActivityCompat.checkSelfPermission(
-                this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                ||
-                ActivityCompat.checkSelfPermission(
-                        this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PERMISSIONS_REQUEST_CAMERA);
+                    PERMISSIONS_REQUEST);
             return;
         }
+        startActivityForResult(new Intent(MainActivity.this, CameraPhotoActivity.class), CAMERA_ACTIVITY);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_CAMERA: {
+            case PERMISSIONS_REQUEST: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startCameraFragment();
+                    startRealCameraActivity();
                 } else {
                     // permission denied
                     Toast.makeText(this, "Permission of camera and storage is needed", Toast.LENGTH_LONG).show();
