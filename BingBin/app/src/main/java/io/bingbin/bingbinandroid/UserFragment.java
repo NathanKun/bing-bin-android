@@ -52,9 +52,12 @@ public class UserFragment extends Fragment {
         // show avatar
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
-        Uri uri = Uri.parse(activity.getCurrentUser().getAvatarUrl());
-        SimpleDraweeView avatar = activity.findViewById(R.id.user_avatar);
-        avatar.setImageURI(uri);
+        String avatarUrl = activity.getCurrentUser().getAvatarUrl();
+        if(avatarUrl != "") {
+            Uri uri = Uri.parse(avatarUrl);
+            SimpleDraweeView avatar = activity.findViewById(R.id.user_avatar);
+            avatar.setImageURI(uri);
+        }
 
         // show user info
         TextView userName = activity.findViewById(R.id.user_name);

@@ -90,20 +90,20 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             smartLogin.login(config);
 
         });
-
+        /*
         customSigninButton.setOnClickListener((v) -> {
             // Perform custom sign in
             smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
             smartLogin.login(config);
 
-        });
-
+        });*/
+        /*
         customSignupButton.setOnClickListener((v) -> {
             // Perform custom sign up
             smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
             smartLogin.signup(config);
 
-        });
+        });*/
     }
 
     private void bindViews() {

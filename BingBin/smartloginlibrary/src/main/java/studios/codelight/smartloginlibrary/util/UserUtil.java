@@ -1,5 +1,6 @@
 package studios.codelight.smartloginlibrary.util;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.facebook.AccessToken;
@@ -32,8 +33,9 @@ public class UserUtil {
         if (account.getAccount() != null) {
             // googleUser.setUsername(account.getAccount().name);
             googleUser.setUsername(account.getDisplayName());
+            Uri avatarUri = account.getPhotoUrl();
+            googleUser.setAvatarUrl(avatarUri == null ? "" : avatarUri.toString());
         }
-        googleUser.setAvatarUrl(account.getPhotoUrl().toString());
 
         //return the populated google user
         return googleUser;
