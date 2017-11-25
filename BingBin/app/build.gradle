@@ -6,7 +6,7 @@ android {
         config {
             keyAlias 'BingBinKey'
             keyPassword 'bingbin'
-            storeFile file('D:/GitRes/BingBin_Android/GoogleStore/bingbinkey.jds')
+            storeFile file('../../GoogleStore/bingbinkey.jds')
             storePassword 'bingbin'
         }
     }
