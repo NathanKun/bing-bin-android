@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "578211331500",
+    "firebase_url": "https://fir-bingbin.firebaseio.com",
+    "project_id": "firebase-bingbin",
+    "storage_bucket": "firebase-bingbin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578211331500:android:1f7432d9a1c34ff9",
+        "android_client_info": {
+          "package_name": "io.bingbin.bingbinandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "578211331500-pjmgjc050iql8okngket970ag7lua3ni.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.bingbin.bingbinandroid",
+            "certificate_hash": "ca3ac8c918b984ed894327ef11d14d8992885379"
+          }
+        },
+        {
+          "client_id": "578211331500-rb4cvnpsgcci6ui2a60r21cbajna74gq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.bingbin.bingbinandroid",
+            "certificate_hash": "14b0398d5ca5fc88e0468d1687b2d62eb0d49285"
+          }
+        },
+        {
+          "client_id": "578211331500-d78qrbh1kkl8se8hcjka6tbrrvu5323l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.bingbin.bingbinandroid",
+            "certificate_hash": "29ebbd85e71dbe06d1cab321b7415491e0aed3ee"
+          }
+        },
+        {
+          "client_id": "578211331500-jbov7jhag6pt279l0r4dnso927u8m061.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.bingbin.bingbinandroid",
+            "certificate_hash": "a0188cf528ed626957d937a27f7d42efcd1d786b"
+          }
+        },
+        {
+          "client_id": "578211331500-ectqsc20td207r8hsisin478ivd912q9.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "***REMOVED***",
+          "client_type": 3
+        },
+        {
+          "client_id": "578211331500-dn0cp8d0qj3hlb29p5l3sr5htgg1t13c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.bingbin.bingbinandroid",
+            "certificate_hash": "d06b3718d32ea3e8de1a8b7ca80c6a0e1beb9c44"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvl36EAPHO6Gz3E40RCSCwr_u1YKMH8L0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "578211331500-ectqsc20td207r8hsisin478ivd912q9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
