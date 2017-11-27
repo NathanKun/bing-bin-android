@@ -8,6 +8,9 @@ import android.graphics.Matrix;
 import android.util.Log;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.bingbin.bingbinandroid.tensorflow.Classifier;
@@ -30,7 +33,7 @@ public class ClassifyHelper {
     private static final String MODEL_FILE = "file:///android_asset/graph.pb";
     private static final String LABEL_FILE = "file:///android_asset/labels.txt";
 
-    public static List<Classifier.Recognition> Classify(Activity activity, File imgFile) {
+    public static String Classify(Activity activity, File imgFile) {
 
         int previewHeight, previewWidth, sensorOrientation;
 
@@ -68,8 +71,17 @@ public class ClassifyHelper {
         canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
 
         // 识别
-        final List<Classifier.Recognition> results = classifier.recognizeImage(croppedBitmap);
-        Log.d("result", results.toString());
-        return results;
+        List<Classifier.Recognition> results = classifier.recognizeImage(croppedBitmap);
+        Collections.sort(results, new RecognitionResultComparator());
+
+        Log.d("Recognition result", results.get(0).getTitle() + ": " + results.get(0).getConfidence());
+        return results.get(0).getTitle();
+    }
+}
+
+class RecognitionResultComparator implements Comparator<Classifier.Recognition> {
+    @Override
+    public int compare(Classifier.Recognition o1, Classifier.Recognition o2) {
+        return o1.getConfidence().compareTo(o2.getConfidence());
     }
 }
