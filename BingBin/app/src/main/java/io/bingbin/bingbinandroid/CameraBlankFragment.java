@@ -1,6 +1,5 @@
 package io.bingbin.bingbinandroid;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,9 +9,11 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CameraBlankFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A blank fragment contains an icon of camera. only for viewpager swiping.
+ * This fragment doesn't contain any business logic of camera.
+ * The real activity of camera is CameraActivity
+ *
+ * @author Junyang HE
  */
 public class CameraBlankFragment extends Fragment {
 
@@ -26,8 +27,7 @@ public class CameraBlankFragment extends Fragment {
      * @return A new instance of fragment CameraBlankFragment.
      */
     public static CameraBlankFragment newInstance() {
-        CameraBlankFragment fragment = new CameraBlankFragment();
-        return fragment;
+        return new CameraBlankFragment();
     }
 
     @Override
@@ -42,15 +42,5 @@ public class CameraBlankFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_camera, container, false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 }

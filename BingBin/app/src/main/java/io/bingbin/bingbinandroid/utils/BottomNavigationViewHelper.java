@@ -7,7 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import java.lang.reflect.Field;
 
 /**
- * Created by jhe on 20/11/2017.
+ * @author Junyang HE
  */
 
 public class BottomNavigationViewHelper {

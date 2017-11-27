@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.List;
@@ -15,11 +17,12 @@ import io.bingbin.bingbinandroid.tensorflow.TensorFlowImageClassifier;
 import io.bingbin.bingbinandroid.tensorflow.env.ImageUtils;
 
 /**
- * Created by Junyang HE on 22/11/2017.
  * Helper class for classify an image
+ *
+ * @author Junyang HE
  */
 
-public class ClassifyHelper {
+public abstract class ClassifyHelper {
     private static final int INPUT_SIZE = 224;
     private static final int IMAGE_MEAN = 128;
     private static final float IMAGE_STD = 128.0f;
@@ -30,7 +33,8 @@ public class ClassifyHelper {
     private static final String MODEL_FILE = "file:///android_asset/graph.pb";
     private static final String LABEL_FILE = "file:///android_asset/labels.txt";
 
-    public static List<Classifier.Recognition> Classify(Activity activity, File imgFile) {
+
+    private static List<Classifier.Recognition> Classify(Activity activity, File imgFile) {
 
         int previewHeight, previewWidth, sensorOrientation;
 
@@ -71,5 +75,30 @@ public class ClassifyHelper {
         final List<Classifier.Recognition> results = classifier.recognizeImage(croppedBitmap);
         Log.d("result", results.toString());
         return results;
+    }
+
+    /**
+     * Classify a file of image.
+     * Show image in an ImageView and show classify result in a TextView
+     * @param imgFile   file of image to classify
+     * @param imageView ImageView to show image file
+     * @param textView  TextView to show result of classify
+     * @param activity  Activity
+     */
+    public static void recognitionFile(File imgFile, ImageView imageView, TextView textView, Activity activity) {
+        String imgPath = imgFile != null ? imgFile.getPath() : null;
+
+        // show image selected
+        imageView.setImageBitmap(BitmapFactory.decodeFile(imgPath));
+
+        // get result
+        List<Classifier.Recognition> results = ClassifyHelper.Classify(activity, imgFile);
+
+        // show result
+        StringBuilder resultStr = new StringBuilder();
+        for (Classifier.Recognition r : results) {
+            resultStr.append(r.getTitle()).append(" : ").append(r.getConfidence()).append("\n");
+        }
+        textView.setText(resultStr.toString());
     }
 }
