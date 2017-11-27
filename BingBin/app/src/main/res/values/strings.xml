@@ -32,4 +32,5 @@
     <string name="btn_gallary">gallary</string>
     <string name="imageview_preview_description">preview image for recognition</string>
     <string name="camera_icon">camera icon</string>
+    <string name="blur_image">Blur image</string>
 </resources>

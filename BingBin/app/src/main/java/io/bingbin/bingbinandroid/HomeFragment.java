@@ -92,15 +92,9 @@ public class HomeFragment extends Fragment {
         ((ImageView) activity.findViewById(R.id.imageView)).setImageBitmap(BitmapFactory.decodeFile(imgPath));
 
         // get result
-        List<Classifier.Recognition> results = ClassifyHelper.Classify(activity, imgFile);
-
-        // show result
-        StringBuilder resultStr = new StringBuilder();
-        for (Classifier.Recognition r : results) {
-            resultStr.append(r.getTitle()).append(" : ").append(r.getConfidence());
-        }
+        String result = ClassifyHelper.Classify(activity, imgFile);
         TextView textViewResult = activity.findViewById(R.id.textView_result);
-        textViewResult.setText(resultStr.toString());
+        textViewResult.setText(result);
     }
 
     File uriToFile(Uri uri) {

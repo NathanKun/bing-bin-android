@@ -36,4 +36,12 @@
             @color/dark_primary_color
         </item>
     </style>
+
+    <style name="AppThemeNoTitleBar" parent="@style/AppTheme">
+        <!-- hide the Window Title -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 </resources>

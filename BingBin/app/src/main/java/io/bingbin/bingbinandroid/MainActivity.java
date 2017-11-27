@@ -18,6 +18,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.io.File;
 
+import io.bingbin.bingbinandroid.tensorflow.Classifier;
 import io.bingbin.bingbinandroid.utils.BottomNavigationViewHelper;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import studios.codelight.smartloginlibrary.UserSessionManager;
@@ -156,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
                     PERMISSIONS_REQUEST);
             return;
         }
-        startActivityForResult(new Intent(MainActivity.this, CameraPhotoActivity.class), CAMERA_ACTIVITY);
+        //startActivityForResult(new Intent(MainActivity.this, CameraPhotoActivity.class), CAMERA_ACTIVITY);
+        startActivity(new Intent(MainActivity.this, ClassifyActivity.class));
     }
 
     @Override
