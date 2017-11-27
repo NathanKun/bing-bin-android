@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.Collection;
@@ -18,11 +20,12 @@ import io.bingbin.bingbinandroid.tensorflow.TensorFlowImageClassifier;
 import io.bingbin.bingbinandroid.tensorflow.env.ImageUtils;
 
 /**
- * Created by Junyang HE on 22/11/2017.
  * Helper class for classify an image
+ *
+ * @author Junyang HE
  */
 
-public class ClassifyHelper {
+public abstract class ClassifyHelper {
     private static final int INPUT_SIZE = 224;
     private static final int IMAGE_MEAN = 128;
     private static final float IMAGE_STD = 128.0f;
@@ -83,5 +86,26 @@ class RecognitionResultComparator implements Comparator<Classifier.Recognition> 
     @Override
     public int compare(Classifier.Recognition o1, Classifier.Recognition o2) {
         return o1.getConfidence().compareTo(o2.getConfidence());
+    }
+
+    /**
+     * Classify a file of image.
+     * Show image in an ImageView and show classify result in a TextView
+     * @param imgFile   file of image to classify
+     * @param imageView ImageView to show image file
+     * @param textView  TextView to show result of classify
+     * @param activity  Activity
+     */
+    public static void recognitionFile(File imgFile, ImageView imageView, TextView textView, Activity activity) {
+        String imgPath = imgFile != null ? imgFile.getPath() : null;
+
+        // show image selected
+        imageView.setImageBitmap(BitmapFactory.decodeFile(imgPath));
+
+        // get result
+        String result = ClassifyHelper.Classify(activity, imgFile);
+
+        // show result
+        textView.setText(result);
     }
 }

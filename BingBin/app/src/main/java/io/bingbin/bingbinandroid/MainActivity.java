@@ -20,12 +20,20 @@ import java.io.File;
 
 import io.bingbin.bingbinandroid.tensorflow.Classifier;
 import io.bingbin.bingbinandroid.utils.BottomNavigationViewHelper;
+import io.bingbin.bingbinandroid.utils.ClassifyHelper;
+import io.bingbin.bingbinandroid.utils.CommonUtil;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
 import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 
+/**
+ * Main Activity.
+ * Invoke after login.
+ *
+ * @author Junyang HE
+ */
 public class MainActivity extends AppCompatActivity {
 
     private final int PERMISSIONS_REQUEST = 2333;
@@ -34,12 +42,91 @@ public class MainActivity extends AppCompatActivity {
 
     private SmartUser currentUser;
     private boolean doubleBackToExitPressedOnce;
-    private ViewPagerAdapter adapter;
     private ViewPager viewPager;
     private BottomNavigationView navigation;
     private MenuItem menuItem;
 
-    // bottom navigation listner
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        currentUser = UserSessionManager.getCurrentUser(this);
+        Log.d("SmartUser", currentUser.toString());
+        if (currentUser instanceof SmartFacebookUser)
+            Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser) currentUser).getProfileName());
+        if (currentUser instanceof SmartGoogleUser)
+            Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
+
+        // init Fresco
+        Fresco.initialize(this);
+
+        // init viewpager
+        viewPager = findViewById(R.id.viewpager);
+        viewPager.addOnPageChangeListener(onPageChangeListner);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+
+        // init bottom navigation
+        navigation = findViewById(R.id.navigation);
+        //BottomNavigationViewHelper.disableShiftMode(navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setSelectedItemId(R.id.navigation_home);
+
+    }
+
+    // back twice to exit
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startCameraActivity();
+                } else {
+                    // permission denied
+                    Toast.makeText(this, "Permission of camera and storage is needed", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // photo token
+        if (requestCode == CAMERA_ACTIVITY && resultCode == RESULT_OK) {
+            String path = data.getStringExtra("imgPath");
+            path = path.replace("file:", "");
+            this.recognitionFile(new File(path));
+        }
+        // image selected
+        else if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK
+                && null != data) {
+            Uri imgUri = data.getData();
+            File imgFile = CommonUtil.uriToFile(imgUri, this);
+            this.recognitionFile(imgFile);
+        }
+    }
+
+    /**
+     * Listeners
+     */
+
+    // bottom navigation listener
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -60,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // fragment viewpager listner
+    // fragment viewpager listener
     private ViewPager.OnPageChangeListener onPageChangeListner = (new ViewPager.OnPageChangeListener() {
         // 滚动过程中会不断触发
         @Override
@@ -86,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     final Handler handler = new Handler();
                     handler.postDelayed(() -> navigation.setSelectedItemId(R.id.navigation_home), 500);
                 });
-                startRealCameraActivity();
+                startCameraActivity();
             }
         }
 
@@ -95,58 +182,7 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        currentUser = UserSessionManager.getCurrentUser(this);
-        Log.d("SmartUser", currentUser.toString());
-        if (currentUser instanceof SmartFacebookUser)
-            Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser) currentUser).getProfileName());
-        if (currentUser instanceof SmartGoogleUser)
-            Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
-
-        // init Fresco
-        Fresco.initialize(this);
-
-        // init viewpager
-        viewPager = findViewById(R.id.viewpager);
-        viewPager.addOnPageChangeListener(onPageChangeListner);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-
-        // init bottom navigation
-        navigation = findViewById(R.id.navigation);
-        BottomNavigationViewHelper.disableShiftMode(navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_home);
-
-    }
-
-    // back twice to exit
-    @Override
-    public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
-    }
-
-    public SmartUser getCurrentUser() {
-        return currentUser;
-    }
-
-    public ViewPagerAdapter getAdapter() {
-        return adapter;
-    }
-
-    private void startRealCameraActivity() {
+    private void startCameraActivity() {
         // check and request permission
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED
@@ -161,35 +197,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, ClassifyActivity.class));
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startRealCameraActivity();
-                } else {
-                    // permission denied
-                    Toast.makeText(this, "Permission of camera and storage is needed", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
+    private void recognitionFile(File file){
+        ClassifyHelper.recognitionFile(file, findViewById(R.id.imageView), findViewById(R.id.results), this);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    /**
+     * Getters
+     */
 
-        if (requestCode == CAMERA_ACTIVITY && resultCode == RESULT_OK) {
-            String path = data.getStringExtra("imgPath");
-            path = path.replace("file:", "");
-            ((HomeFragment) adapter.getRegisteredFragment(1)).recognitionFile(new File(path));
-        } else if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK
-                && null != data) {
-            HomeFragment fgm = ((HomeFragment) adapter.getRegisteredFragment(1));
-            Uri imgUri = data.getData();
-            File imgFile = fgm.uriToFile(imgUri);
-            fgm.recognitionFile(imgFile);
-        }
+    public SmartUser getCurrentUser() {
+        return currentUser;
     }
 }

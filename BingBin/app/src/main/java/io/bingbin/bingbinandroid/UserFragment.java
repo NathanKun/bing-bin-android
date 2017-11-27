@@ -1,6 +1,5 @@
 package io.bingbin.bingbinandroid;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,9 +23,10 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * User fragment.
+ * Contains user's information and logout button.
+ *
+ * @author Junyang HE
  */
 public class UserFragment extends Fragment {
 
@@ -40,7 +40,6 @@ public class UserFragment extends Fragment {
      *
      * @return A new instance of fragment UserFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static UserFragment newInstance() {
         return new UserFragment();
     }
@@ -53,11 +52,12 @@ public class UserFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
         String avatarUrl = activity.getCurrentUser().getAvatarUrl();
-        if(avatarUrl != "") {
+        if(!"".equals(avatarUrl)) {
             Uri uri = Uri.parse(avatarUrl);
             SimpleDraweeView avatar = activity.findViewById(R.id.user_avatar);
             avatar.setImageURI(uri);
         }
+        // if user has no avatar, do nothing, keep the default image holder
 
         // show user info
         TextView userName = activity.findViewById(R.id.user_name);
@@ -65,6 +65,7 @@ public class UserFragment extends Fragment {
 
         // show logout button
         Button logoutButton = activity.findViewById(R.id.logout_button);
+        // listener
         logoutButton.setOnClickListener(v -> {
             SmartUser currentUser = activity.getCurrentUser();
             SmartLogin smartLogin;
@@ -89,24 +90,9 @@ public class UserFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_user, container, false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 }
