@@ -4,20 +4,21 @@ import android.app.Application;
 import android.content.Context;
 
 /**
- * Created by Junyang HE on 18/11/2017.
- * For returning Application Context
+ * BingBinApp Application class
+ *
+ * @author Junyang HE
  */
 
 public class BingBinApp extends Application {
 
-    private static Context context;
+    private Context context;
 
     public void onCreate() {
         super.onCreate();
-        BingBinApp.context = getApplicationContext();
+        this.context = getApplicationContext();
     }
 
-    public static Context getAppContext() {
-        return BingBinApp.context;
+    public Context getAppContext() {
+        return this.context;
     }
 }

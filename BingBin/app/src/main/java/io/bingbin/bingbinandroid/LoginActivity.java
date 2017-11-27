@@ -22,8 +22,9 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
 import studios.codelight.smartloginlibrary.util.SmartLoginException;
 
 /**
- * Created by NathanKun on 2017/11/18.
  * Login activity.
+ *
+ * @author Junyang HE
  */
 public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
@@ -64,8 +65,6 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             if (currentUser instanceof SmartGoogleUser)
                 Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
             toMainActivity();
-        } else {
-            //Toast.makeText(this, "ERROR", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -142,7 +141,6 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     private void toMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
-        //intent.putExtra("user", currentUser);
         startActivity(intent);
         finish();
     }
