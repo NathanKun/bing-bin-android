@@ -11,6 +11,9 @@ import io.bingbin.bingbinandroid.CameraBlankFragment;
 import io.bingbin.bingbinandroid.HomeFragment;
 import io.bingbin.bingbinandroid.UserFragment;
 
+/**
+ * Adapter for ViewPager
+ */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
