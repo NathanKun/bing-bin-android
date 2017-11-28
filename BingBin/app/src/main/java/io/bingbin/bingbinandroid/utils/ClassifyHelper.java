@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import io.bingbin.bingbinandroid.MainActivity;
 import io.bingbin.bingbinandroid.tensorflow.Classifier;
 import io.bingbin.bingbinandroid.tensorflow.TensorFlowImageClassifier;
 import io.bingbin.bingbinandroid.tensorflow.env.ImageUtils;
@@ -36,7 +38,7 @@ public abstract class ClassifyHelper {
     private static final String MODEL_FILE = "file:///android_asset/graph.pb";
     private static final String LABEL_FILE = "file:///android_asset/labels.txt";
 
-    public static String Classify(Activity activity, File imgFile) {
+    public static String classify(Activity activity, File imgFile) {
 
         int previewHeight, previewWidth, sensorOrientation;
 
@@ -86,26 +88,5 @@ class RecognitionResultComparator implements Comparator<Classifier.Recognition> 
     @Override
     public int compare(Classifier.Recognition o1, Classifier.Recognition o2) {
         return o1.getConfidence().compareTo(o2.getConfidence());
-    }
-
-    /**
-     * Classify a file of image.
-     * Show image in an ImageView and show classify result in a TextView
-     * @param imgFile   file of image to classify
-     * @param imageView ImageView to show image file
-     * @param textView  TextView to show result of classify
-     * @param activity  Activity
-     */
-    public static void recognitionFile(File imgFile, ImageView imageView, TextView textView, Activity activity) {
-        String imgPath = imgFile != null ? imgFile.getPath() : null;
-
-        // show image selected
-        imageView.setImageBitmap(BitmapFactory.decodeFile(imgPath));
-
-        // get result
-        String result = ClassifyHelper.Classify(activity, imgFile);
-
-        // show result
-        textView.setText(result);
     }
 }

@@ -1,13 +1,11 @@
 package io.bingbin.bingbinandroid;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,10 +16,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.io.File;
 
-import io.bingbin.bingbinandroid.tensorflow.Classifier;
-import io.bingbin.bingbinandroid.utils.BottomNavigationViewHelper;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
-import io.bingbin.bingbinandroid.utils.CommonUtil;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
@@ -36,8 +31,6 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private final int PERMISSIONS_REQUEST = 2333;
-    private final int CAMERA_ACTIVITY = 23333;
     protected final int GALLERY_PICTURE = 233;
 
     private SmartUser currentUser;
@@ -89,42 +82,23 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startCameraActivity();
-                } else {
-                    // permission denied
-                    Toast.makeText(this, "Permission of camera and storage is needed", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
+    // ============
+    // On results
+    // ============
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // photo token
-        if (requestCode == CAMERA_ACTIVITY && resultCode == RESULT_OK) {
-            String path = data.getStringExtra("imgPath");
-            path = path.replace("file:", "");
-            this.recognitionFile(new File(path));
-        }
-        // image selected
-        else if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK
+        // CameraBlankFragment, Gallery btn, image selected, start ClassifyActivity
+        if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK
                 && null != data) {
-            Uri imgUri = data.getData();
-            File imgFile = CommonUtil.uriToFile(imgUri, this);
-            this.recognitionFile(imgFile);
+            Uri uri = data.getData();
+            assert uri != null;
+            startClassifyActivity(uri.toString());
         }
     }
 
-    /**
-     * Listeners
-     */
+    // ============
+    // Listeners
+    // ============
 
     // bottom navigation listener
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -164,17 +138,6 @@ public class MainActivity extends AppCompatActivity {
             }
             menuItem = navigation.getMenu().getItem(position);
             menuItem.setChecked(true);
-
-            // check is camera nav button selected
-            // start Camera Activity
-            if (position == 0) {
-                // back to home
-                MainActivity.this.runOnUiThread(() -> {
-                    final Handler handler = new Handler();
-                    handler.postDelayed(() -> navigation.setSelectedItemId(R.id.navigation_home), 500);
-                });
-                startCameraActivity();
-            }
         }
 
         @Override
@@ -182,30 +145,23 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
-    private void startCameraActivity() {
-        // check and request permission
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PERMISSIONS_REQUEST);
-            return;
-        }
-        //startActivityForResult(new Intent(MainActivity.this, CameraPhotoActivity.class), CAMERA_ACTIVITY);
-        startActivity(new Intent(MainActivity.this, ClassifyActivity.class));
-    }
-
-    private void recognitionFile(File file){
-        ClassifyHelper.recognitionFile(file, findViewById(R.id.imageView), findViewById(R.id.results), this);
-    }
-
-    /**
-     * Getters
-     */
+    // ============
+    // Getters
+    // ============
 
     public SmartUser getCurrentUser() {
         return currentUser;
+    }
+
+
+    // ============
+    // Methods
+    // ============
+
+    public void startClassifyActivity(String uri) {
+        // start camera activity, with no uri, so ClassifyActivity will start camera activity.
+        Intent intent = new Intent(this, ClassifyActivity.class);
+        intent.putExtra("uri", uri);
+        startActivity(intent);
     }
 }

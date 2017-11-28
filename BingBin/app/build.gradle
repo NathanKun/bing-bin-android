@@ -18,6 +18,8 @@ android {
         targetSdkVersion 27
         versionCode 4
         versionName "0.1.3"
+        //renderscriptTargetApi 27
+        //renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {

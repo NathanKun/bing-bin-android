@@ -46,16 +46,4 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // button to classify file from gallery
-        Button btnGallery = activity.findViewById(R.id.btn_gallery);
-        btnGallery.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            activity.startActivityForResult(intent, activity.GALLERY_PICTURE);
-        });
-    }
 }
