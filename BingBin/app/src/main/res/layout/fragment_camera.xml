@@ -5,18 +5,30 @@
     android:layout_height="match_parent"
     tools:context="io.bingbin.bingbinandroid.CameraBlankFragment">
 
-    <ImageView
-        android:id="@+id/img_camera"
-        android:layout_width="177dp"
-        android:layout_height="197dp"
+    <Button
+        android:id="@+id/btn_takephoto"
+        android:layout_width="129dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="212dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/btn_takephoto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_gallery"
+        android:layout_width="129dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/camera_icon"
-        android:src="@drawable/ic_camera_alt_black_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/btn_gallary"
+        app:layout_constraintBottom_toTopOf="@+id/btn_takephoto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.607" />
 </android.support.constraint.ConstraintLayout>

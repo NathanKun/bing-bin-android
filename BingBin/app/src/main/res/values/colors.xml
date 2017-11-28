@@ -3,6 +3,7 @@
     <color name="primary_color">#4caf50</color>
     <color name="dark_primary_color">#388E3C</color>
     <color name="accent_color">#FF5722</color>
-    <color name="white">#111111</color>
-    <color name="iron">#CBCDCD</color>
+    <color name="white">#FFFFFF</color>
+    <color name="iron">#CBCDCD</color>>
+    <color name="black">#000000</color>
 </resources>
