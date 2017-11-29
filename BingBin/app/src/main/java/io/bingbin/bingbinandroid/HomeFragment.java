@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -38,6 +39,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
         assert activity != null;
+
     }
 
     @Override
@@ -45,5 +47,13 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle b) {
+        super.onActivityCreated(b);
+
+        TextView tv = activity.findViewById(R.id.tv_home_welcome);
+        tv.setText(String.format(activity.getResources().getString(R.string.home_homefragment), activity.getCurrentUser().getUsername()));
     }
 }

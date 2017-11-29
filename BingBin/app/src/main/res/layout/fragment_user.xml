@@ -15,7 +15,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="104dp"
         android:text="@string/logout_text"
-        android:textColor="@color/white"
         fresco:layout_constraintBottom_toBottomOf="parent"
         fresco:layout_constraintEnd_toEndOf="parent"
         fresco:layout_constraintStart_toStartOf="parent"
