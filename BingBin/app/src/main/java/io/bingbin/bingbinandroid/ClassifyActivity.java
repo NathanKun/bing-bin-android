@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -36,17 +37,14 @@ public class ClassifyActivity extends AppCompatActivity {
     private final int CAMERA_RQ = 2333;
     private final int PERMISSIONS_REQUEST = 23333;
 
+    private ConstraintLayout cl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Remove title bar
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        //Remove notification bar
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        //set content view AFTER ABOVE sequence (to avoid crash)
         setContentView(R.layout.activity_classify);
+        cl = findViewById(R.id.constraintlayout_classify);
+        hideComponents();
 
         Intent intent = getIntent();
         String uriStr = intent.getStringExtra("uri");
@@ -95,6 +93,7 @@ public class ClassifyActivity extends AppCompatActivity {
                     // permission denied
                     Log.d("request permission", "not ok");
                     Toast.makeText(this, "Permission of camera and storage is needed", Toast.LENGTH_LONG).show();
+                    finish();
                 }
             }
         }
@@ -147,7 +146,6 @@ public class ClassifyActivity extends AppCompatActivity {
         btn.setOnClickListener((view) -> showRecycleInstruction((Category) categorySpinner.getSelectedItem()));
 
         // run after layout rendered, show blurred image
-        ConstraintLayout cl = findViewById(R.id.constraintlayout_classify);
         cl.post((new Runnable() {
             ImageView iv;
             Bitmap bm;
@@ -174,6 +172,8 @@ public class ClassifyActivity extends AppCompatActivity {
 
                 blurImg = CommonUtil.rsBlur(ClassifyActivity.this, blurImg, 25);
                 iv.setImageBitmap(blurImg);
+
+                showComponents();
             }
         }).init(bitmap, iv_blurImg));
     }
@@ -213,5 +213,13 @@ public class ClassifyActivity extends AppCompatActivity {
                 .stillShot()
                 .allowRetry(true)
                 .start(CAMERA_RQ);
+    }
+
+    private void hideComponents() {
+        cl.setVisibility(ConstraintLayout.INVISIBLE);
+    }
+
+    private void showComponents() {
+        cl.setVisibility(ConstraintLayout.VISIBLE);
     }
 }
