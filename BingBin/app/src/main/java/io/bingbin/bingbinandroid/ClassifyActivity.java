@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -29,7 +28,7 @@ import com.afollestad.materialcamera.MaterialCamera;
 
 import java.io.File;
 
-import io.bingbin.bingbinandroid.Models.Category;
+import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 import io.bingbin.bingbinandroid.utils.CommonUtil;
 

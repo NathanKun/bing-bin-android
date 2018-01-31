@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import io.bingbin.bingbinandroid.Models.Category;
+import io.bingbin.bingbinandroid.models.Category;
 
 public class InstructionActivity extends AppCompatActivity {
 
