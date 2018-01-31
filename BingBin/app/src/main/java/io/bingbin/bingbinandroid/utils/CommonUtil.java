@@ -52,7 +52,7 @@ public abstract class CommonUtil {
         return null;
     }
 
-    public static Bitmap scaleBitmapKeepRatio(Bitmap TargetBmp, int reqHeightInPixels, int reqWidthInPixels) {
+    private static Bitmap scaleBitmapKeepRatio(Bitmap TargetBmp, int reqHeightInPixels, int reqWidthInPixels) {
         Matrix m = new Matrix();
         m.setRectToRect(new RectF(0, 0, TargetBmp.getWidth(), TargetBmp.getHeight()), new RectF(0, 0, reqWidthInPixels, reqHeightInPixels), Matrix.ScaleToFit.CENTER);
         return Bitmap.createBitmap(TargetBmp, 0, 0, TargetBmp.getWidth(), TargetBmp.getHeight(), m, true);

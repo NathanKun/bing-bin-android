@@ -19,6 +19,7 @@ public class SmartUser implements Serializable{
     private String profileLink;
 
     private String avatarUrl;
+    private String token;
 
     public SmartUser() {
     }
@@ -99,6 +100,10 @@ public class SmartUser implements Serializable{
 
     public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
 
+    public String getToken() { return token; }
+
+    public void setToken(String token) { this.token = token; }
+
     @Override
     public String toString() {
         return "SmartUser{" +
@@ -112,6 +117,7 @@ public class SmartUser implements Serializable{
                 ", gender=" + gender +
                 ", profileLink='" + profileLink + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 }

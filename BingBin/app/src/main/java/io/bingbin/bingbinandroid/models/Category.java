@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid.Models;
+package io.bingbin.bingbinandroid.models;
 
 /**
  * Trash category for BingBin.
