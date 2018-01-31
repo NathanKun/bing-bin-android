@@ -30,6 +30,7 @@ public class UserUtil {
         googleUser.setEmail(account.getEmail());
         googleUser.setIdToken(account.getIdToken());
         googleUser.setUserId(account.getId());
+        googleUser.setToken(account.getIdToken());
         if (account.getAccount() != null) {
             // googleUser.setUsername(account.getAccount().name);
             googleUser.setUsername(account.getDisplayName());
@@ -45,6 +46,7 @@ public class UserUtil {
         SmartFacebookUser facebookUser = new SmartFacebookUser();
         facebookUser.setGender(-1);
         facebookUser.setAccessToken(accessToken);
+        facebookUser.setToken(accessToken.getToken());
         try {
             if (object.has(Constants.FacebookFields.EMAIL))
                 facebookUser.setEmail(object.getString(Constants.FacebookFields.EMAIL));
