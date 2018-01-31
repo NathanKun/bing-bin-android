@@ -42,6 +42,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     Button facebookLoginButton;
     @BindView(R.id.google_login_button)
     Button googleLoginButton;
+    @BindView(R.id.user_token)
+    EditText userToken;
 
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
@@ -77,7 +79,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser) currentUser).getProfileName());
             if (currentUser instanceof SmartGoogleUser)
                 Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
-            toMainActivity();
+            //toMainActivity();
+            userToken.setText(currentUser.getToken());
         }
     }
 
