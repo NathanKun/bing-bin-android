@@ -64,7 +64,7 @@ public class FacebookLogin extends SmartLogin {
                     public void onCompleted(JSONObject jsonObject, GraphResponse response) {
                         progress.dismiss();
                         SmartFacebookUser facebookUser = UserUtil.populateFacebookUser(jsonObject, loginResult.getAccessToken());
-facebookUser.setFirstName(loginResult.getAccessToken().getToken());
+
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                                 new GraphRequest.GraphJSONObjectCallback() {
                                     private SmartFacebookUser fbUser;
