@@ -14,8 +14,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 
 import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
@@ -40,6 +42,7 @@ public class GoogleLogin extends SmartLogin {
             // Configure sign-in to request the user's ID, email address, and basic
             // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken("***REMOVED***")
                     .requestEmail()
                     .requestProfile()
                     .build();
@@ -104,6 +107,7 @@ public class GoogleLogin extends SmartLogin {
             try {
                 GoogleSignInAccount account = completedTask.getResult(ApiException.class);
                 Log.d("GOOGLE SIGN IN", " success");
+                //String authCode = account.getServerAuthCode();
 
                 SmartGoogleUser googleUser = UserUtil.populateGoogleUser(account);
                 // Save the user
