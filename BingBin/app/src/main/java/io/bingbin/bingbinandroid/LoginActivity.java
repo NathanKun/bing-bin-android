@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
 import studios.codelight.smartloginlibrary.SmartLoginCallbacks;
@@ -28,8 +30,19 @@ import studios.codelight.smartloginlibrary.util.SmartLoginException;
  */
 public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
-    private Button facebookLoginButton, googleLoginButton, customSigninButton, customSignupButton;
-    private EditText emailEditText, passwordEditText;
+    @BindView(R.id.email_edittext)
+    EditText emailEditText;
+    @BindView(R.id.password_edittext)
+    EditText passwordEditText;
+    @BindView(R.id.custom_signin_button)
+    Button customSigninButton;
+    @BindView(R.id.custom_signup_button)
+    Button customSignupButton;
+    @BindView(R.id.facebook_login_button)
+    Button facebookLoginButton;
+    @BindView(R.id.google_login_button)
+    Button googleLoginButton;
+
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
     SmartLoginConfig config;
@@ -39,7 +52,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        bindViews();
+        ButterKnife.bind(this);
         setListeners();
 
         // config smart login
@@ -103,15 +116,6 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             smartLogin.signup(config);
 
         });*/
-    }
-
-    private void bindViews() {
-        facebookLoginButton = findViewById(R.id.facebook_login_button);
-        googleLoginButton = findViewById(R.id.google_login_button);
-        customSigninButton = findViewById(R.id.custom_signin_button);
-        customSignupButton = findViewById(R.id.custom_signup_button);
-        emailEditText = findViewById(R.id.email_edittext);
-        passwordEditText = findViewById(R.id.password_edittext);
     }
 
     @Override
