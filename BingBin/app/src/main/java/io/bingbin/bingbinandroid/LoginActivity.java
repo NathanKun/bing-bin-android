@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -65,9 +64,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser) currentUser).getProfileName());
             if (currentUser instanceof SmartGoogleUser)
                 Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
-            //toMainActivity();
-            TextView tokenTV = findViewById(R.id.fb_token);
-            tokenTV.setText(currentUser.getFirstName());
+            toMainActivity();
         }
     }
 
@@ -119,7 +116,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     @Override
     public void onLoginSuccess(SmartUser user) {
-        //Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
         refreshLayout();
     }
 
