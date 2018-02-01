@@ -2,16 +2,29 @@ package io.bingbin.bingbinandroid;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.bingbin.bingbinandroid.utils.BingBinHttp;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.Response;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
 import studios.codelight.smartloginlibrary.SmartLoginCallbacks;
@@ -42,11 +55,34 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     Button facebookLoginButton;
     @BindView(R.id.google_login_button)
     Button googleLoginButton;
+    @BindView(R.id.login_progress_bar)
+    ProgressBar loginProgressBar;
 
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
     SmartLoginConfig config;
     SmartLogin smartLogin;
+
+    LoginHandler myHandler = new LoginHandler(this);
+    static class LoginHandler extends Handler {
+        private final WeakReference<LoginActivity> mTarget;
+
+        LoginHandler(LoginActivity target) {
+            mTarget = new WeakReference<LoginActivity>(target);
+        }
+
+        void login() {
+            LoginActivity target = mTarget.get();
+            if (target != null) {
+                target.login();
+            }
+        }
+    }
+
+    private void login() {
+        smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+        smartLogin.login(config);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,20 +138,37 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             smartLogin.login(config);
 
         });
-        /*
+
         customSigninButton.setOnClickListener((v) -> {
             // Perform custom sign in
-            smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-            smartLogin.login(config);
+            (new Thread(){
+                @Override
+                public void run(){
+                    BingBinHttp bbh = new BingBinHttp();
+                    try {
+                        Response response = bbh.test();
+                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-        });*/
-        /*
+                        Headers responseHeaders = response.headers();
+                        for (int i = 0; i < responseHeaders.size(); i++) {
+                            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                        }
+
+                        System.out.println(response.body().string());
+
+                        myHandler.login();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        });
+
         customSignupButton.setOnClickListener((v) -> {
             // Perform custom sign up
             smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-            smartLogin.signup(config);
-
-        });*/
+            smartLogin.login(config);
+        });
     }
 
     @Override
@@ -131,16 +184,21 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     @Override
     public SmartUser doCustomLogin() {
+        // TODO: get email and password, http request, receive token and user infos
+
         SmartUser user = new SmartUser();
         user.setEmail(emailEditText.getText().toString());
+        // TODO: other setters
+
+
+
+        runOnUiThread((() -> loginProgressBar.setVisibility(View.GONE)));
         return user;
     }
 
     @Override
     public SmartUser doCustomSignup() {
-        SmartUser user = new SmartUser();
-        user.setEmail(emailEditText.getText().toString());
-        return user;
+        return doCustomLogin();
     }
 
     private void toMainActivity() {

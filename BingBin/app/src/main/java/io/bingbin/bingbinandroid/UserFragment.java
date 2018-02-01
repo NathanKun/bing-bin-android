@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
 import studios.codelight.smartloginlibrary.SmartLoginFactory;
@@ -52,7 +54,7 @@ public class UserFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
         String avatarUrl = activity.getCurrentUser().getAvatarUrl();
-        if(!"".equals(avatarUrl)) {
+        if(StringUtils.isNotBlank(avatarUrl)) {
             Uri uri = Uri.parse(avatarUrl);
             SimpleDraweeView avatar = activity.findViewById(R.id.user_avatar);
             avatar.setImageURI(uri);

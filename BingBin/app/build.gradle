@@ -58,6 +58,9 @@ dependencies {
     implementation 'com.android.support:support-media-compat:27.0.2'
     implementation 'com.android.support:support-v4:27.0.2'
 
+    // commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+
     // butterknife view injection
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
