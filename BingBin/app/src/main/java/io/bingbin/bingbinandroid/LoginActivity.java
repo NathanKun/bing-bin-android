@@ -81,6 +81,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
             //toMainActivity();
             userToken.setText(currentUser.getToken());
+            Log.d("social token", currentUser.getToken());
         }
     }
 
