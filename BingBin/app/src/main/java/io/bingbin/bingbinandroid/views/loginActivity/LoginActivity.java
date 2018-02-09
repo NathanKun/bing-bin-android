@@ -1,8 +1,7 @@
-package io.bingbin.bingbinandroid;
+package io.bingbin.bingbinandroid.views.Login;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +21,8 @@ import java.lang.ref.WeakReference;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.bingbin.bingbinandroid.MainActivity;
+import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -65,7 +66,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     GoogleSignInClient mGoogleSignInClient;
     SmartLoginConfig config;
     SmartLogin smartLogin;
-
+    /*
     LoginHandler myHandler = new LoginHandler(this);
     static class LoginHandler extends Handler {
         private final WeakReference<LoginActivity> mTarget;
@@ -81,7 +82,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 target.finishLogin();
             }
         }
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +181,25 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 break;
             case R.id.custom_signin_button:
                 BingBinHttp bbh = new BingBinHttp();
-                bbh.test(myHandler);
+                bbh.test2(new Callback() {
+                    //请求失败执行的方法
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        runOnUiThread(() -> finishLogin());
+                    }
+                    //请求成功执行的方法
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                        Headers responseHeaders = response.headers();
+                        for (int i = 0; i < responseHeaders.size(); i++) {
+                            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                        }
+
+                        System.out.println(response.body().string());
+                        runOnUiThread(() -> finishLogin());
+                    }
+                });
                 break;
             case R.id.google_login_button:
                 // Perform Google login

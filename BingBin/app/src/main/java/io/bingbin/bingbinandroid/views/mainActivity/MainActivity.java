@@ -16,8 +16,11 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.io.File;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
+import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
 import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
@@ -36,13 +39,15 @@ public class MainActivity extends AppCompatActivity {
     private SmartUser currentUser;
     private boolean doubleBackToExitPressedOnce;
     private ViewPager viewPager;
-    private BottomNavigationView navigation;
+    @BindView(R.id.navigation)
+    BottomNavigationViewEx navigation;
     private MenuItem menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         currentUser = UserSessionManager.getCurrentUser(this);
         Log.d("SmartUser", currentUser.toString());
@@ -61,8 +66,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
 
         // init bottom navigation
-        navigation = findViewById(R.id.navigation);
-        //BottomNavigationViewHelper.disableShiftMode(navigation);
+        navigation.enableShiftingMode(false);
+        navigation.enableItemShiftingMode(false);
+        navigation.setTextVisibility(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
 
