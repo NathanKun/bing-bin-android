@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid;
+package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,7 +16,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.bingbin.bingbinandroid.views.Login.LoginActivity;
+import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
 import studios.codelight.smartloginlibrary.SmartLoginFactory;

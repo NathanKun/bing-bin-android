@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid;
+package io.bingbin.bingbinandroid.views.classifyActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,9 +28,11 @@ import com.afollestad.materialcamera.MaterialCamera;
 
 import java.io.File;
 
+import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 import io.bingbin.bingbinandroid.utils.CommonUtil;
+import io.bingbin.bingbinandroid.views.mainActivity.InstructionActivity;
 
 public class ClassifyActivity extends AppCompatActivity {
     private final int CAMERA_RQ = 2333;

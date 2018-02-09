@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid;
+package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,11 +14,10 @@ import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 
-import java.io.File;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.bingbin.bingbinandroid.utils.ClassifyHelper;
+import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
+import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
 import studios.codelight.smartloginlibrary.UserSessionManager;

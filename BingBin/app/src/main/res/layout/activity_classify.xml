@@ -5,7 +5,7 @@
     android:id="@+id/constraintlayout_classify"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.bingbin.bingbinandroid.ClassifyActivity">
+    tools:context="io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity">
 
     <ImageView
         android:id="@+id/iv_classify_blurimg"

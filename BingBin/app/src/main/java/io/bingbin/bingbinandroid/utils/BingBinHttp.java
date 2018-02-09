@@ -28,8 +28,8 @@ public class BingBinHttp {
             public void run(){
                 try {
                     Request request = new Request.Builder()
-                    .url("http://publicobject.com/helloworld.txt")
-                    .build();
+                            .url("http://publicobject.com/helloworld.txt")
+                            .build();
 
                     Response response = client.newCall(request).execute();
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
@@ -47,5 +47,17 @@ public class BingBinHttp {
                 }
             }
         }).start();
+    }
+
+    public void test2(Callback call) {
+        try {
+            Request request = new Request.Builder()
+                    .url("http://publicobject.com/helloworld.txt")
+                    .build();
+
+            client.newCall(request).enqueue(call);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

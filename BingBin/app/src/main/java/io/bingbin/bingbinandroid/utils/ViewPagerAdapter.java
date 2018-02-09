@@ -7,9 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import io.bingbin.bingbinandroid.CameraBlankFragment;
-import io.bingbin.bingbinandroid.HomeFragment;
-import io.bingbin.bingbinandroid.UserFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.CameraBlankFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.HomeFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.UserFragment;
 
 /**
  * Adapter for ViewPager

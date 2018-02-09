@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid;
+package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
 
 public class InstructionActivity extends AppCompatActivity {

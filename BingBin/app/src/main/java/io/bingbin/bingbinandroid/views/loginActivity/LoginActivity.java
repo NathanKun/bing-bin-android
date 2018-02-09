@@ -1,10 +1,8 @@
-package io.bingbin.bingbinandroid.views.Login;
+package io.bingbin.bingbinandroid.views.loginActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,12 +14,11 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.bingbin.bingbinandroid.MainActivity;
+import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import okhttp3.Call;

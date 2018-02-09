@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_home"
-    tools:context="io.bingbin.bingbinandroid.HomeFragment">
+    tools:context="io.bingbin.bingbinandroid.views.mainActivity.HomeFragment">
 
     <TextView
         android:id="@+id/tv_home_welcome"

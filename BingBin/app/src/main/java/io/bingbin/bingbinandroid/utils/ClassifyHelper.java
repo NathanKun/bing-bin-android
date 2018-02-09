@@ -6,17 +6,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import io.bingbin.bingbinandroid.MainActivity;
 import io.bingbin.bingbinandroid.tensorflow.Classifier;
 import io.bingbin.bingbinandroid.tensorflow.TensorFlowImageClassifier;
 import io.bingbin.bingbinandroid.tensorflow.env.ImageUtils;
