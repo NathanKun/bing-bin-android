@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -20,6 +21,7 @@ import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -58,6 +60,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     @BindView(R.id.login_progress_bar)
     ProgressBar loginProgressBar;
 
+
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
     SmartLoginConfig config;
@@ -68,20 +71,16 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         private final WeakReference<LoginActivity> mTarget;
 
         LoginHandler(LoginActivity target) {
-            mTarget = new WeakReference<LoginActivity>(target);
+            mTarget = new WeakReference<>(target);
         }
 
-        void login() {
+        @Override
+        public void handleMessage(Message msg) {
             LoginActivity target = mTarget.get();
             if (target != null) {
-                target.login();
+                target.finishLogin();
             }
         }
-    }
-
-    private void login() {
-        smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-        smartLogin.login(config);
     }
 
     @Override
@@ -89,7 +88,6 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        setListeners();
 
         // config smart login
         config = new SmartLoginConfig(this, this);
@@ -113,6 +111,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser) currentUser).getProfileName());
             if (currentUser instanceof SmartGoogleUser)
                 Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
+
             toMainActivity();
         }
     }
@@ -124,75 +123,31 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             smartLogin.onActivityResult(requestCode, resultCode, data, config);
         }
     }
-
-    private void setListeners() {
-        facebookLoginButton.setOnClickListener((v) -> {
-            // Perform Facebook login
-            smartLogin = SmartLoginFactory.build(LoginType.Facebook);
-            smartLogin.login(config);
-        });
-
-        googleLoginButton.setOnClickListener((v) -> {
-            // Perform Google login
-            smartLogin = SmartLoginFactory.build(LoginType.Google);
-            smartLogin.login(config);
-
-        });
-
-        customSigninButton.setOnClickListener((v) -> {
-            // Perform custom sign in
-            (new Thread(){
-                @Override
-                public void run(){
-                    BingBinHttp bbh = new BingBinHttp();
-                    try {
-                        Response response = bbh.test();
-                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                        Headers responseHeaders = response.headers();
-                        for (int i = 0; i < responseHeaders.size(); i++) {
-                            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                        }
-
-                        System.out.println(response.body().string());
-
-                        myHandler.login();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        });
-
-        customSignupButton.setOnClickListener((v) -> {
-            // Perform custom sign up
-            smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-            smartLogin.login(config);
-        });
-    }
-
     @Override
     public void onLoginSuccess(SmartUser user) {
+        // hide loader, enable touch
+        loginProgressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
         Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
         refreshLayout();
     }
 
     @Override
     public void onLoginFailure(SmartLoginException e) {
+        // hide loader, enable touch
+        loginProgressBar.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public SmartUser doCustomLogin() {
-        // TODO: get email and password, http request, receive token and user infos
-
         SmartUser user = new SmartUser();
         user.setEmail(emailEditText.getText().toString());
         // TODO: other setters
 
-
-
-        runOnUiThread((() -> loginProgressBar.setVisibility(View.GONE)));
         return user;
     }
 
@@ -201,9 +156,43 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         return doCustomLogin();
     }
 
+    private void finishLogin() {
+        smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+        smartLogin.login(config);
+    }
+
     private void toMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
+
+    @OnClick({R.id.custom_signup_button, R.id.custom_signin_button, R.id.google_login_button, R.id.facebook_login_button})
+    public void setOnClick(View view) {
+        loginProgressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        switch (view.getId()){
+            case R.id.custom_signup_button:
+                smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+                smartLogin.login(config);
+                break;
+            case R.id.custom_signin_button:
+                BingBinHttp bbh = new BingBinHttp();
+                bbh.test(myHandler);
+                break;
+            case R.id.google_login_button:
+                // Perform Google login
+                smartLogin = SmartLoginFactory.build(LoginType.Google);
+                smartLogin.login(config);
+                break;
+            case R.id.facebook_login_button:
+                // Perform Facebook login
+                smartLogin = SmartLoginFactory.build(LoginType.Facebook);
+                smartLogin.login(config);
+                break;
+        }
+    }
+
 }

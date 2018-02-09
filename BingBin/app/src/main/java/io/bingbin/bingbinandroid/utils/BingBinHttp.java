@@ -1,5 +1,7 @@
 package io.bingbin.bingbinandroid.utils;
 
+import android.os.Handler;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -19,11 +21,31 @@ import okhttp3.Response;
 public class BingBinHttp {
     private final OkHttpClient client = new OkHttpClient();
 
-    public Response test() throws Exception {
-        Request request = new Request.Builder()
-                .url("http://publicobject.com/helloworld.txt")
-                .build();
+    public void test(Handler handler) {
 
-        return client.newCall(request).execute();
+        (new Thread(){
+            @Override
+            public void run(){
+                try {
+                    Request request = new Request.Builder()
+                    .url("http://publicobject.com/helloworld.txt")
+                    .build();
+
+                    Response response = client.newCall(request).execute();
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                    Headers responseHeaders = response.headers();
+                    for (int i = 0; i < responseHeaders.size(); i++) {
+                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                    }
+
+                    System.out.println(response.body().string());
+
+                    handler.obtainMessage().sendToTarget();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
