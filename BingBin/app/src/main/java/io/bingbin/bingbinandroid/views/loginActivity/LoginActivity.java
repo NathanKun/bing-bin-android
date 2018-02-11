@@ -43,6 +43,10 @@ import studios.codelight.smartloginlibrary.util.SmartLoginException;
  */
 public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
+    private final int REGISTER = 233;
+    private final int CANCEL = 2333;
+    private final int SUCCESS = 23333;
+
     @BindView(R.id.email_edittext)
     EditText emailEditText;
     @BindView(R.id.password_edittext)
@@ -119,13 +123,25 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         super.onActivityResult(requestCode, resultCode, data);
         if (smartLogin != null) {
             smartLogin.onActivityResult(requestCode, resultCode, data, config);
+        } else if(requestCode == REGISTER) {
+            if(resultCode == CANCEL) {
+                Log.d("register activity ended", "cancel");
+                showLoader(false);
+                return;
+            }
+            if(resultCode == SUCCESS) {
+                Log.d("register activity ended", "success");
+                showLoader(false);
+                String token = data.getStringExtra("token");
+                Log.d("register activity ended", token);
+                // TODO: Login by token
+            }
         }
     }
     @Override
     public void onLoginSuccess(SmartUser user) {
         // hide loader, enable touch
-        loginProgressBar.setVisibility(View.GONE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        showLoader(false);
 
         Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
         refreshLayout();
@@ -134,8 +150,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     @Override
     public void onLoginFailure(SmartLoginException e) {
         // hide loader, enable touch
-        loginProgressBar.setVisibility(View.GONE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        showLoader(false);
 
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
@@ -166,16 +181,15 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     }
 
     @OnClick({R.id.custom_signup_button, R.id.custom_signin_button, R.id.google_login_button, R.id.facebook_login_button})
-    public void setOnClick(View view) {
-        loginProgressBar.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    void setOnClick(View view) {
+        showLoader(true);
 
         switch (view.getId()){
             case R.id.custom_signup_button:
-                smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-                smartLogin.login(config);
+                Intent intent = new Intent(this, RegisterActivity.class);
+                startActivityForResult(intent, REGISTER);
                 break;
+
             case R.id.custom_signin_button:
                 BingBinHttp bbh = new BingBinHttp();
                 bbh.test2(new Callback() {
@@ -198,11 +212,13 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                     }
                 });
                 break;
+
             case R.id.google_login_button:
                 // Perform Google login
                 smartLogin = SmartLoginFactory.build(LoginType.Google);
                 smartLogin.login(config);
                 break;
+
             case R.id.facebook_login_button:
                 // Perform Facebook login
                 smartLogin = SmartLoginFactory.build(LoginType.Facebook);
@@ -211,4 +227,14 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         }
     }
 
+    private void showLoader(boolean show) {
+        if(show) {
+            loginProgressBar.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            loginProgressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
 }

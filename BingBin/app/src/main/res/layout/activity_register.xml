@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="io.bingbin.bingbinandroid.views.loginActivity.RegisterActivity">
+
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/login_logo"
@@ -14,7 +15,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:contentDescription="login_logo"
-        app:layout_constraintBottom_toTopOf="@+id/cardViewLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,6 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/bottom_glass" />
 
+
     <android.support.v7.widget.CardView
         android:id="@+id/cardViewLogin"
         android:layout_width="match_parent"
@@ -39,12 +40,14 @@
         android:layout_margin="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@color/white"
         app:cardCornerRadius="4dp"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toTopOf="@+id/login_bottom_glass"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_logo">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,82 +56,57 @@
             android:padding="8dp">
 
             <EditText
-                android:id="@+id/email_edittext"
+                android:id="@+id/email_register_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="Email"
                 android:inputType="textEmailAddress" />
+            <EditText
+                android:id="@+id/name_register_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Nom du profil"
+                android:inputType="textEmailAddress" />
 
             <EditText
-                android:id="@+id/password_edittext"
+                android:id="@+id/password_registger_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="Password"
+                android:hint="Mot de passe"
                 android:inputType="textPassword" />
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/password2_registger_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
+                android:hint="Confirmation du mot de passe"
+                android:inputType="textPassword" />
 
-                <Button
-                    android:id="@+id/custom_signin_button"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:tag="custom_login_button"
-                    android:text="@string/sign_in"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/custom_signup_button"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:tag="custom_signup_button"
-                    android:text="@string/sign_up_button"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/hint_register_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:visibility="visible" />
 
-                <Button
-                    android:id="@+id/facebook_login_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_facebook_white_36dp"
-                    android:tag="facebook_login_button"
-                    android:text="@string/sign_in_facebook"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/google_login_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_google_plus_white_36dp"
-                    android:tag="google_login_button"
-                    android:text="@string/sign_in_google"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
+            <Button
+                android:id="@+id/signup_register_button"
+                android:layout_width="200dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:tag="custom_signup_button"
+                android:text="CONFIRME"
+                android:textColor="@color/white" />
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
     <ProgressBar
-        android:id="@+id/login_progress_bar"
+        android:id="@+id/register_progress_bar"
         style="@android:style/Widget.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

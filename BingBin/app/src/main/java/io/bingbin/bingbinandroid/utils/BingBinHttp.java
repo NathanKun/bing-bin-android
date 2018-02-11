@@ -6,9 +6,11 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -21,41 +23,22 @@ import okhttp3.Response;
 public class BingBinHttp {
     private final OkHttpClient client = new OkHttpClient();
 
-    public void test(Handler handler) {
-
-        (new Thread(){
-            @Override
-            public void run(){
-                try {
-                    Request request = new Request.Builder()
-                            .url("http://publicobject.com/helloworld.txt")
-                            .build();
-
-                    Response response = client.newCall(request).execute();
-                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                    Headers responseHeaders = response.headers();
-                    for (int i = 0; i < responseHeaders.size(); i++) {
-                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                    }
-
-                    System.out.println(response.body().string());
-
-                    handler.obtainMessage().sendToTarget();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    public void test2(Callback call) {
+    public void register(Callback callback, String email, String firstname, String password) {
         try {
-            Request request = new Request.Builder()
-                    .url("http://publicobject.com/helloworld.txt")
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("pseudo",email + firstname)
+                    .add("email",email)
+                    .add("password",password)
+                    .add("name","NA")
+                    .add("firstname",firstname)
                     .build();
 
-            client.newCall(request).enqueue(call);
+            Request request = new Request.Builder()
+                    .url("https://bingbin.io/index.php/app/registerValidation")
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
         } catch (Exception e) {
             e.printStackTrace();
         }
