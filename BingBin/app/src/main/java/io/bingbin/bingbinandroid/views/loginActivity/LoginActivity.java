@@ -9,21 +9,25 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
+import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.Response;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
@@ -35,6 +39,7 @@ import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
 import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 import studios.codelight.smartloginlibrary.util.SmartLoginException;
+import studios.codelight.smartloginlibrary.util.UserUtil;
 
 /**
  * Login activity.
@@ -61,29 +66,16 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     Button googleLoginButton;
     @BindView(R.id.login_progress_bar)
     ProgressBar loginProgressBar;
+    @BindView(R.id.hint_login_textview)
+    TextView hintLoginTextview;
 
 
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
     SmartLoginConfig config;
     SmartLogin smartLogin;
-    /*
-    LoginHandler myHandler = new LoginHandler(this);
-    static class LoginHandler extends Handler {
-        private final WeakReference<LoginActivity> mTarget;
 
-        LoginHandler(LoginActivity target) {
-            mTarget = new WeakReference<>(target);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            LoginActivity target = mTarget.get();
-            if (target != null) {
-                target.finishLogin();
-            }
-        }
-    }*/
+    JSONObject userData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,13 +115,13 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         super.onActivityResult(requestCode, resultCode, data);
         if (smartLogin != null) {
             smartLogin.onActivityResult(requestCode, resultCode, data, config);
-        } else if(requestCode == REGISTER) {
-            if(resultCode == CANCEL) {
+        } else if (requestCode == REGISTER) {
+            if (resultCode == CANCEL) {
                 Log.d("register activity ended", "cancel");
                 showLoader(false);
                 return;
             }
-            if(resultCode == SUCCESS) {
+            if (resultCode == SUCCESS) {
                 Log.d("register activity ended", "success");
                 showLoader(false);
                 String token = data.getStringExtra("token");
@@ -138,6 +130,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             }
         }
     }
+
     @Override
     public void onLoginSuccess(SmartUser user) {
         // hide loader, enable touch
@@ -157,21 +150,17 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     @Override
     public SmartUser doCustomLogin() {
-        SmartUser user = new SmartUser();
-        user.setEmail(emailEditText.getText().toString());
-        // TODO: other setters
-
-        return user;
+        try {
+            return UserUtil.populateBingBinUser(userData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return new SmartUser();
+        }
     }
 
     @Override
     public SmartUser doCustomSignup() {
         return doCustomLogin();
-    }
-
-    private void finishLogin() {
-        smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-        smartLogin.login(config);
     }
 
     private void toMainActivity() {
@@ -184,33 +173,73 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     void setOnClick(View view) {
         showLoader(true);
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.custom_signup_button:
                 Intent intent = new Intent(this, RegisterActivity.class);
                 startActivityForResult(intent, REGISTER);
                 break;
 
             case R.id.custom_signin_button:
+                String email = emailEditText.getText().toString();
+                String pwd = passwordEditText.getText().toString();
+                if(StringUtils.isAnyBlank(email, pwd)) {
+                    hintLoginTextview.setText("Veuillez entrer votre email et votre mot de pass");
+                    showLoader(false);
+                    return;
+                }
+
+
                 BingBinHttp bbh = new BingBinHttp();
-                bbh.test2(new Callback() {
-                    //请求失败执行的方法
+                Callback callback = new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        runOnUiThread(() -> finishLogin());
+                        runOnUiThread(() -> {
+                            hintLoginTextview.setText("Erreur de connexion");
+                            showLoader(false);
+                        });
                     }
-                    //请求成功执行的方法
+
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-                        Headers responseHeaders = response.headers();
-                        for (int i = 0; i < responseHeaders.size(); i++) {
-                            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                        }
+                        if (!response.isSuccessful()){
+                            runOnUiThread(() -> hintLoginTextview.setText("Request not success"));
+                        } else {
+                            String hint = "";
+                            String token = "";
 
-                        System.out.println(response.body().string());
-                        runOnUiThread(() -> finishLogin());
+                            // check login result
+                            try {
+                                JSONObject json = new JSONObject(response.body().string());
+                                if (json.getBoolean("valid")) {
+                                    token = json.getString("token");
+                                    userData = json.getJSONObject("data");
+                                } else {
+                                    hint = json.getString("error");
+                                }
+                            } catch (JSONException e) {
+                                hint = "Response JSON error";
+                                e.printStackTrace();
+                            }
+
+                            // if login failed, end
+                            if (StringUtils.isNotBlank(hint)) {
+                                String finalHint = hint;
+                                runOnUiThread(() -> {
+                                    hintLoginTextview.setText(finalHint);
+                                    showLoader(false);
+                                });
+                                return;
+                            }
+
+                            // if login success
+                            runOnUiThread(() -> {
+                                smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+                                smartLogin.login(config);
+                            });
+                        }
                     }
-                });
+                };
+                bbh.login(callback, emailEditText.getText().toString(), passwordEditText.getText().toString());
                 break;
 
             case R.id.google_login_button:
@@ -228,7 +257,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     }
 
     private void showLoader(boolean show) {
-        if(show) {
+        if (show) {
             loginProgressBar.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -237,4 +266,5 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
+
 }

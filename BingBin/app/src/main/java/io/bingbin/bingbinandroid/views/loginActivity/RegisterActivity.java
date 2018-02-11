@@ -53,8 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         ButterKnife.bind(this);
-
-        hintRegisterTextView.setTextColor(Color.RED);
     }
 
     @OnClick(R.id.signup_register_button)
@@ -64,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         String pwd = passwordRegistgerEdittext.getText().toString();
         String pwd2 = password2RegistgerEdittext.getText().toString();
         if(StringUtils.isAnyBlank(email, firstname, pwd, pwd2)) {
-            hintRegisterTextView.setText("Veuillez renseigner tous les champs.");
+            hintRegisterTextView.setText("Veuillez renseigner tous les champs");
             return;
         }
         if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -72,11 +70,11 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
         if(!pwd.equals(pwd2)) {
-            hintRegisterTextView.setText("Les mots de passe sont différents.");
+            hintRegisterTextView.setText("Les mots de passe sont différents");
             return;
         }
         if(pwd.length() < 6) {
-            hintRegisterTextView.setText("Le mots de passe est trop court.");
+            hintRegisterTextView.setText("Le mots de passe est trop court");
             return;
         }
         registerProgressBar.setVisibility(View.VISIBLE);
@@ -88,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    hintRegisterTextView.setText("Erreur de connexion.");
+                    hintRegisterTextView.setText("Erreur de connexion");
                     registerProgressBar.setVisibility(View.GONE);});
             }
 

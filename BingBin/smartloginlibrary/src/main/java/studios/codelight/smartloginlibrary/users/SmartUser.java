@@ -20,6 +20,8 @@ public class SmartUser implements Serializable{
 
     private String avatarUrl;
     private String token;
+    private String pseudo;
+    private String eco_point;
 
     public SmartUser() {
     }
@@ -104,6 +106,22 @@ public class SmartUser implements Serializable{
 
     public void setToken(String token) { this.token = token; }
 
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    public String getEco_point() {
+        return eco_point;
+    }
+
+    public void setEco_point(String eco_point) {
+        this.eco_point = eco_point;
+    }
+
     @Override
     public String toString() {
         return "SmartUser{" +
@@ -118,6 +136,8 @@ public class SmartUser implements Serializable{
                 ", profileLink='" + profileLink + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", token='" + token + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                ", eco_point='" + eco_point + '\'' +
                 '}';
     }
 }

@@ -19,6 +19,22 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
  */
 public class UserUtil {
 
+
+    public static SmartUser populateBingBinUser(JSONObject data) throws JSONException {
+        SmartUser user = new SmartUser();
+        user.setUserId(data.getString("id"));
+        user.setLastName(data.getString("name"));
+        user.setFirstName(data.getString("firstname"));
+        user.setEco_point(data.getString("eco_point"));
+        user.setEmail(data.getString("email"));
+        user.setAvatarUrl(data.getString("img_url"));
+        user.setBirthday(data.getString("date_nais"));
+        user.setPseudo(data.getString("pseudo"));
+
+        Log.d("Populate BingBin User", user.toString());
+        return user;
+    }
+
     public static SmartGoogleUser populateGoogleUser(GoogleSignInAccount account){
         //Create a new google user
         SmartGoogleUser googleUser = new SmartGoogleUser();

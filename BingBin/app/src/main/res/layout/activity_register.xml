@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="Nom du profil"
+                android:hint="Pseudo"
                 android:inputType="textEmailAddress" />
 
             <EditText
@@ -90,7 +90,8 @@
                 android:id="@+id/hint_register_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:textColor="@color/red"/>
 
             <Button
                 android:id="@+id/signup_register_button"

@@ -22,19 +22,42 @@ import okhttp3.Response;
 
 public class BingBinHttp {
     private final OkHttpClient client = new OkHttpClient();
+    private final String baseUrl = "https://bingbin.io/index.php/";
 
+    // app/registerValidation
     public void register(Callback callback, String email, String firstname, String password) {
         try {
             RequestBody requestBody = new FormBody.Builder()
-                    .add("pseudo",email + firstname)
+                    .add("pseudo",firstname)
                     .add("email",email)
                     .add("password",password)
-                    .add("name","NA")
+                    .add("name",firstname)
                     .add("firstname",firstname)
                     .build();
 
             Request request = new Request.Builder()
-                    .url("https://bingbin.io/index.php/app/registerValidation")
+                    .url(baseUrl + "app/registerValidation")
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // app/loginAuthorize
+    public void login(Callback callback, String email, String password) {
+        try {
+            RequestBody requestBody = new FormBody.Builder()
+                    // TODO: Change pseudo to email
+                    //.add("email",email)
+                    .add("pseudo",email)
+                    .add("password",password)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(baseUrl + "app/loginAuthorize")
                     .post(requestBody)
                     .build();
 
