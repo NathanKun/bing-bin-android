@@ -2,6 +2,7 @@ package io.bingbin.bingbinandroid.utils;
 
 import android.os.Handler;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -17,7 +18,7 @@ import okhttp3.Response;
  * Http connection class for BingBin
  * Created by Junyang HE on 2018/1/31.
  *
- * @author Junyang HE
+ * @author Junyang HE, Yuzhou SONG
  */
 
 public class BingBinHttp {
@@ -58,6 +59,102 @@ public class BingBinHttp {
 
             Request request = new Request.Builder()
                     .url(baseUrl + "app/loginAuthorize")
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // Google/authorizeLogin
+    public void googleLogin(Callback callback, String googleToken){
+        try {
+            Request request = new Request.Builder()
+                    .url(baseUrl + "app/loginAuthorize" + googleToken)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // Facebook/authorizeLogin
+    public void facebookLogin(Callback callback, String facebookToken){
+        try {
+            Request request = new Request.Builder()
+                    .url(baseUrl + "app/loginAuthorize" + facebookToken)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // Rankinkg/getLadder
+    public void getLadder(Callback callback, String BingBinToken, String Duration) {
+        try {
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("BingBinToken",BingBinToken)
+                    .add("Duration",Duration)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(baseUrl + "Rankinkg/getLadder")
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // app/getmyinfo
+    public void getMyInfo(Callback callback, String BingBinToken) {
+        try {
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("BingBinToken",BingBinToken)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(baseUrl + "app/getmyinfo")
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // app/uploadscan
+    public void getMyInfo(Callback callback, String BingBinToken, String trashName, String trashCategory, File image) {
+        try {
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("BingBinToken",BingBinToken)
+                    .add("trashName",trashName)
+                    .add("trashCategory",trashCategory)
+                    .add("image",image)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(baseUrl + "app/uploadscan")
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // app/gettrashescategories
+    public void getTrashesCategories(Callback callback, String BingBinToken) {
+        try {
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("BingBinToken",BingBinToken)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(baseUrl + "app/gettrashescategories")
                     .post(requestBody)
                     .build();
 
