@@ -16,6 +16,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.apache.commons.lang3.StringUtils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import studios.codelight.smartloginlibrary.LoginType;
@@ -32,9 +35,17 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
  *
  * @author Junyang HE
  */
-public class UserFragment extends Fragment {
+public class RankFragment extends Fragment {
 
-    public UserFragment() {
+    @BindView(R.id.logout_btn)
+    Button logoutBtn;
+    @BindView(R.id.useravatar_draweeview)
+    SimpleDraweeView userAvatar;
+    @BindView(R.id.username_textview)
+    TextView usernameTextview;
+    private Unbinder unbinder;
+
+    public RankFragment() {
         // Required empty public constructor
     }
 
@@ -42,10 +53,10 @@ public class UserFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment UserFragment.
+     * @return A new instance of fragment RankFragment.
      */
-    public static UserFragment newInstance() {
-        return new UserFragment();
+    public static RankFragment newInstance() {
+        return new RankFragment();
     }
 
     @Override
@@ -56,21 +67,17 @@ public class UserFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
         String avatarUrl = activity.getCurrentUser().getAvatarUrl();
-        if(StringUtils.isNotBlank(avatarUrl)) {
+        if (StringUtils.isNotBlank(avatarUrl)) {
             Uri uri = Uri.parse(avatarUrl);
-            SimpleDraweeView avatar = activity.findViewById(R.id.user_avatar);
-            avatar.setImageURI(uri);
+            userAvatar.setImageURI(uri);
         }
         // if user has no avatar, do nothing, keep the default image holder
 
         // show user info
-        TextView userName = activity.findViewById(R.id.user_name);
-        userName.setText(activity.getCurrentUser().getUsername());
+        usernameTextview.setText(activity.getCurrentUser().getUsername());
 
-        // show logout button
-        Button logoutButton = activity.findViewById(R.id.logout_button);
-        // listener
-        logoutButton.setOnClickListener(v -> {
+        // logout button listener
+        logoutBtn.setOnClickListener(v -> {
             SmartUser currentUser = activity.getCurrentUser();
             SmartLogin smartLogin;
             if (currentUser != null) {
@@ -97,6 +104,14 @@ public class UserFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_rank, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

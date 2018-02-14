@@ -29,8 +29,8 @@
     <string name="imageview_preview_description">preview image for recognition</string>
     <string name="camera_icon">camera icon</string>
     <string name="blur_image">Blur image</string>
-    <string name="btn_recycle">Recycle</string>
-    <string name="done">Done</string>
+    <string name="btn_recycle">Recycler mon déchet</string>
+    <string name="btn_trier">Trier</string>
     <string name="recycle_it">Recycle it</string>
     <string name="trashbin_image_description">Trash bin with color</string>
 </resources>

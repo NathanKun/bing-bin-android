@@ -2,13 +2,18 @@ package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 
 
@@ -19,20 +24,29 @@ import io.bingbin.bingbinandroid.R;
  *
  * @author Junyang HE
  */
-public class CameraBlankFragment extends Fragment {
-    private MainActivity activity;
+public class WelcomeFragment extends Fragment {
 
-    public CameraBlankFragment() {
+    @BindView(R.id.welcome_image_btn)
+    Button welcomeImageBtn;
+    @BindView(R.id.welcome_camera_btn)
+    Button welcomeCameraBtn;
+    @BindView(R.id.home_welcome_textview)
+    TextView homeWelcomeTextview;
+
+    private MainActivity activity;
+    private Unbinder unbinder;
+
+    public WelcomeFragment() {
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment CameraBlankFragment.
+     * @return A new instance of fragment WelcomeFragment.
      */
-    public static CameraBlankFragment newInstance() {
-        return new CameraBlankFragment();
+    public static WelcomeFragment newInstance() {
+        return new WelcomeFragment();
     }
 
     @Override
@@ -47,23 +61,35 @@ public class CameraBlankFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_camera, container, false);
+        View view = inflater.inflate(R.layout.fragment_welcome, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         // button to start gallery
-        Button btnGallery = activity.findViewById(R.id.btn_gallery);
-        btnGallery.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        welcomeImageBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             activity.startActivityForResult(intent, activity.GALLERY_PICTURE);
         });
 
         // button to start camera activity
-        Button btnTakePhoto = activity.findViewById(R.id.btn_takephoto);
-        btnTakePhoto.setOnClickListener(view -> {
+        welcomeCameraBtn.setOnClickListener(view -> {
             activity.startClassifyActivity(""); // no uri, so ClassifyActivity will start CameraActivity
         });
+    }
+
+    @Override
+    public void onActivityCreated(Bundle b) {
+        super.onActivityCreated(b);
+        homeWelcomeTextview.setText(String.format(activity.getResources().getString(R.string.home_homefragment), activity.getCurrentUser().getFirstName()));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

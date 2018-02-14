@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintlayout_classify"
+    android:id="@+id/constraintlayout_classify_master"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity">
@@ -11,56 +11,171 @@
         android:id="@+id/iv_classify_blurimg"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/blur_image"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@color/primary_color" />
 
-    <View
-        android:id="@+id/rectangle_classify"
-        android:layout_width="0dp"
-        android:layout_height="152dp"
-        android:layout_marginBottom="24dp"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintlayout_classify_select"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/classify_result_rectangle"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_classify_blurimg"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_classify_blurimg"
-        app:layout_constraintVertical_bias="0.933" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Spinner
-        android:id="@+id/spinner_classify_category"
-        android:layout_width="219dp"
-        android:layout_height="53dp"
+        <View
+            android:id="@+id/rectangle_classify"
+            android:layout_width="0dp"
+            android:layout_height="152dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/classify_result_rectangle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.871" />
+
+        <Spinner
+            android:id="@+id/spinner_classify_category"
+            android:layout_width="219dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/rectangle_classify"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_classify"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_classify"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_classify"
+            app:layout_constraintVertical_bias="0.144" />
+
+        <Button
+            android:id="@+id/btn_classify_confirmresult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="OK"
+            app:layout_constraintBottom_toBottomOf="@+id/rectangle_classify"
+            app:layout_constraintEnd_toEndOf="@+id/rectangle_classify"
+            app:layout_constraintStart_toStartOf="@+id/rectangle_classify"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_classify_category" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintlayout_classify_instruction"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/rectangle_classify"
-        app:layout_constraintEnd_toEndOf="@+id/rectangle_classify"
-        app:layout_constraintStart_toStartOf="@+id/rectangle_classify"
-        app:layout_constraintTop_toTopOf="@+id/rectangle_classify"
-        app:layout_constraintVertical_bias="0.144" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/btn_classify_confirmresult"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/btn_recycle"
-        app:layout_constraintBottom_toBottomOf="@+id/rectangle_classify"
-        app:layout_constraintEnd_toEndOf="@+id/rectangle_classify"
-        app:layout_constraintStart_toStartOf="@+id/rectangle_classify"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_classify_category" />
 
+        <TextView
+            android:id="@+id/tv_instruction_title"
+            android:layout_width="217dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textColor="@color/primary_color"
+            android:elevation="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rectangle_classify2" />
+
+        <ImageView
+            android:id="@+id/iv_instruction_trashbin"
+            android:layout_width="139dp"
+            android:layout_height="162dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/trashbin_image_description"
+            android:elevation="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_instruction_title"
+            app:srcCompat="@color/cardview_shadow_end_color" />
+
+        <Button
+            android:id="@+id/instruction_trier_btn"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/primary_color"
+            android:text="@string/btn_trier"
+            android:textColor="@color/white"
+            android:elevation="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_instruction_trashbin" />
+
+        <Button
+            android:id="@+id/instruction_recycle_btn"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/lightblue"
+            android:text="@string/recycle_it"
+            android:textColor="@color/white"
+            android:elevation="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/rectangle_classify2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instruction_trier_btn"
+            app:layout_constraintVertical_bias="0.035" />
+
+        <View
+            android:id="@+id/rectangle_classify2"
+            android:layout_width="250dp"
+            android:layout_height="380dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/classify_result_rectangle"
+            android:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.496" />
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>
