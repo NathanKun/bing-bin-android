@@ -3,11 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BingBin.iml" filepath="$PROJECT_DIR$/BingBin.iml" />
-      <module fileurl="file://C:\GitRepo\BingBin_Android\BingBin\BingBin.iml" filepath="C:\GitRepo\BingBin_Android\BingBin\BingBin.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\GitRepo\BingBin_Android\BingBin\app\app.iml" filepath="C:\GitRepo\BingBin_Android\BingBin\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/smartloginlibrary/smartloginlibrary.iml" filepath="$PROJECT_DIR$/smartloginlibrary/smartloginlibrary.iml" />
-      <module fileurl="file://C:\GitRepo\BingBin_Android\BingBin\smartloginlibrary\smartloginlibrary.iml" filepath="C:\GitRepo\BingBin_Android\BingBin\smartloginlibrary\smartloginlibrary.iml" />
     </modules>
   </component>
 </project>
