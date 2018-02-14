@@ -123,16 +123,17 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             smartLogin.onActivityResult(requestCode, resultCode, data, config);
         } else if (requestCode == REGISTER) {
             if (resultCode == CANCEL) {
-                Log.d("register activity ended", "cancel");
+                Log.d("register activity", "cancel");
                 showLoader(false);
                 return;
             }
             if (resultCode == SUCCESS) {
-                Log.d("register activity ended", "success");
-                showLoader(false);
                 String resultToken = data.getStringExtra("token");
-                Log.d("register activity ended", resultToken);
+                Log.d("register activity", resultToken);
                 token = resultToken;
+                // login directly
+                smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+                smartLogin.login(config);
             }
         }
     }

@@ -33,6 +33,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".views.loginActivity.RegisterActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".views.mainActivity.MainActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -62,8 +65,6 @@
             android:name="com.afollestad.materialcamera.CaptureActivity2"
             android:theme="@style/MaterialCamera.CaptureActivity" />
         <activity android:name=".views.classifyActivity.ClassifyActivity" />
-        <activity android:name=".views.mainActivity.InstructionActivity" />
-        <activity android:name=".views.loginActivity.RegisterActivity"></activity>
     </application>
 
 </manifest>

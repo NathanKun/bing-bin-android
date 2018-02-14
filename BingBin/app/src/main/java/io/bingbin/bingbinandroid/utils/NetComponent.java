@@ -9,6 +9,7 @@ import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import studios.codelight.smartloginlibrary.util.UserUtil;
 
 /**
+ * Dagger component
  * Created by NathanKun on 2018/2/13.
  */
 
@@ -18,5 +19,4 @@ public interface NetComponent {
     void inject(MainActivity activity);
     void inject(LoginActivity activity);
     void inject(RegisterActivity activity);
-    void inject(UserUtil userUtil);
 }

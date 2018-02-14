@@ -7,18 +7,21 @@ import io.bingbin.bingbinandroid.R;
  */
 
 public enum TrashBinColor {
-    YELLOW(R.drawable.trashbin_yellow),
-    GREEN(R.drawable.trashbin_green),
-    BLUE(R.drawable.trashbin_blue),
-    BLACK(R.drawable.trashbin_black),
-    PINK(R.drawable.trashbin_pink),
-    OTHER(R.drawable.trashbin_black);
+    YELLOW(R.drawable.trashbin_yellow, "Jaune"),
+    GREEN(R.drawable.trashbin_green, "Vert"),
+    BLUE(R.drawable.trashbin_blue, "Bleu"),
+    BLACK(R.drawable.trashbin_black, "Black"),
+    PINK(R.drawable.trashbin_pink, "Rose"),
+    OTHER(R.drawable.trashbin_black, "Autre");
 
     private int imageResource;
+    private String frenchName;
 
-    TrashBinColor (int id) {
+    TrashBinColor (int id, String frenchName) {
         this.imageResource = id;
+        this.frenchName = frenchName;
     }
 
     public int getImageResource() { return this.imageResource; }
+    public String getFrenchName() { return this.frenchName; }
 }

@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
@@ -19,13 +17,13 @@ import io.bingbin.bingbinandroid.R;
  *
  * @author Junyang HE
  */
-public class EcoPointFragment extends Fragment {
+public class GetEcoPointFragment extends Fragment {
 
     private MainActivity activity;
 
     private Unbinder unbinder;
 
-    public EcoPointFragment() {
+    public GetEcoPointFragment() {
         // Required empty public constructor
     }
 
@@ -35,8 +33,8 @@ public class EcoPointFragment extends Fragment {
      *
      * @return A new instance of fragment EcoPointFragment.
      */
-    public static EcoPointFragment newInstance() {
-        return new EcoPointFragment();
+    public static GetEcoPointFragment newInstance() {
+        return new GetEcoPointFragment();
     }
 
     @Override
@@ -51,7 +49,7 @@ public class EcoPointFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ecopoint, container, false);
+        View view = inflater.inflate(R.layout.fragment_getecopoint, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

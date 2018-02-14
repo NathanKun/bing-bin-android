@@ -7,9 +7,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import io.bingbin.bingbinandroid.views.mainActivity.CameraBlankFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.HomeFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.UserFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.GetEcoPointFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.RecycleFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.WelcomeFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.EcoPointFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.RankFragment;
 
 /**
  * Adapter for ViewPager
@@ -32,11 +34,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return CameraBlankFragment.newInstance();
+                return EcoPointFragment.newInstance();
             case 1:
-                return HomeFragment.newInstance();
+                return WelcomeFragment.newInstance();
             case 2:
-                return UserFragment.newInstance();
+                return RankFragment.newInstance();
             default:
                 return null;
         }

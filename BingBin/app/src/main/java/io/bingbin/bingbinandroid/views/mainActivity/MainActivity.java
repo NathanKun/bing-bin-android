@@ -16,13 +16,11 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
+import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import studios.codelight.smartloginlibrary.UserSessionManager;
-import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
-import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 
 /**
@@ -34,13 +32,18 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
 public class MainActivity extends AppCompatActivity {
 
     protected final int GALLERY_PICTURE = 233;
+    private final int CLASSIFY = 6;
+    private final int CLASSIFY_END_TRIER = 66;
+    private final int CLASSIFY_END_RECYCLER = 666;
 
-    private SmartUser currentUser;
-    private boolean doubleBackToExitPressedOnce;
-    private ViewPager viewPager;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
     @BindView(R.id.navigation)
     BottomNavigationViewEx navigation;
+
+    private SmartUser currentUser;
     private MenuItem menuItem;
+    private boolean doubleBackToExitPressedOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +52,13 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         currentUser = UserSessionManager.getCurrentUser(this);
-        Log.d("SmartUser", currentUser.toString());
-        if (currentUser instanceof SmartFacebookUser)
-            Log.d("Smart Login", "Facebook ProfileName: " + ((SmartFacebookUser) currentUser).getProfileName());
-        if (currentUser instanceof SmartGoogleUser)
-            Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
+        Log.d("Main activity user", currentUser.toString());
 
         // init Fresco
-        if(!Fresco.hasBeenInitialized())
+        if (!Fresco.hasBeenInitialized())
             Fresco.initialize(this);
-        
+
         // init viewpager
-        viewPager = findViewById(R.id.viewpager);
         viewPager.addOnPageChangeListener(onPageChangeListner);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -70,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.enableItemShiftingMode(false);
         navigation.setTextVisibility(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_home);
-
+        navigation.setSelectedItemId(R.id.navigation_welcome);
     }
 
     // back twice to exit
@@ -93,12 +90,18 @@ public class MainActivity extends AppCompatActivity {
     // ============
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // CameraBlankFragment, Gallery btn, image selected, start ClassifyActivity
-        if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK
-                && null != data) {
+        Log.d("Classify End", String.valueOf(requestCode));
+        // WelcomeFragment, Gallery btn, image selected, start ClassifyActivity
+        if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK && null != data) {
             Uri uri = data.getData();
             assert uri != null;
             startClassifyActivity(uri.toString());
+        } else if(requestCode == CLASSIFY){
+            if(resultCode == CLASSIFY_END_RECYCLER) {
+                Log.d("Classify End", "To recycler fragment");
+            } else if(resultCode == CLASSIFY_END_TRIER){
+                Log.d("Classify End", "To trier fragment");
+            }
         }
     }
 
@@ -109,17 +112,16 @@ public class MainActivity extends AppCompatActivity {
     // bottom navigation listener
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_camara:
+                case R.id.navigation_ecopoint:
                     viewPager.setCurrentItem(0);
                     return true;
-                case R.id.navigation_home:
+                case R.id.navigation_welcome:
                     viewPager.setCurrentItem(1);
                     return true;
-                case R.id.navigation_user:
+                case R.id.navigation_rank:
                     viewPager.setCurrentItem(2);
                     return true;
             }
@@ -168,6 +170,6 @@ public class MainActivity extends AppCompatActivity {
         // start camera activity, with no uri, so ClassifyActivity will start camera activity.
         Intent intent = new Intent(this, ClassifyActivity.class);
         intent.putExtra("uri", uri);
-        startActivity(intent);
+        startActivityForResult(intent, CLASSIFY);
     }
 }

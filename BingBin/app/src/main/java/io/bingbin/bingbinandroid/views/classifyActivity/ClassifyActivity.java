@@ -1,5 +1,6 @@
 package io.bingbin.bingbinandroid.views.classifyActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -28,24 +29,51 @@ import com.afollestad.materialcamera.MaterialCamera;
 
 import java.io.File;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 import io.bingbin.bingbinandroid.utils.CommonUtil;
-import io.bingbin.bingbinandroid.views.mainActivity.InstructionActivity;
+import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 
 public class ClassifyActivity extends AppCompatActivity {
     private final int CAMERA_RQ = 2333;
     private final int PERMISSIONS_REQUEST = 23333;
+    private final int CLASSIFY_END = 6;
+    private final int CLASSIFY_END_TRIER = 66;
+    private final int CLASSIFY_END_RECYCLER = 666;
 
-    private ConstraintLayout cl;
+    @BindView(R.id.iv_classify_blurimg)
+    ImageView ivClassifyBlurimg;
+    @BindView(R.id.spinner_classify_category)
+    Spinner spinnerClassifyCategory;
+    @BindView(R.id.btn_classify_confirmresult)
+    Button btnClassifyConfirmresult;
+    @BindView(R.id.tv_instruction_title)
+    TextView tvInstructionTitle;
+    @BindView(R.id.iv_instruction_trashbin)
+    ImageView ivInstructionTrashbin;
+    @BindView(R.id.instruction_trier_btn)
+    Button instructionTrierBtn;
+    @BindView(R.id.instruction_recycle_btn)
+    Button instructionRecycleBtn;
+    @BindView(R.id.constraintlayout_classify_master)
+    ConstraintLayout constraintlayoutClassifyMaster;
+    @BindView(R.id.constraintlayout_classify_select)
+    ConstraintLayout constraintlayoutClassifySelect;
+    @BindView(R.id.constraintlayout_classify_instruction)
+    ConstraintLayout constraintlayoutClassifyInstruction;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classify);
-        cl = findViewById(R.id.constraintlayout_classify);
-        hideComponents();
+        ButterKnife.bind(this);
+
+        constraintlayoutClassifySelect.setVisibility(View.INVISIBLE);
+        constraintlayoutClassifyInstruction.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
         String uriStr = intent.getStringExtra("uri");
@@ -110,7 +138,6 @@ public class ClassifyActivity extends AppCompatActivity {
      * @param imgFile image file to show
      */
     private void initComponents(File imgFile) {
-        ImageView iv_blurImg = findViewById(R.id.iv_classify_blurimg);
         Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getPath());
         //iv_blurImg.setImageBitmap(bitmap);
 
@@ -135,19 +162,19 @@ public class ClassifyActivity extends AppCompatActivity {
             }
 
         };
-        Spinner categorySpinner = findViewById(R.id.spinner_classify_category);
+
         runOnUiThread(() -> {
-            categorySpinner.setAdapter(adapter);
+            spinnerClassifyCategory.setAdapter(adapter);
             // set selected to result
-            categorySpinner.setSelection(adapter.getPosition(Category.saveValueOf(resultStr)));
+            spinnerClassifyCategory.setSelection(adapter.getPosition(Category.saveValueOf(resultStr)));
         });
 
         // init btn "recycle"
         Button btn = findViewById(R.id.btn_classify_confirmresult);
-        btn.setOnClickListener((view) -> showRecycleInstruction((Category) categorySpinner.getSelectedItem()));
+        btn.setOnClickListener((view) -> showRecycleInstruction((Category) spinnerClassifyCategory.getSelectedItem()));
 
         // run after layout rendered, show blurred image
-        cl.post((new Runnable() {
+        constraintlayoutClassifySelect.post((new Runnable() {
             ImageView iv;
             Bitmap bm;
 
@@ -161,7 +188,8 @@ public class ClassifyActivity extends AppCompatActivity {
             public void run() {
                 final int ivWidth = iv.getMeasuredWidth();
                 final int ivHeight = iv.getMeasuredHeight();
-
+                Log.d("blur", String.valueOf(ivWidth));
+                Log.d("blur", String.valueOf(ivHeight));
                 bm = CommonUtil.scaleBitmapToCropFill(bm, ivHeight, ivWidth);
 
                 Bitmap blurImg = Bitmap.createBitmap(ivWidth, ivHeight, Bitmap.Config.ARGB_8888);
@@ -174,21 +202,39 @@ public class ClassifyActivity extends AppCompatActivity {
                 blurImg = CommonUtil.rsBlur(ClassifyActivity.this, blurImg, 25);
                 iv.setImageBitmap(blurImg);
 
-                showComponents();
+                constraintlayoutClassifySelect.setVisibility(View.VISIBLE);
             }
-        }).init(bitmap, iv_blurImg));
+        }).init(bitmap, ivClassifyBlurimg));
     }
 
     /**
-     * start InstructionActivity by sending category
+     * show instruction layout
      *
      * @param category category enum
      */
     private void showRecycleInstruction(Category category) {
-        Intent intent = new Intent(ClassifyActivity.this, InstructionActivity.class);
-        intent.putExtra("category", category);
-        startActivity(intent);
-        finish();
+        String title = "Poubelle " + category.getColor().getFrenchName();
+
+        tvInstructionTitle.setText(title);
+
+        Bitmap trashbinImg = BitmapFactory.decodeResource(getResources(), category.getColor().getImageResource());
+        ivInstructionTrashbin.setImageBitmap(trashbinImg);
+
+        Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        intent.putExtra("requestCode", CLASSIFY_END);
+
+        instructionTrierBtn.setOnClickListener(view -> {
+            setResult(CLASSIFY_END_TRIER, intent);
+            finish();
+        });
+        instructionRecycleBtn.setOnClickListener(view -> {
+            setResult(CLASSIFY_END_RECYCLER, intent);
+            finish();
+        });
+
+        constraintlayoutClassifyInstruction.setVisibility(View.VISIBLE);
+        constraintlayoutClassifySelect.setVisibility(View.GONE);
     }
 
     /**
@@ -196,12 +242,12 @@ public class ClassifyActivity extends AppCompatActivity {
      */
     private void startCameraActivity() {
         // check and request permission, onRequestPermissionsResult method in MainActivity
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     this.PERMISSIONS_REQUEST);
             return;
         }
@@ -214,13 +260,5 @@ public class ClassifyActivity extends AppCompatActivity {
                 .stillShot()
                 .allowRetry(true)
                 .start(CAMERA_RQ);
-    }
-
-    private void hideComponents() {
-        cl.setVisibility(ConstraintLayout.INVISIBLE);
-    }
-
-    private void showComponents() {
-        cl.setVisibility(ConstraintLayout.VISIBLE);
     }
 }
