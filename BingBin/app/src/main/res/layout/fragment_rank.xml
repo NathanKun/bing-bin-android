@@ -7,7 +7,7 @@
     tools:context="io.bingbin.bingbinandroid.views.mainActivity.RankFragment">
 
     <Button
-        android:id="@+id/logout_button"
+        android:id="@+id/logout_btn"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
@@ -22,7 +22,7 @@
         fresco:layout_constraintVertical_bias="0.81" />
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/user_avatar"
+        android:id="@+id/useravatar_draweeview"
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_marginBottom="8dp"
@@ -37,7 +37,7 @@
         fresco:placeholderImage="@drawable/com_facebook_profile_picture_blank_square" />
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/username_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

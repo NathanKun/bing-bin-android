@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="io.bingbin.bingbinandroid.views.loginActivity.RegisterActivity">
 
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/login_logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="48dp"
         android:contentDescription="login_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,16 +39,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/white"
         app:cardCornerRadius="4dp"
         app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/login_bottom_glass"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_logo">
+        app:layout_constraintTop_toBottomOf="@+id/login_logo"
+        app:layout_constraintVertical_bias="0.139">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,6 +66,7 @@
                 android:layout_marginBottom="16dp"
                 android:hint="Email"
                 android:inputType="textEmailAddress" />
+
             <EditText
                 android:id="@+id/name_register_edittext"
                 android:layout_width="match_parent"
@@ -90,8 +95,8 @@
                 android:id="@+id/hint_register_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:textColor="@color/red"/>
+                android:textColor="@color/red"
+                android:visibility="visible" />
 
             <Button
                 android:id="@+id/signup_register_button"
