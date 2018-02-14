@@ -20,9 +20,8 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
 public class UserUtil {
 
 
-    public static SmartUser populateBingBinUser(JSONObject data) throws JSONException {
+    public static SmartUser populateBingBinUser(JSONObject data, String bingbinToken) throws JSONException {
         SmartUser user = new SmartUser();
-        user.setUserId(data.getString("id"));
         user.setLastName(data.getString("name"));
         user.setFirstName(data.getString("firstname"));
         user.setEco_point(data.getString("eco_point"));
@@ -30,6 +29,7 @@ public class UserUtil {
         user.setAvatarUrl(data.getString("img_url"));
         user.setBirthday(data.getString("date_nais"));
         user.setPseudo(data.getString("pseudo"));
+        user.setToken(bingbinToken);
 
         Log.d("Populate BingBin User", user.toString());
         return user;
@@ -46,7 +46,7 @@ public class UserUtil {
         googleUser.setEmail(account.getEmail());
         googleUser.setIdToken(account.getIdToken());
         googleUser.setUserId(account.getId());
-        googleUser.setToken(account.getIdToken());
+
         if (account.getAccount() != null) {
             // googleUser.setUsername(account.getAccount().name);
             googleUser.setUsername(account.getDisplayName());
@@ -62,7 +62,7 @@ public class UserUtil {
         SmartFacebookUser facebookUser = new SmartFacebookUser();
         facebookUser.setGender(-1);
         facebookUser.setAccessToken(accessToken);
-        facebookUser.setToken(accessToken.getToken());
+
         try {
             if (object.has(Constants.FacebookFields.EMAIL))
                 facebookUser.setEmail(object.getString(Constants.FacebookFields.EMAIL));
@@ -102,13 +102,4 @@ public class UserUtil {
         }
         return facebookUser;
     }
-
-    public static SmartUser populateCustomUser(String username, String email, String userId){
-        SmartUser user = new SmartUser();
-        user.setEmail(email);
-        user.setUsername(username);
-        user.setUserId(userId);
-        return user;
-    }
-
 }

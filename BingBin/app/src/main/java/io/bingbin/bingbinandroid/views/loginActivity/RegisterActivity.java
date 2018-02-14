@@ -20,9 +20,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import okhttp3.Call;
@@ -33,6 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private final int CANCEL = 2333;
     private final int SUCCESS = 23333;
+
+    @Inject
+    BingBinHttp bbh;
 
     @BindView(R.id.email_register_edittext)
     EditText emailRegisterEdittext;
@@ -52,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        ((BingBinApp) getApplication()).getNetComponent().inject(this);
         ButterKnife.bind(this);
     }
 
@@ -134,7 +141,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
 
-        BingBinHttp bbh = new BingBinHttp();
         bbh.register(callback, email, firstname, pwd);
     }
 

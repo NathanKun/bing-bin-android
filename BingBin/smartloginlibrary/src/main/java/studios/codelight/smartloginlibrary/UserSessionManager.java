@@ -53,7 +53,7 @@ public class UserSessionManager {
         This is called from inside the SmartLoginActivity to save the
         current logged in user to the shared preferences.
     */
-    static boolean setUserSession(Context context, SmartUser smartUser){
+    public static boolean setUserSession(Context context, SmartUser smartUser){
         SharedPreferences preferences;
         SharedPreferences.Editor editor;
         if(smartUser != null) {

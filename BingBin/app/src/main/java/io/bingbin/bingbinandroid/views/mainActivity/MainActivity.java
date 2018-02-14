@@ -56,8 +56,9 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Smart Login", "Google DisplayName: " + ((SmartGoogleUser) currentUser).getDisplayName());
 
         // init Fresco
-        Fresco.initialize(this);
-
+        if(!Fresco.hasBeenInitialized())
+            Fresco.initialize(this);
+        
         // init viewpager
         viewPager = findViewById(R.id.viewpager);
         viewPager.addOnPageChangeListener(onPageChangeListner);
