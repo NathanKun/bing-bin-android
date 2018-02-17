@@ -5,4 +5,22 @@
     android:layout_height="match_parent"
     tools:context="io.bingbin.bingbinandroid.views.mainActivity.WelcomeFragment">
 
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/recycle_footer_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="login_bottom_glass"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/bottom_glass" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="recycle fgm"
+        tools:layout_editor_absoluteX="83dp"
+        tools:layout_editor_absoluteY="145dp" />
 </android.support.constraint.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import io.bingbin.bingbinandroid.views.mainActivity.GetEcoPointFragment;
@@ -19,6 +20,8 @@ import io.bingbin.bingbinandroid.views.mainActivity.RankFragment;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
+    private int count = 5;
+
     public ViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
@@ -26,7 +29,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     // Returns total number of pages
     @Override
     public int getCount() {
-        return 3;
+        return count;
     }
 
     // Returns the fragment to display for that page
@@ -39,6 +42,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return WelcomeFragment.newInstance();
             case 2:
                 return RankFragment.newInstance();
+            case 3:
+                return GetEcoPointFragment.newInstance();
+            case 4:
+                return RecycleFragment.newInstance();
             default:
                 return null;
         }
@@ -66,7 +73,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         super.destroyItem(container, position, object);
     }
 
+
     public Fragment getRegisteredFragment(int position) {
         return registeredFragments.get(position);
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+        this.notifyDataSetChanged();
     }
 }

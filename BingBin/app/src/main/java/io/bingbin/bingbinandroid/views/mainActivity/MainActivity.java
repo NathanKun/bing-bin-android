@@ -1,11 +1,14 @@
 package io.bingbin.bingbinandroid.views.mainActivity;
 
+import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,6 +20,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.models.SwipeDirection;
+import io.bingbin.bingbinandroid.utils.BingBinMainViewPager;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
 import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
@@ -37,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private final int CLASSIFY_END_RECYCLER = 666;
 
     @BindView(R.id.viewpager)
-    ViewPager viewPager;
+    BingBinMainViewPager viewPager;
     @BindView(R.id.navigation)
     BottomNavigationViewEx navigation;
 
     private SmartUser currentUser;
     private MenuItem menuItem;
     private boolean doubleBackToExitPressedOnce;
+    private ViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         // init viewpager
         viewPager.addOnPageChangeListener(onPageChangeListner);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
 
         // init bottom navigation
@@ -85,22 +91,26 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onSaveInstanceState(Bundle outState) { }
     // ============
     // On results
     // ============
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("Classify End", String.valueOf(requestCode));
         // WelcomeFragment, Gallery btn, image selected, start ClassifyActivity
         if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK && null != data) {
             Uri uri = data.getData();
             assert uri != null;
             startClassifyActivity(uri.toString());
         } else if(requestCode == CLASSIFY){
-            if(resultCode == CLASSIFY_END_RECYCLER) {
-                Log.d("Classify End", "To recycler fragment");
-            } else if(resultCode == CLASSIFY_END_TRIER){
+            if(resultCode == CLASSIFY_END_TRIER) {
                 Log.d("Classify End", "To trier fragment");
+                viewPager.setCurrentItem(3);
+            } else if(resultCode == CLASSIFY_END_RECYCLER){
+                Log.d("Classify End", "To recycler fragment");
+                viewPager.setCurrentItem(4);
             }
         }
     }
@@ -141,11 +151,18 @@ public class MainActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             if (menuItem != null) {
                 menuItem.setChecked(false);
-            } else {
-                navigation.getMenu().getItem(0).setChecked(false);
             }
-            menuItem = navigation.getMenu().getItem(position);
-            menuItem.setChecked(true);
+            if(position >= 3) { // when forth/fifth page, disable swiping left and right
+                viewPager.setAllowedSwipeDirection(SwipeDirection.NONE);
+            } else {
+                menuItem = navigation.getMenu().getItem(position); // for navigation, max index is 2
+                menuItem.setChecked(true);
+                if(position == 2) { // when on third page, block swiping right
+                    viewPager.setAllowedSwipeDirection(SwipeDirection.LEFT);
+                } else { // else allow all direction swiping
+                    viewPager.setAllowedSwipeDirection(SwipeDirection.ALL);
+                }
+            }
         }
 
         @Override
