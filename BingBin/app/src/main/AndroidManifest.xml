@@ -65,6 +65,10 @@
             android:name="com.afollestad.materialcamera.CaptureActivity2"
             android:theme="@style/MaterialCamera.CaptureActivity" />
         <activity android:name=".views.classifyActivity.ClassifyActivity" />
+        <activity
+            android:name=".views.instructionActivity.InstructionActivity"
+            android:label="@string/title_activity_instruction"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

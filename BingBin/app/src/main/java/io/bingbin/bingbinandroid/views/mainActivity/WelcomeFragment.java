@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,16 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
+import studios.codelight.smartloginlibrary.LoginType;
+import studios.codelight.smartloginlibrary.SmartLogin;
+import studios.codelight.smartloginlibrary.SmartLoginFactory;
+import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
+import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
+import studios.codelight.smartloginlibrary.users.SmartUser;
 
 
 /**
@@ -32,6 +41,8 @@ public class WelcomeFragment extends Fragment {
     Button welcomeCameraBtn;
     @BindView(R.id.home_welcome_textview)
     TextView homeWelcomeTextview;
+    @BindView(R.id.logout_btn)
+    Button logoutBtn;
 
     private MainActivity activity;
     private Unbinder unbinder;
@@ -91,5 +102,28 @@ public class WelcomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.logout_btn)
+    void logoutOnClick(View view) {
+        SmartUser currentUser = activity.getCurrentUser();
+        SmartLogin smartLogin;
+        if (currentUser != null) {
+            if (currentUser instanceof SmartFacebookUser) {
+                smartLogin = SmartLoginFactory.build(LoginType.Facebook);
+            } else if (currentUser instanceof SmartGoogleUser) {
+                smartLogin = SmartLoginFactory.build(LoginType.Google);
+            } else {
+                smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+            }
+            boolean result = smartLogin.logout(activity);
+            if (result) {
+                Intent intent = new Intent(activity, LoginActivity.class);
+                startActivity(intent);
+                activity.finish();
+            } else {
+                Log.d("Smart Login", "Logout failed");
+            }
+        }
     }
 }

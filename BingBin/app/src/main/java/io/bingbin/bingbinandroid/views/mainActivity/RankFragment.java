@@ -37,12 +37,6 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
  */
 public class RankFragment extends Fragment {
 
-    @BindView(R.id.logout_btn)
-    Button logoutBtn;
-    @BindView(R.id.useravatar_draweeview)
-    SimpleDraweeView userAvatar;
-    @BindView(R.id.username_textview)
-    TextView usernameTextview;
     private Unbinder unbinder;
 
     public RankFragment() {
@@ -60,6 +54,15 @@ public class RankFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_rank, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
     public void onActivityCreated(Bundle b) {
         super.onActivityCreated(b);
 
@@ -69,44 +72,13 @@ public class RankFragment extends Fragment {
         String avatarUrl = activity.getCurrentUser().getAvatarUrl();
         if (StringUtils.isNotBlank(avatarUrl)) {
             Uri uri = Uri.parse(avatarUrl);
-            userAvatar.setImageURI(uri);
+            //userAvatar.setImageURI(uri);
         }
         // if user has no avatar, do nothing, keep the default image holder
 
         // show user info
-        usernameTextview.setText(activity.getCurrentUser().getUsername());
+        //usernameTextview.setText(activity.getCurrentUser().getUsername());
 
-        // logout button listener
-        logoutBtn.setOnClickListener(v -> {
-            SmartUser currentUser = activity.getCurrentUser();
-            SmartLogin smartLogin;
-            if (currentUser != null) {
-                if (currentUser instanceof SmartFacebookUser) {
-                    smartLogin = SmartLoginFactory.build(LoginType.Facebook);
-                } else if (currentUser instanceof SmartGoogleUser) {
-                    smartLogin = SmartLoginFactory.build(LoginType.Google);
-                } else {
-                    smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-                }
-                boolean result = smartLogin.logout(activity);
-                if (result) {
-                    Intent intent = new Intent(activity, LoginActivity.class);
-                    startActivity(intent);
-                    activity.finish();
-                } else {
-                    Log.d("Smart Login", "Logout failed");
-                }
-            }
-        });
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_rank, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
     }
 
     @Override

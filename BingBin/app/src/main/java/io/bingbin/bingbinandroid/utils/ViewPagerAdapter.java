@@ -5,11 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import io.bingbin.bingbinandroid.views.mainActivity.GetEcoPointFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.RecycleFragment;
 import io.bingbin.bingbinandroid.views.mainActivity.WelcomeFragment;
 import io.bingbin.bingbinandroid.views.mainActivity.EcoPointFragment;
 import io.bingbin.bingbinandroid.views.mainActivity.RankFragment;
@@ -20,7 +18,7 @@ import io.bingbin.bingbinandroid.views.mainActivity.RankFragment;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    private int count = 5;
+    private int count = 4;
 
     public ViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
@@ -44,8 +42,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return RankFragment.newInstance();
             case 3:
                 return GetEcoPointFragment.newInstance();
-            case 4:
-                return RecycleFragment.newInstance();
             default:
                 return null;
         }

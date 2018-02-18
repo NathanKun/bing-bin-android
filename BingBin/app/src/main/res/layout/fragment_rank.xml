@@ -6,50 +6,50 @@
     android:layout_height="match_parent"
     tools:context="io.bingbin.bingbinandroid.views.mainActivity.RankFragment">
 
-    <Button
-        android:id="@+id/logout_btn"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="104dp"
-        android:text="@string/logout_text"
-        fresco:layout_constraintBottom_toBottomOf="parent"
-        fresco:layout_constraintEnd_toEndOf="parent"
-        fresco:layout_constraintStart_toStartOf="parent"
-        fresco:layout_constraintTop_toTopOf="parent"
-        fresco:layout_constraintVertical_bias="0.81" />
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/useravatar_draweeview"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        fresco:layout_constraintBottom_toTopOf="@+id/logout_button"
-        fresco:layout_constraintEnd_toEndOf="parent"
-        fresco:layout_constraintStart_toStartOf="parent"
-        fresco:layout_constraintTop_toTopOf="parent"
-        fresco:layout_constraintVertical_bias="0.238"
-        fresco:placeholderImage="@drawable/com_facebook_profile_picture_blank_square" />
-
-    <TextView
-        android:id="@+id/username_textview"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="user name"
-        android:textSize="24sp"
-        fresco:layout_constraintBottom_toTopOf="@+id/logout_button"
+        android:orientation="horizontal"
+        fresco:layout_constraintBottom_toTopOf="@+id/listView"
         fresco:layout_constraintEnd_toEndOf="parent"
         fresco:layout_constraintStart_toStartOf="parent"
-        fresco:layout_constraintTop_toBottomOf="@+id/user_avatar"
-        fresco:layout_constraintVertical_bias="0.0" />
+        fresco:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Aujourd'hui" />
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Semaine" />
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Mois" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="395dp"
+        android:layout_height="516dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        fresco:layout_constraintBottom_toBottomOf="parent"
+        fresco:layout_constraintEnd_toEndOf="parent"
+        fresco:layout_constraintStart_toStartOf="parent"
+        fresco:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </android.support.constraint.ConstraintLayout>

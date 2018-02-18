@@ -35,6 +35,7 @@ import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 import io.bingbin.bingbinandroid.utils.CommonUtil;
+import io.bingbin.bingbinandroid.views.instructionActivity.InstructionActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 
 public class ClassifyActivity extends AppCompatActivity {
@@ -64,6 +65,7 @@ public class ClassifyActivity extends AppCompatActivity {
     ConstraintLayout constraintlayoutClassifySelect;
     @BindView(R.id.constraintlayout_classify_instruction)
     ConstraintLayout constraintlayoutClassifyInstruction;
+    private Category category;
 
 
     @Override
@@ -142,7 +144,7 @@ public class ClassifyActivity extends AppCompatActivity {
         //iv_blurImg.setImageBitmap(bitmap);
 
         // classify
-        String resultStr = ClassifyHelper.classify(this, imgFile);
+        String classifyResultStr = ClassifyHelper.classify(this, imgFile);
 
         // Init spinner
         ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(
@@ -166,12 +168,15 @@ public class ClassifyActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             spinnerClassifyCategory.setAdapter(adapter);
             // set selected to result
-            spinnerClassifyCategory.setSelection(adapter.getPosition(Category.saveValueOf(resultStr)));
+            spinnerClassifyCategory.setSelection(adapter.getPosition(Category.saveValueOf(classifyResultStr)));
         });
 
         // init btn "recycle"
         Button btn = findViewById(R.id.btn_classify_confirmresult);
-        btn.setOnClickListener((view) -> showRecycleInstruction((Category) spinnerClassifyCategory.getSelectedItem()));
+        btn.setOnClickListener((view) -> {
+            category = (Category) spinnerClassifyCategory.getSelectedItem();
+            showRecycleInstruction(category);
+        });
 
         // run after layout rendered, show blurred image
         constraintlayoutClassifySelect.post((new Runnable() {
@@ -220,17 +225,18 @@ public class ClassifyActivity extends AppCompatActivity {
         Bitmap trashbinImg = BitmapFactory.decodeResource(getResources(), category.getColor().getImageResource());
         ivInstructionTrashbin.setImageBitmap(trashbinImg);
 
-        Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        intent.putExtra("requestCode", CLASSIFY_END);
 
         instructionTrierBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            intent.putExtra("requestCode", CLASSIFY_END);
             setResult(CLASSIFY_END_TRIER, intent);
             finish();
         });
         instructionRecycleBtn.setOnClickListener(view -> {
-            setResult(CLASSIFY_END_RECYCLER, intent);
-            finish();
+            Intent intent = new Intent(ClassifyActivity.this, InstructionActivity.class);
+            intent.putExtra("category", category);
+            startActivity(intent);
         });
 
         constraintlayoutClassifyInstruction.setVisibility(View.VISIBLE);
