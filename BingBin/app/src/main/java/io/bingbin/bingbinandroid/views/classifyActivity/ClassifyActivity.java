@@ -57,6 +57,8 @@ public class ClassifyActivity extends AppCompatActivity {
     private final int PERMISSIONS_REQUEST = 23333;
     private final int CLASSIFY_END_TRIER = 66;
 
+    private Category category;
+
     @Inject
     BingBinHttp bbh;
 
@@ -80,9 +82,6 @@ public class ClassifyActivity extends AppCompatActivity {
     ConstraintLayout constraintlayoutClassifyInstruction;
     @BindView(R.id.classify_progress_bar)
     ProgressBar classifyProgressBar;
-
-    private Category category;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

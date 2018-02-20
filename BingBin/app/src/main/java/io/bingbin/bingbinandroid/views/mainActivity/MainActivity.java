@@ -1,21 +1,17 @@
 package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.facebook.drawee.backends.pipeline.Fresco;
 
 import javax.inject.Inject;
 
@@ -69,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Main activity user", currentUser.toString());
 
         // init Fresco
-        if (!Fresco.hasBeenInitialized())
-            Fresco.initialize(this);
+        /*if (!Fresco.hasBeenInitialized())
+            Fresco.initialize(this);*/
 
         // init viewpager
         viewPager.addOnPageChangeListener(onPageChangeListner);
