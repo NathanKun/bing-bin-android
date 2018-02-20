@@ -7,19 +7,21 @@ package io.bingbin.bingbinandroid.models;
  */
 
 public enum Category {
-    PAPER("paper", TrashBinColor.YELLOW),
-    METAL("metal", TrashBinColor.OTHER),
-    CARDBOARD("cardboard", TrashBinColor.YELLOW),
-    GLASS("glass", TrashBinColor.GREEN),
-    PLASTIC("plastic", TrashBinColor.YELLOW),
-    OTHER("other", TrashBinColor.OTHER);
+    PAPER("paper", TrashBinColor.YELLOW, 4),
+    METAL("metal", TrashBinColor.OTHER, 2),
+    CARDBOARD("cardboard", TrashBinColor.YELLOW, 3),
+    GLASS("glass", TrashBinColor.GREEN, 5),
+    PLASTIC("plastic", TrashBinColor.YELLOW, 1),
+    OTHER("other", TrashBinColor.OTHER, 99);
 
     private String lowerCaseName;
     private TrashBinColor color;
+    private int categoryId;
 
-    Category(String friendlyName, TrashBinColor color) {
+    Category(String friendlyName, TrashBinColor color, int categoryId) {
         this.lowerCaseName = friendlyName;
         this.color = color;
+        this.categoryId = categoryId;
     }
 
     @Override
@@ -49,4 +51,8 @@ public enum Category {
     }
 
     public TrashBinColor getColor() { return color; }
+
+    public String getLowerCaseName() { return lowerCaseName; }
+
+    public int getCategoryId() { return categoryId; }
 }

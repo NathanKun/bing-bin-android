@@ -90,4 +90,8 @@ public class GetEcoPointFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+    public void setEcoPoint(int ep) {
+        getecopointEcopointGotTextview.setText(String.valueOf(ep));
+    }
 }

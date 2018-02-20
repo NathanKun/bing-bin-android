@@ -17,10 +17,14 @@ import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.SwipeDirection;
+import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import io.bingbin.bingbinandroid.utils.BingBinMainViewPager;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
@@ -41,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private final int CLASSIFY_END_TRIER = 66;
     private final int CLASSIFY_END_RECYCLER = 666;
 
+    @Inject
+    BingBinHttp bbh;
+
     @BindView(R.id.viewpager)
     BingBinMainViewPager viewPager;
     @BindView(R.id.navigation)
@@ -55,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ((BingBinApp) getApplication()).getNetComponent().inject(this);
         ButterKnife.bind(this);
 
         currentUser = UserSessionManager.getCurrentUser(this);
@@ -107,10 +115,12 @@ public class MainActivity extends AppCompatActivity {
         } else if(requestCode == CLASSIFY){
             if(resultCode == CLASSIFY_END_TRIER) {
                 Log.d("Classify End", "To trier fragment");
+                int ecopoint = data.getIntExtra("ecopoint", 0);
+                if(ecopoint == 0) {
+                    Log.e("ecopoint gain", "ecopoint gain 0");
+                }
+                ((GetEcoPointFragment)adapter.getItem(3)).setEcoPoint(ecopoint);
                 viewPager.setCurrentItem(3);
-            } else if(resultCode == CLASSIFY_END_RECYCLER){
-                Log.d("Classify End", "To recycler fragment");
-                viewPager.setCurrentItem(4);
             }
         }
     }

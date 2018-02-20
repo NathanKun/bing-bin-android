@@ -1,7 +1,11 @@
 package io.bingbin.bingbinandroid.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -149,12 +153,21 @@ public class BingBinHttp {
     // app/uploadscan
     public void uploadscan(Callback callback, String BingBinToken, String trashName, String trashCategory, File image) {
         try {
+
+            //Compress Image
+            Bitmap bmp = BitmapFactory.decodeFile(image.getAbsolutePath());
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+
+            Log.d("uploadScan size", String.valueOf(bos.size()));
+
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("BingBinToken", BingBinToken)
                     .addFormDataPart("trashName", trashName)
                     .addFormDataPart("trashCategory", trashCategory)
-                    .addFormDataPart("img", image.getName(), RequestBody.create(MediaType.parse("image/*"), image))
+                    .addFormDataPart("img", image.getName(),
+                            RequestBody.create(MediaType.parse("image/*"), bos.toByteArray()))
                     .build();
 
             Request request = new Request.Builder()
