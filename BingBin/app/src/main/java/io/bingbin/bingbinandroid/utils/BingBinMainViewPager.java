@@ -63,8 +63,6 @@ public class BingBinMainViewPager extends ViewPager {
     }
 
     public void setAllowedSwipeDirection(SwipeDirection direction) {
-        System.out.println("before " + direction);
         this.direction = direction;
-        System.out.println("after " + direction);
     }
 }

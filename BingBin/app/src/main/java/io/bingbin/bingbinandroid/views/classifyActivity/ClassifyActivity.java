@@ -208,8 +208,8 @@ public class ClassifyActivity extends AppCompatActivity {
                         try {
                             JSONObject json = new JSONObject(res);
                             if (json.getBoolean("valid")) {
-                                int ecoPoint = json.getJSONObject("data").getInt("gain_eco_point");
-                                showRecycleInstruction(category, ecoPoint);
+                                int ecoPoint = json.getInt("gain_eco_point");
+                                runOnUiThread(() -> showRecycleInstruction(category, ecoPoint));
                             } else {
                                 String errorMsg = json.getString("error");
                                 runOnUiThread(() -> Toast.makeText(ClassifyActivity.this,

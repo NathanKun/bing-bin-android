@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
                 if(ecopoint == 0) {
                     Log.e("ecopoint gain", "ecopoint gain 0");
                 }
-                ((GetEcoPointFragment)adapter.getItem(3)).setEcoPoint(ecopoint);
                 viewPager.setCurrentItem(3);
+                ((GetEcoPointFragment)adapter.getRegisteredFragment(3)).setEcoPoint(ecopoint);
             }
         }
     }

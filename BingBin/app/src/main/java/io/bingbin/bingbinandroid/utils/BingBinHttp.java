@@ -113,16 +113,16 @@ public class BingBinHttp {
                 .execute();
     }
 
-    // Rankinkg/getLadder
-    public void getLadder(Callback callback, String BingBinToken, String Duration) {
+    // Ranking/getLadder
+    public void getLadder(Callback callback, String bingBinToken, String duration) {
         try {
             RequestBody requestBody = new FormBody.Builder()
-                    .add("BingBinToken", BingBinToken)
-                    .add("Duration", Duration)
+                    .add("BingBinToken", bingBinToken)
+                    .add("Duration", duration)
                     .build();
 
             Request request = new Request.Builder()
-                    .url(baseUrl + "Rankinkg/getLadder")
+                    .url(baseUrl + "Ranking/getLadder")
                     .post(requestBody)
                     .build();
 
@@ -133,10 +133,10 @@ public class BingBinHttp {
     }
 
     // app/getmyinfo
-    public void getMyInfo(Callback callback, String BingBinToken) {
+    public void getMyInfo(Callback callback, String bingBinToken) {
         try {
             RequestBody requestBody = new FormBody.Builder()
-                    .add("BingBinToken", BingBinToken)
+                    .add("BingBinToken", bingBinToken)
                     .build();
 
             Request request = new Request.Builder()
@@ -151,7 +151,7 @@ public class BingBinHttp {
     }
 
     // app/uploadscan
-    public void uploadscan(Callback callback, String BingBinToken, String trashName, String trashCategory, File image) {
+    public void uploadscan(Callback callback, String bingBinToken, String trashName, String trashCategory, File image) {
         try {
 
             //Compress Image
@@ -163,7 +163,7 @@ public class BingBinHttp {
 
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("BingBinToken", BingBinToken)
+                    .addFormDataPart("BingBinToken", bingBinToken)
                     .addFormDataPart("trashName", trashName)
                     .addFormDataPart("trashCategory", trashCategory)
                     .addFormDataPart("img", image.getName(),
@@ -182,10 +182,10 @@ public class BingBinHttp {
     }
 
     // app/gettrashescategories
-    public void getTrashesCategories(Callback callback, String BingBinToken) {
+    public void getTrashesCategories(Callback callback, String bingBinToken) {
         try {
             RequestBody requestBody = new FormBody.Builder()
-                    .add("BingBinToken", BingBinToken)
+                    .add("BingBinToken", bingBinToken)
                     .build();
 
             Request request = new Request.Builder()

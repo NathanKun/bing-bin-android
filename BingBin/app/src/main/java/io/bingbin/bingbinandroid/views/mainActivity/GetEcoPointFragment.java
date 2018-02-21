@@ -3,7 +3,9 @@ package io.bingbin.bingbinandroid.views.mainActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,8 @@ public class GetEcoPointFragment extends Fragment {
     Button getecopointShareBtn;
     @BindView(R.id.getecopoint_myecopoint_btn)
     Button getecopointMyecopointBtn;
+    @BindView(R.id.getecopoint_master_layout)
+    ConstraintLayout getecopointMasterLayout;
 
     private MainActivity activity;
     private Unbinder unbinder;
@@ -53,16 +57,15 @@ public class GetEcoPointFragment extends Fragment {
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
         assert activity != null;
-
     }
 
     @OnClick(R.id.getecopoint_share_btn)
     void shareOnClick(View view) {
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         String shareBody = "Here is the share content body";
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
@@ -92,6 +95,7 @@ public class GetEcoPointFragment extends Fragment {
     }
 
     public void setEcoPoint(int ep) {
-        getecopointEcopointGotTextview.setText(String.valueOf(ep));
+        // show eco point got
+        getecopointMasterLayout.post(() -> getecopointEcopointGotTextview.setText(String.valueOf(ep)));
     }
 }
