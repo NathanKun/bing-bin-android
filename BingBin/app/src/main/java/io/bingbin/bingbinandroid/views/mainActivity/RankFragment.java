@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -29,6 +30,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import okhttp3.Call;
@@ -44,22 +46,39 @@ import okhttp3.Response;
  */
 public class RankFragment extends Fragment {
 
+
+    final private String BBH_DURATION_ALL = "all";
+    final private String BBH_DURATION_DAY = "day";
+    final private String BBH_DURATION_WEEK = "week";
+    final private String BBH_DURATION_MONTH = "month";
+
+    final private String[] KEYS = new String[]{"username", "point", "rank"};
+    final private int[] IDS = new int[]{R.id.listview_username,
+            R.id.listview_ecopoint, R.id.listview_rank};
+
     @BindView(R.id.rank_ranklistView)
     ListView listView;
     @BindView(R.id.rank_swiperefresh)
     SwipeRefreshLayout rankSwiperefresh;
+    @BindView(R.id.rank_butbtonbar_all_btn)
+    Button rankButbtonbarAllBtn;
+    @BindView(R.id.rank_butbtonbar_day_btn)
+    Button rankButbtonbarDayBtn;
+    @BindView(R.id.rank_butbtonbar_week_btn)
+    Button rankButbtonbarWeekBtn;
+    @BindView(R.id.rank_butbtonbar_month_btn)
+    Button rankButbtonbarMonthBtn;
 
     private MainActivity activity;
     private Unbinder unbinder;
 
     private SimpleAdapter mAdapter;
 
-    private String[] KEYS = new String[]{"username", "point", "rank"};
-    private int[] IDS = new int[]{R.id.listview_username,
-            R.id.listview_ecopoint, R.id.listview_rank};
-
     private List<Map<String, Object>> dataToShow = new ArrayList<>();
     private List<String> avatarsUrl = new ArrayList<>();
+
+    private String currentDuration = BBH_DURATION_ALL;
+
 
     public RankFragment() {
         // Required empty public constructor
@@ -92,7 +111,7 @@ public class RankFragment extends Fragment {
         assert activity != null;
 
         // add swipe down refresh listener, call getData() when swipe down
-        rankSwiperefresh.setOnRefreshListener(() -> getData());
+        rankSwiperefresh.setOnRefreshListener(() -> getData(currentDuration));
 
         // add adapter to listview, link dataToShow to adapter
         mAdapter = new SimpleAdapter(this.activity, dataToShow, R.layout.listview_ranklist,
@@ -120,7 +139,7 @@ public class RankFragment extends Fragment {
         };
         listView.setAdapter(mAdapter);
 
-        getData();
+        getData(BBH_DURATION_ALL);
     }
 
     @Override
@@ -132,7 +151,7 @@ public class RankFragment extends Fragment {
     /**
      * Use BingBinHttp class to get ladder, then call showData()
      */
-    private void getData() {
+    private void getData(String duration) {
         Callback cb = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -185,13 +204,16 @@ public class RankFragment extends Fragment {
                 }
             }
         };
-        activity.bbh.getLadder(cb, activity.getCurrentUser().getToken(), "all");
+
+        rankSwiperefresh.setRefreshing(true);
+        activity.bbh.getLadder(cb, activity.getCurrentUser().getToken(), duration);
     }
 
     /**
      * show ladder in listview
+     *
      * @param array json array contains ladder
-     * @throws JSONException    json exception
+     * @throws JSONException json exception
      */
     private void showData(JSONArray array) throws JSONException {
         dataToShow.clear();
@@ -223,6 +245,38 @@ public class RankFragment extends Fragment {
             Log.d("size error", "listView.getCount() != urls.size()");
             Log.d("size error", "listView.getCount() = " + listView.getCount());
             Log.d("size error", "urls.size() = " + avatarsUrl.size());
+        }
+    }
+
+    @OnClick({R.id.rank_butbtonbar_all_btn, R.id.rank_butbtonbar_day_btn,
+            R.id.rank_butbtonbar_week_btn, R.id.rank_butbtonbar_month_btn})
+    void buttonBarBtnOnClick(View view) {
+        rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.black));
+        rankButbtonbarDayBtn.setTextColor(getResources().getColor(R.color.black));
+        rankButbtonbarWeekBtn.setTextColor(getResources().getColor(R.color.black));
+        rankButbtonbarMonthBtn.setTextColor(getResources().getColor(R.color.black));
+
+        switch (view.getId()) {
+            case R.id.rank_butbtonbar_all_btn:
+                currentDuration = BBH_DURATION_ALL;
+                rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                getData(currentDuration);
+                break;
+            case R.id.rank_butbtonbar_day_btn:
+                currentDuration = BBH_DURATION_DAY;
+                rankButbtonbarWeekBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                getData(currentDuration);
+                break;
+            case R.id.rank_butbtonbar_week_btn:
+                currentDuration = BBH_DURATION_WEEK;
+                rankButbtonbarWeekBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                getData(currentDuration);
+                break;
+            case R.id.rank_butbtonbar_month_btn:
+                currentDuration = BBH_DURATION_MONTH;
+                rankButbtonbarMonthBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                getData(currentDuration);
+                break;
         }
     }
 }

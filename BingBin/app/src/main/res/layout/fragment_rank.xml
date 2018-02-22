@@ -18,6 +18,17 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/rank_butbtonbar_all_btn"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="Tout"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/rank_butbtonbar_day_btn"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -27,6 +38,7 @@
             android:textAlignment="center" />
 
         <Button
+            android:id="@+id/rank_butbtonbar_week_btn"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -35,6 +47,7 @@
             android:text="Semaine" />
 
         <Button
+            android:id="@+id/rank_butbtonbar_month_btn"
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
