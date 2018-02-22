@@ -1,9 +1,17 @@
 package io.bingbin.bingbinandroid.views.loginActivity;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -27,12 +35,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import dagger.Provides;
 import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.utils.AnimationUtil;
 import io.bingbin.bingbinandroid.utils.BingBinCallBack;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
-import io.bingbin.bingbinandroid.utils.NetComponent;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -80,6 +87,14 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     @BindView(R.id.hint_login_textview)
     TextView hintLoginTextview;
 
+    @BindView(R.id.login_logo)
+    LinearLayoutCompat loginLogo;
+    @BindView(R.id.login_bottom_glass)
+    AppCompatImageView loginBottomGlass;
+    @BindView(R.id.login_cardview)
+    CardView loginCardview;
+    @BindView(R.id.login_masterlayout)
+    ConstraintLayout loginMasterlayout;
 
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
@@ -107,15 +122,46 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     @Override
     protected void onResume() {
         super.onResume();
-        currentUser = UserSessionManager.getCurrentUser(this);
-        refreshLayout();
+
+        // hide elements for animation
+        loginLogo.setVisibility(View.INVISIBLE);
+        loginCardview.setVisibility(View.INVISIBLE);
+        loginBottomGlass.setVisibility(View.INVISIBLE);
+
+        // First put logo on center
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(loginMasterlayout);
+        constraintSet.connect(R.id.login_logo, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        constraintSet.applyTo(loginMasterlayout);
+
+        loginMasterlayout.post(
+                () -> AnimationUtil.revealView(loginBottomGlass, true,  // show glass
+                        () -> AnimationUtil.revealView(loginLogo, true, // show logo
+                                () -> {                                      // move up logo
+                                    // start constraint layout auto animation
+                                    TransitionManager.beginDelayedTransition(loginMasterlayout);
+                                    // clear connection just added to move up logo
+                                    constraintSet.clone(loginMasterlayout);
+                                    constraintSet.clear(R.id.login_logo, ConstraintSet.BOTTOM);
+                                    constraintSet.applyTo(loginMasterlayout);
+
+                                    (new Handler()).postDelayed(this::checkIsLoggedIn, 1000);
+                                })
+                )
+        );
+
     }
 
-    private void refreshLayout() {
+    /**
+     * Try find the logged in user, if found go to MainActivity
+     */
+    private void checkIsLoggedIn() {
         currentUser = UserSessionManager.getCurrentUser(this);
         if (currentUser != null) {
             Log.d("Smart Login", "Logged in user: " + currentUser.toString());
             toMainActivity();
+        } else {
+            AnimationUtil.revealView(loginCardview, true, null);
         }
     }
 
@@ -143,6 +189,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     /**
      * on social login success, login check or register success
+     *
      * @param user
      */
     @Override
@@ -153,25 +200,25 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             // so should send fb/google token to server to get the bingbintoken
             // if token not null, means user use normal login/register
             // can get user info by bingbintoken directly
-            if(token == null) {
+            if (token == null) {
                 String hint = "";
                 try {
                     Response res = null;
 
                     // use bbh to synchronous get bingbintoken
-                    if(user instanceof SmartGoogleUser) {
+                    if (user instanceof SmartGoogleUser) {
                         res = bbh.googleLogin(((SmartGoogleUser) user).getIdToken());
-                    } else if(user instanceof SmartFacebookUser) {
+                    } else if (user instanceof SmartFacebookUser) {
                         res = bbh.facebookLogin(((SmartFacebookUser) user).getAccessToken().getToken());
                     }
 
-                    if(res != null) {
+                    if (res != null) {
                         // if request success
-                        if(res.isSuccessful()) {
+                        if (res.isSuccessful()) {
                             // parse json
                             JSONObject json = new JSONObject(res.body().string());
                             // if json doesn't have the 'error' key, means social token correct
-                            if(!json.has("error")) {
+                            if (!json.has("error")) {
                                 // get the bingbintoken
                                 String resultToken = json.getString("token");
                                 // ask server for user data from the bingbintoken
@@ -188,7 +235,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                         hint = "what?";
                     }
 
-                }catch (IOException e) { // bbh connexion error
+                } catch (IOException e) { // bbh connexion error
                     e.printStackTrace();
                     hint = "Erreur de connextion";
                 } catch (JSONException e) { // json parse error
@@ -205,9 +252,9 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 });
             }
 
-            if(token == null) return;
+            if (token == null) return;
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Runnable onFailure = () -> {
                     runOnUiThread(() -> hintLoginTextview.setText("Erreur de connexion"));
                 };
@@ -245,7 +292,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                         showLoader(false);
                         Toast.makeText(LoginActivity.this, user.toString(), Toast.LENGTH_SHORT).show();
                         // go to main activity
-                        refreshLayout();
+                        checkIsLoggedIn();
                     });
                 };
 
@@ -262,7 +309,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                     private String token;
 
                     // pass the bingbintoken in to inner class
-                    public Callback init (String token) {
+                    public Callback init(String token) {
                         this.token = token;
                         return this;
                     }
@@ -275,11 +322,11 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String hint = "";
-                        try{
+                        try {
                             // get json obj from response body
                             JSONObject json = new JSONObject(response.body().string());
                             // if token is valid
-                            if(json.getBoolean("valid")) {
+                            if (json.getBoolean("valid")) {
                                 // get user data from json obj and populate to SmartUser
                                 SmartUser u = UserUtil.populateBingBinUser(json.getJSONObject("data"), token);
                                 // set user session
@@ -290,7 +337,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                                     showLoader(false);
                                     Toast.makeText(LoginActivity.this, user.toString(), Toast.LENGTH_SHORT).show();
                                     // go to main activity
-                                    refreshLayout();
+                                    checkIsLoggedIn();
                                 });
                             } else { // if token is not valid
                                 hint = "BingBinToken not valid";
@@ -353,7 +400,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             case R.id.custom_signin_button:
                 String email = emailEditText.getText().toString();
                 String pwd = passwordEditText.getText().toString();
-                if(StringUtils.isAnyBlank(email, pwd)) {
+                if (StringUtils.isAnyBlank(email, pwd)) {
                     hintLoginTextview.setText("Veuillez entrer votre email et votre mot de pass");
                     showLoader(false);
                     return;
@@ -370,7 +417,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        if (!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             runOnUiThread(() -> hintLoginTextview.setText("Request not success"));
                         } else {
                             String hint = "";
