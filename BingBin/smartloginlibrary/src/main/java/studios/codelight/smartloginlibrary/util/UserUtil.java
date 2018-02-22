@@ -24,7 +24,10 @@ public class UserUtil {
         SmartUser user = new SmartUser();
         user.setLastName(data.getString("name"));
         user.setFirstName(data.getString("firstname"));
-        user.setEco_point(data.getString("eco_point"));
+        user.setEcoPoint(data.getInt("eco_point"));
+        user.setSunPoint(data.getInt("sun_point"));
+        user.setRabbit(data.getInt("id_usagi"));
+        user.setLeaf(data.getInt("id_leaf"));
         user.setEmail(data.getString("email"));
         user.setAvatarUrl(data.getString("img_url"));
         user.setBirthday(data.getString("date_nais"));
