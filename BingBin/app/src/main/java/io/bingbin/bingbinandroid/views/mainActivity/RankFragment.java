@@ -157,14 +157,14 @@ public class RankFragment extends Fragment {
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
                 Log.d("Get Ladder", "Call Failed");
-                rankSwiperefresh.setRefreshing(false);
+                activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     Log.d("Get Ladder", "Request not successful");
-                    rankSwiperefresh.setRefreshing(false);
+                    activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
                     return;
                 }
 
@@ -174,7 +174,7 @@ public class RankFragment extends Fragment {
 
                     if (!json.getBoolean("valid")) {
                         Log.d("Get Ladder", "Not valid: " + json.getString("error"));
-                        rankSwiperefresh.setRefreshing(false);
+                        activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
                         return;
                     }
 
@@ -194,18 +194,18 @@ public class RankFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d("Get Ladder", "Showdata JSON parse error");
-                            rankSwiperefresh.setRefreshing(false);
+                            activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
                         }
                     });
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("Get Ladder", "JSON parse error");
-                    rankSwiperefresh.setRefreshing(false);
+                    activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
                 }
             }
         };
 
-        rankSwiperefresh.setRefreshing(true);
+        activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(true));
         activity.bbh.getLadder(cb, activity.getCurrentUser().getToken(), duration);
     }
 
@@ -264,7 +264,7 @@ public class RankFragment extends Fragment {
                 break;
             case R.id.rank_butbtonbar_day_btn:
                 currentDuration = BBH_DURATION_DAY;
-                rankButbtonbarWeekBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                rankButbtonbarDayBtn.setTextColor(getResources().getColor(R.color.primary_color));
                 getData(currentDuration);
                 break;
             case R.id.rank_butbtonbar_week_btn:
