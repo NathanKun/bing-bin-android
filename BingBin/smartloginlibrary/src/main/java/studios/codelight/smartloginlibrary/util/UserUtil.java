@@ -26,7 +26,7 @@ public class UserUtil {
         user.setFirstName(data.getString("firstname"));
         user.setEcoPoint(data.getInt("eco_point"));
         user.setSunPoint(data.getInt("sun_point"));
-        user.setRabbit(data.getInt("id_usagi"));
+        user.setRabbit(data.getInt("id_rabbit"));
         user.setLeaf(data.getInt("id_leaf"));
         user.setEmail(data.getString("email"));
         user.setAvatarUrl(data.getString("img_url"));

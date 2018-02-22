@@ -1,6 +1,5 @@
 package io.bingbin.bingbinandroid.views.loginActivity;
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -95,6 +94,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     CardView loginCardview;
     @BindView(R.id.login_masterlayout)
     ConstraintLayout loginMasterlayout;
+    @BindView(R.id.login_bottomimageslayout)
+    ConstraintLayout loginBottomimageslayout;
 
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
@@ -126,7 +127,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         // hide elements for animation
         loginLogo.setVisibility(View.INVISIBLE);
         loginCardview.setVisibility(View.INVISIBLE);
-        loginBottomGlass.setVisibility(View.INVISIBLE);
+        loginBottomimageslayout.setVisibility(View.INVISIBLE);
 
         // First put logo on center
         ConstraintSet constraintSet = new ConstraintSet();
@@ -135,7 +136,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         constraintSet.applyTo(loginMasterlayout);
 
         loginMasterlayout.post(
-                () -> AnimationUtil.revealView(loginBottomGlass, true,  // show glass
+                () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show glass
                         () -> AnimationUtil.revealView(loginLogo, true, // show logo
                                 () -> {                                      // move up logo
                                     // start constraint layout auto animation
@@ -254,7 +255,10 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
             if (token == null) return;
 
+            Log.d("OnTokenGot", token);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Log.d("GetMyInfo", "High SDK");
                 Runnable onFailure = () -> {
                     runOnUiThread(() -> hintLoginTextview.setText("Erreur de connexion"));
                 };
@@ -303,13 +307,15 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                         onNotValid, onTokenNotValid, onValid, onAllError
                 );
                 bbh.getMyInfo(cb, token);
+
             } else {
+                Log.d("GetMyInfo", "Low SDK");
                 // callback for bbh.getMyInfo
                 Callback cb = new Callback() {
                     private String token;
 
                     // pass the bingbintoken in to inner class
-                    public Callback init(String token) {
+                    Callback init(String token) {
                         this.token = token;
                         return this;
                     }
