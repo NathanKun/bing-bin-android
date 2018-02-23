@@ -7,26 +7,34 @@ package io.bingbin.bingbinandroid.models;
  */
 
 public enum Category {
-    PAPER("paper", TrashBinColor.YELLOW, 4),
-    METAL("metal", TrashBinColor.OTHER, 2),
-    CARDBOARD("cardboard", TrashBinColor.YELLOW, 3),
-    GLASS("glass", TrashBinColor.GREEN, 5),
-    PLASTIC("plastic", TrashBinColor.YELLOW, 1),
-    OTHER("other", TrashBinColor.OTHER, 99);
+    PLASTIC("plastique", TrashBin.YELLOW, 1),
+    METAL("metal", TrashBin.YELLOW, 2),
+    CARDBOARD("carton", TrashBin.YELLOW, 3),
+    PAPER("papier", TrashBin.BLUE, 4),
+    GLASS("verre", TrashBin.GREEN, 5),
+    FOOD("dechet menager", TrashBin.COMPOST, 6),
+    TOXIC("produit toxique", TrashBin.CALLNUMBER, 7),
+    CUMBERSOME("encombrant", TrashBin.LEBONCOIN, 8),
+    //GREENWASTE("dechets verts", TrashBin.BLACK, 9),
+    ELECTRONIC("équipement électronique", TrashBin.LEBONCOIN, 10),
+    BATTERY_LIGHTBALL("pile ou ampoule", TrashBin.SUPERMARKET, 11),
+    CLOTHE("vêtements usés", TrashBin.CLOTHES, 12),
+    MEDICINE("medicament", TrashBin.PHARMACY, 13),
+    OTHER("autre", TrashBin.OTHER, 99);
 
-    private String lowerCaseName;
-    private TrashBinColor color;
+    private String frenchName;
+    private TrashBin trashbin;
     private int categoryId;
 
-    Category(String friendlyName, TrashBinColor color, int categoryId) {
-        this.lowerCaseName = friendlyName;
-        this.color = color;
+    Category(String frenchName, TrashBin trashbin, int categoryId) {
+        this.frenchName = frenchName;
+        this.trashbin = trashbin;
         this.categoryId = categoryId;
     }
 
     @Override
     public String toString() {
-        return lowerCaseName;
+        return frenchName;
     }
 
     public static boolean contains(String name) {
@@ -42,17 +50,43 @@ public enum Category {
         return false;
     }
 
-    public static Category saveValueOf(String name) {
-        if (Category.contains(name.toLowerCase())) {
+    public TrashBin getTrashbin() { return trashbin; }
+
+    public String getFrenchName() { return frenchName; }
+
+    public int getCategoryId() { return categoryId; }
+
+    public static Category fromName(String name) {
+        if (Category.contains(name)) {
             return Category.valueOf(name.toUpperCase());
         } else {
             return Category.OTHER;
         }
     }
 
-    public TrashBinColor getColor() { return color; }
+    public static Category fromFrenchName(String frenchName) {
+        Category[] ctgs = values();
 
-    public String getLowerCaseName() { return lowerCaseName; }
+        for (Category c : ctgs) {
+            if (c.getFrenchName().toLowerCase().equals(frenchName.toLowerCase())) {
+                return c;
+            }
+        }
+        return null;
+    }
 
-    public int getCategoryId() { return categoryId; }
+    public static String getFrenchNameById(int categoryId) {
+        Category[] ctgs = values();
+
+        for (Category c : ctgs) {
+            if (c.getCategoryId() == categoryId) {
+                return c.getFrenchName();
+            }
+        }
+        return "";
+    }
+
+    public static String getFrenchNameByName(String name) {
+        return fromName(name).getFrenchName();
+    }
 }

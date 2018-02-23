@@ -8,13 +8,9 @@
     tools:context="io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity">
 
     <ImageView
-        android:id="@+id/iv_classify_blurimg"
+        android:id="@+id/classify_blurimg_imageview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:contentDescription="@string/blur_image"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,22 +20,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@color/primary_color" />
 
+
+    <!-- YesNo -->
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintlayout_classify_select"
+        android:id="@+id/classify_yesno_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <View
-            android:id="@+id/rectangle_classify"
+            android:id="@+id/classify_yesno_rectangle"
             android:layout_width="0dp"
             android:layout_height="152dp"
             android:layout_marginBottom="8dp"
@@ -54,44 +48,306 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.871" />
 
-        <Spinner
-            android:id="@+id/spinner_classify_category"
-            android:layout_width="219dp"
-            android:layout_height="53dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/rectangle_classify"
-            app:layout_constraintEnd_toEndOf="@+id/rectangle_classify"
-            app:layout_constraintStart_toStartOf="@+id/rectangle_classify"
-            app:layout_constraintTop_toTopOf="@+id/rectangle_classify"
-            app:layout_constraintVertical_bias="0.144" />
-
-        <Button
-            android:id="@+id/btn_classify_confirmresult"
+        <LinearLayout
+            android:id="@+id/classify_yesno_buttonbar_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="OK"
-            app:layout_constraintBottom_toBottomOf="@+id/rectangle_classify"
-            app:layout_constraintEnd_toEndOf="@+id/rectangle_classify"
-            app:layout_constraintStart_toStartOf="@+id/rectangle_classify"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_classify_category" />
+            app:layout_constraintBottom_toBottomOf="@+id/classify_yesno_rectangle"
+            app:layout_constraintEnd_toEndOf="@+id/classify_yesno_rectangle"
+            app:layout_constraintStart_toStartOf="@+id/classify_yesno_rectangle"
+            app:layout_constraintTop_toBottomOf="@+id/classify_yesno_result_textview">
+
+            <Button
+                android:id="@+id/classify_yesno_yes_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="Oui" />
+
+            <Button
+                android:id="@+id/classify_yesno_no_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:backgroundTint="@color/red"
+                android:text="Non" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/classify_yesno_result_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="catg"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintEnd_toEndOf="@+id/classify_yesno_rectangle"
+            app:layout_constraintStart_toStartOf="@+id/classify_yesno_rectangle"
+            app:layout_constraintTop_toTopOf="@+id/classify_yesno_rectangle" />
 
     </android.support.constraint.ConstraintLayout>
 
+
+    <!-- Select -->
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintlayout_classify_instruction"
+        android:id="@+id/classify_select_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/classify_select_rectangle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/classify_result_rectangle"
+            android:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.496" />
+
+        <TextView
+            android:id="@+id/classify_select_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Dis nous c'est ...."
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/primary_color"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@+id/classify_select_rectangle"
+            app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle"
+            app:layout_constraintTop_toTopOf="@+id/classify_select_rectangle" />
+
+        <LinearLayout
+            android:id="@+id/classify_select_selectedbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/classify_select_rectangle"
+            app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle"
+            app:layout_constraintTop_toBottomOf="@+id/classify_select_header">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_selected_imageview"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/catg_1_plastic" />
+
+            <TextView
+                android:id="@+id/classify_select_selected_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="plastique"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <GridLayout
+            android:id="@+id/classify_select_grid_gridlayout"
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:layout_margin="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:columnCount="3"
+            android:rowCount="5"
+            android:useDefaultMargins="true"
+            app:layout_constraintEnd_toEndOf="@+id/classify_select_rectangle"
+            app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle"
+            app:layout_constraintTop_toBottomOf="@+id/classify_select_selectedbar_layout">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_1"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="0"
+                android:layout_rowWeight="1"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_1_plastic" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_2"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="0"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_2_metal" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_3"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="0"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_3_cardboard" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_4"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="1"
+                android:layout_rowWeight="1"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_4_paper" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_5"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="1"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_5_glass" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_6"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="1"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_6_food" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_7"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="2"
+                android:layout_rowWeight="1"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_7_toxic" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_8"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="2"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_8_cumbersome" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_10"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="2"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_10_electronic" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_11"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="3"
+                android:layout_rowWeight="1"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_11_battery_lightball" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_12"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="3"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_12_clothe" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/classify_select_img_13"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_column="2"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="3"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/catg_13_medicine" />
+
+            <TextView
+                android:id="@+id/classify_select_other"
+                android:layout_column="0"
+                android:layout_columnSpan="3"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center"
+                android:layout_row="4"
+                android:layout_rowWeight="1"
+                android:text="Autre" />
+        </GridLayout>
+
+        <Button
+            android:id="@+id/classify_select_confirm_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Confirmer"
+            app:layout_constraintBottom_toBottomOf="@+id/classify_select_rectangle"
+            app:layout_constraintEnd_toEndOf="@+id/classify_select_rectangle"
+            app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle"
+            app:layout_constraintTop_toBottomOf="@+id/classify_select_grid_gridlayout" />
+    </android.support.constraint.ConstraintLayout>
+
+
+    <!-- Finish -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/classify_finish_constraintlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +356,7 @@
 
 
         <TextView
-            android:id="@+id/tv_instruction_title"
+            android:id="@+id/classify_finish_title_textview"
             android:layout_width="217dp"
             android:layout_height="42dp"
             android:layout_marginEnd="8dp"
@@ -113,10 +369,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rectangle_classify2" />
+            app:layout_constraintTop_toTopOf="@+id/classify_finish_rectangle" />
 
         <ImageView
-            android:id="@+id/iv_instruction_trashbin"
+            android:id="@+id/classify_finish_trashbin_imageview"
             android:layout_width="139dp"
             android:layout_height="162dp"
             android:layout_marginEnd="8dp"
@@ -126,11 +382,11 @@
             android:elevation="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_instruction_title"
+            app:layout_constraintTop_toBottomOf="@+id/classify_finish_title_textview"
             app:srcCompat="@color/cardview_shadow_end_color" />
 
         <Button
-            android:id="@+id/instruction_trier_btn"
+            android:id="@+id/classify_finish_trier_btn"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -141,10 +397,10 @@
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_instruction_trashbin" />
+            app:layout_constraintTop_toBottomOf="@+id/classify_finish_trashbin_imageview" />
 
         <Button
-            android:id="@+id/instruction_recycle_btn"
+            android:id="@+id/classify_finish_recycle_btn"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -155,14 +411,14 @@
             android:elevation="1dp"
             android:text="@string/recycle_it"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/rectangle_classify2"
+            app:layout_constraintBottom_toBottomOf="@+id/classify_finish_rectangle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/instruction_trier_btn"
+            app:layout_constraintTop_toBottomOf="@+id/classify_finish_trier_btn"
             app:layout_constraintVertical_bias="0.035" />
 
         <View
-            android:id="@+id/rectangle_classify2"
+            android:id="@+id/classify_finish_rectangle"
             android:layout_width="250dp"
             android:layout_height="380dp"
             android:layout_marginBottom="8dp"

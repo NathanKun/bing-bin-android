@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected final int GALLERY_PICTURE = 233;
     private final int CLASSIFY = 6;
     private final int CLASSIFY_END_TRIER = 66;
-    private final int CLASSIFY_END_RECYCLER = 666;
+    private final int CLASSIFY_END_CANCEL = 666;
 
     @Inject
     BingBinHttp bbh;
@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 viewPager.setCurrentItem(3);
                 ((GetEcoPointFragment)adapter.getRegisteredFragment(3)).setEcoPoint(ecopoint);
+            } else if(resultCode == CLASSIFY_END_CANCEL){
+                Log.d("Classify End", "CANCEL");
             }
         }
     }

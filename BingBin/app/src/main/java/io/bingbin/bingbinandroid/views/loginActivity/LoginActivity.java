@@ -118,11 +118,6 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         config.setFacebookAppId(getString(R.string.facebook_app_id));
         config.setFacebookPermissions(null); // use default
         config.setGoogleSignInClient(mGoogleSignInClient);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         // hide elements for animation
         loginLogo.setVisibility(View.INVISIBLE);
@@ -151,6 +146,11 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 )
         );
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     /**

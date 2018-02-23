@@ -32,6 +32,6 @@
     <string name="btn_recycle">Recycler mon déchet</string>
     <string name="btn_trier">Trier</string>
     <string name="recycle_it">Recycle it</string>
-    <string name="trashbin_image_description">Trash bin with color</string>
+    <string name="trashbin_image_description">Trash bin with trashbin</string>
     <string name="title_activity_instruction">InstructionActivity</string>
 </resources>

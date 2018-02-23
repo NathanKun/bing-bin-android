@@ -1,5 +1,6 @@
 package io.bingbin.bingbinandroid.views.mainActivity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.BuildConfig;
@@ -33,6 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -52,9 +54,9 @@ public class RankFragment extends Fragment {
     final private String BBH_DURATION_WEEK = "week";
     final private String BBH_DURATION_MONTH = "month";
 
-    final private String[] KEYS = new String[]{"username", "point", "rank"};
+    final private String[] KEYS = new String[]{"username", "point", "rank", "avatar"};
     final private int[] IDS = new int[]{R.id.listview_username,
-            R.id.listview_ecopoint, R.id.listview_rank};
+            R.id.listview_ecopoint, R.id.listview_rank, R.id.listview_avatar};
 
     @BindView(R.id.rank_ranklistView)
     ListView listView;
@@ -110,6 +112,9 @@ public class RankFragment extends Fragment {
         activity = (MainActivity) getActivity();
         assert activity != null;
 
+        // Make AllBtn green, look likes clicked
+        rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
+
         // add swipe down refresh listener, call getData() when swipe down
         rankSwiperefresh.setOnRefreshListener(() -> getData(currentDuration));
 
@@ -120,7 +125,7 @@ public class RankFragment extends Fragment {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-
+                /*
                 // load avatar
                 String url = avatarsUrl.get(position);
                 AppCompatImageView iv = view.findViewById(R.id.listview_avatar);
@@ -132,7 +137,7 @@ public class RankFragment extends Fragment {
                 } else {
                     iv.setImageResource(R.drawable.ic_account_circle_black_24dp);
                 }
-
+                */
                 return view;
             }
 
@@ -178,11 +183,13 @@ public class RankFragment extends Fragment {
                         return;
                     }
 
-                    JSONObject ladder = json.getJSONObject("ladder");
                     JSONArray data = new JSONArray();
-                    Iterator it = ladder.keys();
-                    while (it.hasNext()) {
-                        data.put(ladder.getJSONObject((String) it.next()));
+                    Object ladder = json.get("ladder");
+                    if(ladder instanceof JSONObject) { // if no data, will be [] JSONArray
+                        Iterator it = ((JSONObject)ladder).keys();
+                        while (it.hasNext()) {
+                            data.put(((JSONObject)ladder).getJSONObject((String) it.next()));
+                        }
                     }
 
                     Log.d("Get Ladder", "data size: " + data.length());
@@ -217,7 +224,7 @@ public class RankFragment extends Fragment {
      */
     private void showData(JSONArray array) throws JSONException {
         dataToShow.clear();
-        avatarsUrl.clear();
+        //avatarsUrl.clear();
 
         for (int i = 0; i < array.length(); i++) {
             JSONObject json = array.getJSONObject(i);
@@ -227,13 +234,15 @@ public class RankFragment extends Fragment {
             int rank = json.getInt("rank");
             int pt = json.getInt("eco_point");
 
+            int rabbitId = json.getInt("id_rabbit");
+            int leafId = json.getInt("id_leaf");
+            Bitmap avatar = AvatarHelper.generateAvarat(activity, rabbitId, leafId);
+
             map.put("username", name);
             map.put("point", pt);
             map.put("rank", rank);
+            map.put("avatar", avatar);
             dataToShow.add(map);
-
-            String avatarUrl = json.getString("img_url");
-            avatarsUrl.add(avatarUrl);
         }
 
         // show data in list
@@ -241,11 +250,11 @@ public class RankFragment extends Fragment {
         rankSwiperefresh.setRefreshing(false);
 
 
-        if (BuildConfig.DEBUG && listView.getCount() != avatarsUrl.size()) {
+        /*if (BuildConfig.DEBUG && listView.getCount() != avatarsUrl.size()) {
             Log.d("size error", "listView.getCount() != urls.size()");
             Log.d("size error", "listView.getCount() = " + listView.getCount());
             Log.d("size error", "urls.size() = " + avatarsUrl.size());
-        }
+        }*/
     }
 
     @OnClick({R.id.rank_butbtonbar_all_btn, R.id.rank_butbtonbar_day_btn,
