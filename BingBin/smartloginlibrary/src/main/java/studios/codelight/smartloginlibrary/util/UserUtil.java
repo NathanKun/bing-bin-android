@@ -22,6 +22,7 @@ public class UserUtil {
 
     public static SmartUser populateBingBinUser(JSONObject data, String bingbinToken) throws JSONException {
         SmartUser user = new SmartUser();
+        user.setUserId(data.getString("id"));
         user.setLastName(data.getString("name"));
         user.setFirstName(data.getString("firstname"));
         user.setEcoPoint(data.getInt("eco_point"));

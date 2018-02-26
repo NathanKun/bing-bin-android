@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -125,23 +127,48 @@ public class RankFragment extends Fragment {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                /*
-                // load avatar
-                String url = avatarsUrl.get(position);
-                AppCompatImageView iv = view.findViewById(R.id.listview_avatar);
-                if (StringUtils.isNotBlank(url) && !StringUtils.equals("null", url)) {
-                    Glide.with(RankFragment.this)
-                            .load(url)
-                            .fitCenter()
-                            .into(iv);
-                } else {
-                    iv.setImageResource(R.drawable.ic_account_circle_black_24dp);
-                }
-                */
+
+                ImageView b = view.findViewById(R.id.listview_sun);
+                b.setOnClickListener((v) -> {
+                    Log.d("list user id", (String) dataToShow.get(position).get("id"));
+                    activity.showLoader(true);
+
+                    Callback cb = new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            activity.runOnUiThread(() -> {
+                                Toast.makeText(activity, "Erreur de connexion", Toast.LENGTH_SHORT).show();
+                                activity.showLoader(false);
+                            });
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if(!response.isSuccessful()) {
+                                activity.runOnUiThread(() -> {
+                                    Toast.makeText(activity, "request de not success", Toast.LENGTH_SHORT).show();
+                                    activity.showLoader(false);
+                                    return;
+                                });
+
+                                
+                            }
+                        }
+                    };
+                });
+
                 return view;
             }
 
         };
+        mAdapter.setViewBinder((view, data, textRepresentation) -> {
+            if(view instanceof ImageView && data instanceof Bitmap){
+                ImageView i = (ImageView )view;
+                i.setImageBitmap((Bitmap) data);
+                return true;
+            }
+            return false;
+        });
         listView.setAdapter(mAdapter);
 
         getData(BBH_DURATION_ALL);
@@ -230,7 +257,8 @@ public class RankFragment extends Fragment {
             JSONObject json = array.getJSONObject(i);
             Map<String, Object> map = new HashMap<>();
 
-            String name = json.getString("name");
+            String name = json.getString("firstname");
+            String id = json.getString("id");
             int rank = json.getInt("rank");
             int pt = json.getInt("eco_point");
 
@@ -242,19 +270,13 @@ public class RankFragment extends Fragment {
             map.put("point", pt);
             map.put("rank", rank);
             map.put("avatar", avatar);
+            map.put("id", id);
             dataToShow.add(map);
         }
 
         // show data in list
         mAdapter.notifyDataSetChanged();
         rankSwiperefresh.setRefreshing(false);
-
-
-        /*if (BuildConfig.DEBUG && listView.getCount() != avatarsUrl.size()) {
-            Log.d("size error", "listView.getCount() != urls.size()");
-            Log.d("size error", "listView.getCount() = " + listView.getCount());
-            Log.d("size error", "urls.size() = " + avatarsUrl.size());
-        }*/
     }
 
     @OnClick({R.id.rank_butbtonbar_all_btn, R.id.rank_butbtonbar_day_btn,

@@ -70,7 +70,7 @@ public abstract class AvatarHelper {
         Bitmap bmOverlay = Bitmap.createBitmap(rabbit.getWidth(), rabbit.getHeight(), rabbit.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(rabbit, new Matrix(), null);
-        canvas.drawBitmap(leaf, (rabbit.getWidth() - leaf.getWidth()) / 2, rabbit.getHeight()/3, null);
+        canvas.drawBitmap(leaf, (rabbit.getWidth() - leaf.getWidth()) / 2, rabbit.getHeight()/5, null);
 
         return bmOverlay;
     }

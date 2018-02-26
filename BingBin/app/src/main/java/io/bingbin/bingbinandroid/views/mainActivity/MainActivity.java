@@ -11,6 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import javax.inject.Inject;
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     BingBinMainViewPager viewPager;
     @BindView(R.id.navigation)
     BottomNavigationViewEx navigation;
+    @BindView(R.id.main_progress_bar)
+    ProgressBar mainProgressBar;
 
     private SmartUser currentUser;
     private MenuItem menuItem;
@@ -97,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("MissingSuperCall")
     @Override
-    protected void onSaveInstanceState(Bundle outState) { }
+    protected void onSaveInstanceState(Bundle outState) {
+    }
     // ============
     // On results
     // ============
@@ -108,16 +114,16 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = data.getData();
             assert uri != null;
             startClassifyActivity(uri.toString());
-        } else if(requestCode == CLASSIFY){
-            if(resultCode == CLASSIFY_END_TRIER) {
+        } else if (requestCode == CLASSIFY) {
+            if (resultCode == CLASSIFY_END_TRIER) {
                 Log.d("Classify End", "To trier fragment");
                 int ecopoint = data.getIntExtra("ecopoint", 0);
-                if(ecopoint == 0) {
+                if (ecopoint == 0) {
                     Log.e("ecopoint gain", "ecopoint gain 0");
                 }
                 viewPager.setCurrentItem(3);
-                ((GetEcoPointFragment)adapter.getRegisteredFragment(3)).setEcoPoint(ecopoint);
-            } else if(resultCode == CLASSIFY_END_CANCEL){
+                ((GetEcoPointFragment) adapter.getRegisteredFragment(3)).setEcoPoint(ecopoint);
+            } else if (resultCode == CLASSIFY_END_CANCEL) {
                 Log.d("Classify End", "CANCEL");
             }
         }
@@ -160,12 +166,12 @@ public class MainActivity extends AppCompatActivity {
             if (menuItem != null) {
                 menuItem.setChecked(false);
             }
-            if(position >= 3) { // when forth/fifth page, disable swiping left and right
+            if (position >= 3) { // when forth/fifth page, disable swiping left and right
                 viewPager.setAllowedSwipeDirection(SwipeDirection.NONE);
             } else {
                 menuItem = navigation.getMenu().getItem(position); // for navigation, max index is 2
                 menuItem.setChecked(true);
-                if(position == 2) { // when on third page, block swiping right
+                if (position == 2) { // when on third page, block swiping right
                     viewPager.setAllowedSwipeDirection(SwipeDirection.LEFT);
                 } else { // else allow all direction swiping
                     viewPager.setAllowedSwipeDirection(SwipeDirection.ALL);
@@ -196,5 +202,16 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ClassifyActivity.class);
         intent.putExtra("uri", uri);
         startActivityForResult(intent, CLASSIFY);
+    }
+
+    void showLoader(boolean show) {
+        if (show) {
+            mainProgressBar.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            mainProgressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
     }
 }
