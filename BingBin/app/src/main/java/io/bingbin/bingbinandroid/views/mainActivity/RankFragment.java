@@ -2,24 +2,22 @@ package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.BuildConfig;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.utils.AnimationUtil;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -72,6 +71,8 @@ public class RankFragment extends Fragment {
     Button rankButbtonbarWeekBtn;
     @BindView(R.id.rank_butbtonbar_month_btn)
     Button rankButbtonbarMonthBtn;
+    @BindView(R.id.ranking_sendsun_layout)
+    ConstraintLayout rankingSendsunLayout;
 
     private MainActivity activity;
     private Unbinder unbinder;
@@ -130,7 +131,7 @@ public class RankFragment extends Fragment {
 
                 ImageView b = view.findViewById(R.id.listview_sun);
                 b.setOnClickListener((v) -> {
-                    Log.d("list user id", (String) dataToShow.get(position).get("id"));
+                    Log.d("selected user id", (String) dataToShow.get(position).get("id"));
                     activity.showLoader(true);
 
                     Callback cb = new Callback() {
@@ -144,26 +145,62 @@ public class RankFragment extends Fragment {
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            if(!response.isSuccessful()) {
+                            if (!response.isSuccessful()) {
                                 activity.runOnUiThread(() -> {
                                     Toast.makeText(activity, "request de not success", Toast.LENGTH_SHORT).show();
                                     activity.showLoader(false);
-                                    return;
                                 });
-
-                                
+                                return;
                             }
-                        }
-                    };
-                });
+
+                            String res = response.body().string();
+                            try {
+                                JSONObject json = new JSONObject(res);
+
+                                if (!json.getBoolean("valid")) {
+                                    activity.runOnUiThread(() -> {
+                                        Toast.makeText(activity, "invalid", Toast.LENGTH_SHORT).show();
+                                        activity.showLoader(false);
+                                    });
+                                    return;
+                                }
+
+                                if (json.getBoolean("limit_reach")) {
+                                    activity.runOnUiThread(() -> {
+                                        Toast.makeText(activity, "limit reached", Toast.LENGTH_SHORT).show();
+                                        activity.showLoader(false);
+                                    });
+                                    return;
+                                }
+
+                                activity.runOnUiThread(() -> {
+                                    activity.showLoader(false);
+                                    AnimationUtil.revealView(rankingSendsunLayout, true, null);
+                                    (new Handler()).postDelayed(
+                                            () -> AnimationUtil.revealView(rankingSendsunLayout, false, null),
+                                            3000);
+                                });
+                            } catch (JSONException e) {
+                                activity.runOnUiThread(() -> {
+                                    Toast.makeText(activity, "json parse error", Toast.LENGTH_SHORT).show();
+                                    activity.showLoader(false);
+                                });
+                                e.printStackTrace();
+                            }
+                        } // onResponse end
+                    }; // call back end
+
+                    activity.bbh.sendSunPoint(cb, activity.getCurrentUser().getToken(), dataToShow.get(position).get("id"));
+
+                }); // onClickListener end
 
                 return view;
             }
 
         };
         mAdapter.setViewBinder((view, data, textRepresentation) -> {
-            if(view instanceof ImageView && data instanceof Bitmap){
-                ImageView i = (ImageView )view;
+            if (view instanceof ImageView && data instanceof Bitmap) {
+                ImageView i = (ImageView) view;
                 i.setImageBitmap((Bitmap) data);
                 return true;
             }
@@ -212,10 +249,10 @@ public class RankFragment extends Fragment {
 
                     JSONArray data = new JSONArray();
                     Object ladder = json.get("ladder");
-                    if(ladder instanceof JSONObject) { // if no data, will be [] JSONArray
-                        Iterator it = ((JSONObject)ladder).keys();
+                    if (ladder instanceof JSONObject) { // if no data, will be [] JSONArray
+                        Iterator it = ((JSONObject) ladder).keys();
                         while (it.hasNext()) {
-                            data.put(((JSONObject)ladder).getJSONObject((String) it.next()));
+                            data.put(((JSONObject) ladder).getJSONObject((String) it.next()));
                         }
                     }
 
