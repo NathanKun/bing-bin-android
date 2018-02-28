@@ -95,11 +95,14 @@
 
 
     <!-- Select -->
+
+
+    <!-- Finish -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/classify_select_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -258,7 +261,7 @@
                 android:layout_row="2"
                 android:layout_rowWeight="1"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_7_toxic" />
+                app:srcCompat="@drawable/catg_7_lightbulb" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/classify_select_img_8"
@@ -272,7 +275,7 @@
                 app:srcCompat="@drawable/catg_8_cumbersome" />
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/classify_select_img_10"
+                android:id="@+id/classify_select_img_9"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_column="2"
@@ -280,10 +283,10 @@
                 android:layout_gravity="center"
                 android:layout_row="2"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_10_electronic" />
+                app:srcCompat="@drawable/catg_9_electronic" />
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/classify_select_img_11"
+                android:id="@+id/classify_select_img_10"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_column="0"
@@ -292,10 +295,10 @@
                 android:layout_row="3"
                 android:layout_rowWeight="1"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_11_battery_lightball" />
+                app:srcCompat="@drawable/catg_10_battery" />
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/classify_select_img_12"
+                android:id="@+id/classify_select_img_11"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_column="1"
@@ -303,10 +306,10 @@
                 android:layout_gravity="center"
                 android:layout_row="3"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_12_clothe" />
+                app:srcCompat="@drawable/catg_11_clothe" />
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/classify_select_img_13"
+                android:id="@+id/classify_select_img_12"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_column="2"
@@ -314,7 +317,7 @@
                 android:layout_gravity="center"
                 android:layout_row="3"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_13_medicine" />
+                app:srcCompat="@drawable/catg_12_medicine" />
 
             <TextView
                 android:id="@+id/classify_select_other"
@@ -342,13 +345,11 @@
             app:layout_constraintTop_toBottomOf="@+id/classify_select_grid_gridlayout" />
     </android.support.constraint.ConstraintLayout>
 
-
-    <!-- Finish -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/classify_finish_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

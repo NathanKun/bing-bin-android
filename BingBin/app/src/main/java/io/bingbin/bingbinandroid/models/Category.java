@@ -13,13 +13,12 @@ public enum Category {
     PAPER("papier", TrashBin.BLUE, 4),
     GLASS("verre", TrashBin.GREEN, 5),
     FOOD("dechet menager", TrashBin.COMPOST, 6),
-    TOXIC("produit toxique", TrashBin.CALLNUMBER, 7),
+    LIGHTBULB("ampoule", TrashBin.CALLNUMBER, 7),
     CUMBERSOME("encombrant", TrashBin.LEBONCOIN, 8),
-    //GREENWASTE("dechets verts", TrashBin.BLACK, 9),
-    ELECTRONIC("équipement électronique", TrashBin.LEBONCOIN, 10),
-    BATTERY_LIGHTBALL("pile ou ampoule", TrashBin.SUPERMARKET, 11),
-    CLOTHE("vêtements usés", TrashBin.CLOTHES, 12),
-    MEDICINE("medicament", TrashBin.PHARMACY, 13),
+    ELECTRONIC("équipement électronique", TrashBin.LEBONCOIN, 9),
+    BATTERY("pile ou ampoule", TrashBin.SUPERMARKET, 10),
+    CLOTHE("vêtements usés", TrashBin.CLOTHES, 11),
+    MEDICINE("medicament", TrashBin.PHARMACY, 12),
     OTHER("autre", TrashBin.OTHER, 99);
 
     private String frenchName;

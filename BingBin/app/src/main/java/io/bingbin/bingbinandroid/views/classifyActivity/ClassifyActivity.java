@@ -116,14 +116,16 @@ public class ClassifyActivity extends AppCompatActivity {
     AppCompatImageView classifySelectImg7;
     @BindView(R.id.classify_select_img_8)
     AppCompatImageView classifySelectImg8;
+    @BindView(R.id.classify_select_img_9)
+    AppCompatImageView classifySelectImg9;
     @BindView(R.id.classify_select_img_10)
     AppCompatImageView classifySelectImg10;
     @BindView(R.id.classify_select_img_11)
     AppCompatImageView classifySelectImg11;
     @BindView(R.id.classify_select_img_12)
     AppCompatImageView classifySelectImg12;
-    @BindView(R.id.classify_select_img_13)
-    AppCompatImageView classifySelectImg13;
+    @BindView(R.id.classify_select_other)
+    TextView classifySelectOther;
 
     @BindView(R.id.classify_blurimg_imageview)
     ImageView classifyBlurimgImageview;
@@ -404,14 +406,14 @@ public class ClassifyActivity extends AppCompatActivity {
 
     @OnClick({R.id.classify_select_img_1, R.id.classify_select_img_2, R.id.classify_select_img_3,
             R.id.classify_select_img_4, R.id.classify_select_img_5, R.id.classify_select_img_6,
-            R.id.classify_select_img_7, R.id.classify_select_img_8, R.id.classify_select_img_10,
-            R.id.classify_select_img_11, R.id.classify_select_img_12, R.id.classify_select_img_13,
+            R.id.classify_select_img_7, R.id.classify_select_img_8, R.id.classify_select_img_9,
+            R.id.classify_select_img_10, R.id.classify_select_img_11, R.id.classify_select_img_12,
             R.id.classify_select_other})
     void imageOnClick(View view) {
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.classify_select_other:
-                classifySelectSelectedImageview.setImageResource(R.drawable.btn_ecopoint);
-                classifySelectSelectedTextview.setText("Autre");
+                classifySelectSelectedImageview.setImageResource(R.drawable.bingbin_icon);
+                classifySelectSelectedTextview.setText(Category.getFrenchNameById(99));
                 break;
             case R.id.classify_select_img_1:
                 classifySelectSelectedImageview.setImageResource(R.drawable.catg_1_plastic);
@@ -438,27 +440,27 @@ public class ClassifyActivity extends AppCompatActivity {
                 classifySelectSelectedTextview.setText(Category.getFrenchNameById(6));
                 break;
             case R.id.classify_select_img_7:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_7_toxic);
+                classifySelectSelectedImageview.setImageResource(R.drawable.catg_7_lightbulb);
                 classifySelectSelectedTextview.setText(Category.getFrenchNameById(7));
                 break;
             case R.id.classify_select_img_8:
                 classifySelectSelectedImageview.setImageResource(R.drawable.catg_8_cumbersome);
                 classifySelectSelectedTextview.setText(Category.getFrenchNameById(8));
                 break;
-            case R.id.classify_select_img_10:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_10_electronic);
+            case R.id.classify_select_img_9:
+                classifySelectSelectedImageview.setImageResource(R.drawable.catg_9_electronic);
                 classifySelectSelectedTextview.setText(Category.getFrenchNameById(10));
                 break;
-            case R.id.classify_select_img_11:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_11_battery_lightball);
+            case R.id.classify_select_img_10:
+                classifySelectSelectedImageview.setImageResource(R.drawable.catg_10_battery);
                 classifySelectSelectedTextview.setText(Category.getFrenchNameById(11));
                 break;
-            case R.id.classify_select_img_12:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_12_clothe);
+            case R.id.classify_select_img_11:
+                classifySelectSelectedImageview.setImageResource(R.drawable.catg_11_clothe);
                 classifySelectSelectedTextview.setText(Category.getFrenchNameById(12));
                 break;
-            case R.id.classify_select_img_13:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_13_medicine);
+            case R.id.classify_select_img_12:
+                classifySelectSelectedImageview.setImageResource(R.drawable.catg_12_medicine);
                 classifySelectSelectedTextview.setText(Category.getFrenchNameById(13));
                 break;
         }

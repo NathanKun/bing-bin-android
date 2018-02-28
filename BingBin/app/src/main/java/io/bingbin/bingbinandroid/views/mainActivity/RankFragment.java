@@ -190,7 +190,7 @@ public class RankFragment extends Fragment {
                         } // onResponse end
                     }; // call back end
 
-                    activity.bbh.sendSunPoint(cb, activity.getCurrentUser().getToken(), dataToShow.get(position).get("id"));
+                    //activity.bbh.sendSunPoint(cb, activity.getCurrentUser().getToken(), dataToShow.get(position).get("id"));
 
                 }); // onClickListener end
 
