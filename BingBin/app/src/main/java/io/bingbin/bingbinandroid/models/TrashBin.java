@@ -12,11 +12,9 @@ public enum TrashBin {
     BLUE(R.drawable.trashbin_blue, "Poubelle bleu"),
     BLACK(R.drawable.trashbin_black, "Poubelle black"),
     PINK(R.drawable.trashbin_pink, "Rose"),
-    COMPOST(R.drawable.rabbit_1, "Compost"),
-    SUPERMARKET(R.drawable.rabbit_2, "Supermarché"),
-    CLOTHES(R.drawable.rabbit_1, "Point relais (Boîte blanche)"),
-    PHARMACY(R.drawable.rabbit_1, "Pharmacie"),
-    CALLNUMBER(R.drawable.rabbit_1, "Appel "),
+    COMPOST(R.drawable.trashbin_compost, "Compost"),
+    SUPERMARKET(R.drawable.trashbin_store, "Supermarché"),
+    PHARMACY(R.drawable.trashbin_pharmacy, "Pharmacie"),
     LEBONCOIN(R.drawable.rabbit_1, "Leboncoin"),
     OTHER(R.drawable.rabbit_1, "Autre");
 

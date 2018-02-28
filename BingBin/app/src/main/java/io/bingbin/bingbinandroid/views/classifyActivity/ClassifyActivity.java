@@ -75,13 +75,17 @@ public class ClassifyActivity extends AppCompatActivity {
     @BindView(R.id.classify_finish_title_textview)
     TextView classifyFinishTitleTextview;
     @BindView(R.id.classify_finish_trashbin_imageview)
-    ImageView ivInstructionTrashbin;
+    ImageView classifyFinishTrashbinImageview;
     @BindView(R.id.classify_finish_trier_btn)
     Button instructionTrierBtn;
     @BindView(R.id.classify_finish_recycle_btn)
     Button instructionRecycleBtn;
+    @BindView(R.id.classify_finish_rectangle)
+    View classifyFinishRectangle;
     @BindView(R.id.classify_finish_constraintlayout)
-    ConstraintLayout classifyFininshConstraintLayout;
+    ConstraintLayout classifyFinishConstraintLayout;
+    @BindView(R.id.classify_finish_longtext)
+    TextView classifyFinishLongtext;
 
     @BindView(R.id.classify_select_header)
     TextView classifySelectHeader;
@@ -140,7 +144,7 @@ public class ClassifyActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         classifyYesnoConstraintLayout.setVisibility(View.INVISIBLE);
-        classifyFininshConstraintLayout.setVisibility(View.INVISIBLE);
+        classifyFinishConstraintLayout.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
         String uriStr = intent.getStringExtra("uri");
@@ -346,9 +350,10 @@ public class ClassifyActivity extends AppCompatActivity {
         String title = category.getTrashbin().getFrenchName();
 
         classifyFinishTitleTextview.setText(title);
+        classifyFinishLongtext.setText(category.getText());
 
         Bitmap trashbinImg = BitmapFactory.decodeResource(getResources(), category.getTrashbin().getImageResource());
-        ivInstructionTrashbin.setImageBitmap(trashbinImg);
+        classifyFinishTrashbinImageview.setImageBitmap(trashbinImg);
 
 
         instructionTrierBtn.setOnClickListener(view -> {
@@ -364,8 +369,17 @@ public class ClassifyActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        classifyFininshConstraintLayout.setVisibility(View.VISIBLE);
+        classifyFinishConstraintLayout.setVisibility(View.VISIBLE);
         classifyYesnoConstraintLayout.setVisibility(View.GONE);
+
+        // adjust image size to improve layout
+        int rectangleBottom = classifyFinishRectangle.getBottom();
+        int recycleBtnBottom = instructionRecycleBtn.getBottom();
+        int imageHeight = classifyFinishTrashbinImageview.getLayoutParams().height;
+
+        ViewGroup.LayoutParams layoutParams = classifyFinishTrashbinImageview.getLayoutParams();
+        layoutParams.height = imageHeight + rectangleBottom - 32 - recycleBtnBottom;
+        classifyFinishTrashbinImageview.setLayoutParams(layoutParams);
     }
 
     /**
@@ -449,19 +463,19 @@ public class ClassifyActivity extends AppCompatActivity {
                 break;
             case R.id.classify_select_img_9:
                 classifySelectSelectedImageview.setImageResource(R.drawable.catg_9_electronic);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(10));
+                classifySelectSelectedTextview.setText(Category.getFrenchNameById(9));
                 break;
             case R.id.classify_select_img_10:
                 classifySelectSelectedImageview.setImageResource(R.drawable.catg_10_battery);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(11));
+                classifySelectSelectedTextview.setText(Category.getFrenchNameById(10));
                 break;
             case R.id.classify_select_img_11:
                 classifySelectSelectedImageview.setImageResource(R.drawable.catg_11_clothe);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(12));
+                classifySelectSelectedTextview.setText(Category.getFrenchNameById(11));
                 break;
             case R.id.classify_select_img_12:
                 classifySelectSelectedImageview.setImageResource(R.drawable.catg_12_medicine);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(13));
+                classifySelectSelectedTextview.setText(Category.getFrenchNameById(12));
                 break;
         }
     }

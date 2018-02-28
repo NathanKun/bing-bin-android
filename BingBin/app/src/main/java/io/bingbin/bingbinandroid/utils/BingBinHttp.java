@@ -199,7 +199,24 @@ public class BingBinHttp {
         }
     }
 
+    // app/sendSunPoint
+    public void sendSunPoint(Callback callback, String bingBinToken, String targetId) {
+        try {
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("BingBinToken", bingBinToken)
+                    .add("targetId", targetId)
+                    .build();
 
+            Request request = new Request.Builder()
+                    .url(baseUrl + "app/sendSunPoint")
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
@@ -232,12 +249,12 @@ public class BingBinHttp {
         // {"token":"984500015184422845a81972c48dd9634891465"}
 
         //System.out.println(System.getProperty("user.dir"));
-        File img = new File("jotun.png");
-        System.out.println(img.getName());
-        System.out.println(img.getAbsolutePath());
-        System.out.println(img.getPath());
-        System.out.println(img.exists());
-        System.out.println(img.canRead());
-        bbh.uploadscan(cb, "984500015184422845a81972c48dd9634891465", "test", "1", img);
-    }
+        //File img = new File("jotun.png");
+        //System.out.println(img.getName());
+        //System.out.println(img.getAbsolutePath());
+        //System.out.println(img.getPath());
+        //System.out.println(img.exists());
+        //System.out.println(img.canRead());
+        //bbh.uploadscan(cb, "984500015184422845a81972c48dd9634891465", "test", "1", img);
+}
 }

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -154,6 +153,7 @@ public class RankFragment extends Fragment {
                             }
 
                             String res = response.body().string();
+                            Log.d("sendSunPoint", res);
                             try {
                                 JSONObject json = new JSONObject(res);
 
@@ -175,10 +175,15 @@ public class RankFragment extends Fragment {
 
                                 activity.runOnUiThread(() -> {
                                     activity.showLoader(false);
-                                    AnimationUtil.revealView(rankingSendsunLayout, true, null);
-                                    (new Handler()).postDelayed(
-                                            () -> AnimationUtil.revealView(rankingSendsunLayout, false, null),
-                                            3000);
+
+                                    // disable input + fade in => 0.5s => delay 2s => fade out => 0.5s => enable input
+                                    activity.enableInput(false);
+                                    AnimationUtil.revealView(rankingSendsunLayout, true, 500);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(
+                                            () -> AnimationUtil.revealView(rankingSendsunLayout, false, 500), 1500);
+                                    handler.postDelayed(
+                                            () -> activity.enableInput(true), 2500);
                                 });
                             } catch (JSONException e) {
                                 activity.runOnUiThread(() -> {
@@ -190,7 +195,7 @@ public class RankFragment extends Fragment {
                         } // onResponse end
                     }; // call back end
 
-                    //activity.bbh.sendSunPoint(cb, activity.getCurrentUser().getToken(), dataToShow.get(position).get("id"));
+                    activity.bbh.sendSunPoint(cb, activity.getCurrentUser().getToken(), (String) dataToShow.get(position).get("id"));
 
                 }); // onClickListener end
 

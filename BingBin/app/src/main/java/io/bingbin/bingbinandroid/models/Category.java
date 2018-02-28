@@ -7,28 +7,30 @@ package io.bingbin.bingbinandroid.models;
  */
 
 public enum Category {
-    PLASTIC("plastique", TrashBin.YELLOW, 1),
-    METAL("metal", TrashBin.YELLOW, 2),
-    CARDBOARD("carton", TrashBin.YELLOW, 3),
-    PAPER("papier", TrashBin.BLUE, 4),
-    GLASS("verre", TrashBin.GREEN, 5),
-    FOOD("dechet menager", TrashBin.COMPOST, 6),
-    LIGHTBULB("ampoule", TrashBin.CALLNUMBER, 7),
-    CUMBERSOME("encombrant", TrashBin.LEBONCOIN, 8),
-    ELECTRONIC("équipement électronique", TrashBin.LEBONCOIN, 9),
-    BATTERY("pile ou ampoule", TrashBin.SUPERMARKET, 10),
-    CLOTHE("vêtements usés", TrashBin.CLOTHES, 11),
-    MEDICINE("medicament", TrashBin.PHARMACY, 12),
-    OTHER("autre", TrashBin.OTHER, 99);
+    PLASTIC("Plastique", TrashBin.YELLOW, 1, "1000 ans pour décomposer  une bouteille en plastique"),
+    METAL("Metal", TrashBin.YELLOW, 2, "200 ans pour décomposer une cannette"),
+    CARDBOARD("Carton", TrashBin.YELLOW, 3, "On utilise 222 222 t de cartons par jour"),
+    PAPER("Papier", TrashBin.BLUE, 4, "35 000 d'arbres sont utilisé pour faire des papiers chaque jour"),
+    GLASS("Verre", TrashBin.GREEN, 5, "35 kg de verre sont recyclé chaque seconde"),
+    FOOD("Déchet menager", TrashBin.COMPOST, 6, "Met le dans le compost et récupère des engrais plus tard"),
+    LIGHTBULB("Ampoule", TrashBin.SUPERMARKET, 7, "Les supermarchés récuppèrent de s ampoules"),
+    CUMBERSOME("Encombrant", TrashBin.LEBONCOIN, 8, "Vent ton produit ou appel SMDO 0. 44 38 29 00"),
+    ELECTRONIC("Equipement électronique", TrashBin.LEBONCOIN, 9, "Vent ton produit ou appel SMDO 0. 44 38 29 00"),
+    BATTERY("Pile", TrashBin.SUPERMARKET, 10, "5000 ans pour décomposer une pile"),
+    CLOTHE("Vêtements usés", TrashBin.LEBONCOIN, 11, "Vent ton produit ou appel SMDO 0. 44 38 29 00"),
+    MEDICINE("Médicament", TrashBin.PHARMACY, 12, "Les médicaments non utilisés présentent des risques d'intoxications par ingestion accidentelle"),
+    OTHER("Autre", TrashBin.OTHER, 99, "Il faut que Bing Bin apprenne plus pour le valoriser");
 
     private String frenchName;
     private TrashBin trashbin;
     private int categoryId;
+    private String text;
 
-    Category(String frenchName, TrashBin trashbin, int categoryId) {
+    Category(String frenchName, TrashBin trashbin, int categoryId, String text) {
         this.frenchName = frenchName;
         this.trashbin = trashbin;
         this.categoryId = categoryId;
+        this.text = text;
     }
 
     @Override
@@ -54,6 +56,8 @@ public enum Category {
     public String getFrenchName() { return frenchName; }
 
     public int getCategoryId() { return categoryId; }
+
+    public String getText() { return text; }
 
     public static Category fromName(String name) {
         if (Category.contains(name)) {

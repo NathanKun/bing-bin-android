@@ -207,11 +207,19 @@ public class MainActivity extends AppCompatActivity {
     void showLoader(boolean show) {
         if (show) {
             mainProgressBar.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            enableInput(false);
         } else {
             mainProgressBar.setVisibility(View.GONE);
+            enableInput(true);
+        }
+    }
+
+    void enableInput(boolean enable) {
+        if(enable) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
 }

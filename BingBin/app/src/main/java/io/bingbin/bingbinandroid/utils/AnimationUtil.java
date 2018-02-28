@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewPropertyAnimator;
@@ -21,16 +22,32 @@ import android.view.animation.DecelerateInterpolator;
  */
 public abstract class AnimationUtil {
 
-    // show or hide a view
+
+    public static void revealView(View view, boolean show) {
+        revealView(view, show, 1000, null);
+    }
+
     public static void revealView(View view, boolean show, Runnable onAnimationEnd) {
+        revealView(view, show, 1000, onAnimationEnd);
+    }
+
+    public static void revealView(View view, boolean show, int duration) {
+        revealView(view, show, duration, null);
+    }
+
+    // show or hide a view
+    public static void revealView(View view, boolean show, int duration, Runnable onAnimationEnd) {
         if(show) {
             view.setAlpha(0f);
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setAlpha(1f);
             view.setVisibility(View.VISIBLE);
         }
 
         ViewPropertyAnimator animator = view.animate()
                 .alpha(show ? 1f : 0f)
-                .setDuration(1000);
+                .setDuration(duration);
 
         if(null != onAnimationEnd) {
             animator.setListener(new Animator.AnimatorListener() {
@@ -51,7 +68,7 @@ public abstract class AnimationUtil {
 
         animator.start();
 
-        if(!show) view.setVisibility(View.GONE);
+        if(!show) (new Handler()).postDelayed(() -> view.setVisibility(View.GONE), duration);
     }
 
 }
