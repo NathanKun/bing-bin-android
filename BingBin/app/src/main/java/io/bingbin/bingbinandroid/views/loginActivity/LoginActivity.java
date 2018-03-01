@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
-import io.bingbin.bingbinandroid.utils.AnimationUtil;
+import com.catprogrammer.android.utils.AnimationUtil;
 import io.bingbin.bingbinandroid.utils.BingBinCallBack;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;

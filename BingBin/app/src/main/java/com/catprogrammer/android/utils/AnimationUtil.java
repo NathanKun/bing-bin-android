@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid.utils;
+package com.catprogrammer.android.utils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

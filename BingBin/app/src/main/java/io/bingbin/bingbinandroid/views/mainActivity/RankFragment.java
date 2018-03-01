@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
-import io.bingbin.bingbinandroid.utils.AnimationUtil;
+import com.catprogrammer.android.utils.AnimationUtil;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -202,7 +202,8 @@ public class RankFragment extends Fragment {
                 return view;
             }
 
-        };
+        }; // simpleadapter end
+
         mAdapter.setViewBinder((view, data, textRepresentation) -> {
             if (view instanceof ImageView && data instanceof Bitmap) {
                 ImageView i = (ImageView) view;

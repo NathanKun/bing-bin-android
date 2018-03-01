@@ -178,7 +178,7 @@
             android:layout_marginTop="8dp"
             android:columnCount="3"
             android:rowCount="5"
-            android:useDefaultMargins="true"
+            android:useDefaultMargins="false"
             app:layout_constraintEnd_toEndOf="@+id/classify_select_rectangle"
             app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle"
             app:layout_constraintTop_toBottomOf="@+id/classify_select_selectedbar_layout">

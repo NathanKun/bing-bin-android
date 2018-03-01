@@ -34,4 +34,5 @@
     <string name="recycle_it">Recycle it</string>
     <string name="trashbin_image_description">Trash bin with color</string>
     <string name="title_activity_instruction">InstructionActivity</string>
+    <string name="placeholder_space"> </string>
 </resources>

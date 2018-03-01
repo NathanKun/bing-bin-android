@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private final int CLASSIFY_END_TRIER = 66;
     private final int CLASSIFY_END_CANCEL = 666;
 
+    final Handler handler = new Handler();
+
     @Inject
     BingBinHttp bbh;
 
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+        handler.postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
     @SuppressLint("MissingSuperCall")
