@@ -8,6 +8,9 @@ import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -218,9 +221,56 @@ public class BingBinHttp {
         }
     }
 
+    // app/modifyRabbit
+    public void modifyRabbit(Callback callback, String bingBinToken, int rabbitId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("BingBinToken", bingBinToken);
+        map.put("rabbitId",  String.valueOf(rabbitId));
+        asynPost(callback, "app/modifyRabbit", map);
+    }
 
+    // app/modifyLeaf
+    public void modifyLeaf(Callback callback, String bingBinToken, int leafId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("BingBinToken", bingBinToken);
+        map.put("leafId",  String.valueOf(leafId));
+        asynPost(callback, "app/modifyLeaf", map);
+    }
 
+    // app/getMySummary
+    public void getMyRecycleCounts(Callback callback, String bingBinToken) {
+        Map<String, String> map = new HashMap<>();
+        map.put("BingBinToken", bingBinToken);
+        asynPost(callback, "app/getMySummary", map);
+    }
 
+    // app/getMyScanHistory
+    public void getMyRecycleHistory(Callback callback, String bingBinToken) {
+        Map<String, String> map = new HashMap<>();
+        map.put("BingBinToken", bingBinToken);
+        asynPost(callback, "app/getMyScanHistory", map);
+    }
+
+    private void asynPost(Callback callback, String url, Map<String, String> params) {
+        try {
+            Iterator it = params.entrySet().iterator();
+
+            FormBody.Builder builder = new FormBody.Builder();
+            while(it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                builder.add((String) entry.getKey(), (String) entry.getValue());
+            }
+
+            Request request = new Request.Builder()
+                    .url(baseUrl + url)
+                    .post(builder.build())
+                    .build();
+
+            client.newCall(request).enqueue(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         Callback cb = new Callback() {
@@ -256,5 +306,10 @@ public class BingBinHttp {
         //System.out.println(img.exists());
         //System.out.println(img.canRead());
         //bbh.uploadscan(cb, "984500015184422845a81972c48dd9634891465", "test", "1", img);
+
+        bbh.modifyRabbit(cb, "081700015196769915a946e3f1a691990511820", 9);
+        bbh.modifyLeaf(cb, "081700015196769915a946e3f1a691990511820", 9);
+        bbh.getMyRecycleCounts(cb, "081700015196769915a946e3f1a691990511820");
+        bbh.getMyRecycleHistory(cb, "081700015196769915a946e3f1a691990511820");
 }
 }
