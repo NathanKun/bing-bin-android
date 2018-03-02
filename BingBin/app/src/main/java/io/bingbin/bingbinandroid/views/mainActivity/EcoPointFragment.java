@@ -11,8 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -26,15 +25,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import okhttp3.Call;
@@ -121,19 +126,18 @@ public class EcoPointFragment extends Fragment {
     @BindView(R.id.ecopoint_count_text_12)
     TextView ecopointCountText12;
 
-    @BindView(R.id.ecopoint_gridlayout_masterlayout)
-    FrameLayout ecopointGridlayoutMasterLayout;
-    @BindView(R.id.ecopoint_gridlayout_cover)
-    View ecopointGridlayoutCover;
     @BindView(R.id.ecopoint_historylistView)
     ListView ecopointHistorylistView;
     @BindView(R.id.ecopoint_history_swiperefresh)
     SwipeRefreshLayout ecopointHistorySwiperefresh;
+    @BindView(R.id.ecopoint_gridlayout)
+    GridLayout ecopointGridlayout;
 
     private MainActivity activity;
     private Unbinder unbinder;
     private SimpleAdapter mAdapter;
     private List<Map<String, Object>> recycleHistoryDataToShow = new ArrayList<>();
+    private boolean isShowingGrid;
 
     public EcoPointFragment() {
         // Required empty public constructor
@@ -172,8 +176,8 @@ public class EcoPointFragment extends Fragment {
 
         SmartUser user = activity.getCurrentUser();
 
-        // hide gridlayout,  listview
-        ecopointGridlayoutMasterLayout.setVisibility(View.INVISIBLE);
+        // hide gridlayout, listview
+        ecopointGridlayout.setVisibility(View.INVISIBLE);
         ecopointHistorySwiperefresh.setVisibility(View.GONE);
 
 
@@ -200,10 +204,10 @@ public class EcoPointFragment extends Fragment {
                 ecopointIconImg10, ecopointIconImg11, ecopointIconImg12
         };
 
-        int maxHeight = ecopointGridlayoutMasterLayout.getHeight();
+        int maxHeight = ecopointGridlayout.getHeight();
         int numberHeight = ecopointCountText1.getHeight();
         int targetHeight = (maxHeight - 4 * (numberHeight + 16)) / 4;
-        int maxWidth = ecopointGridlayoutMasterLayout.getWidth();
+        int maxWidth = ecopointGridlayout.getWidth();
         int targetWidth = (maxWidth - 4 * 16) / 3;
         int target = targetHeight < targetWidth ? targetHeight : targetWidth;
         target = target > 200 ? 200 : target;
@@ -231,26 +235,17 @@ public class EcoPointFragment extends Fragment {
 
         // ------ listener to switch between grid and list ------
 
-        ecopointGridlayoutCover.setOnClickListener((v) -> {
-            Log.d("grid", "on click");
-            activity.enableInput(false);
-            AnimationUtil.revealView(ecopointGridlayoutMasterLayout, false, 500);
-            AnimationUtil.revealView(ecopointHistorySwiperefresh, true, 500);
-            activity.handler.postDelayed(() -> activity.enableInput(true), 1000);
+        ecopointEcopointTextview.setOnClickListener((v) -> {
+            isShowingGrid = !isShowingGrid;
+            switchBetweenGridAndList(isShowingGrid);
         });
-        ecopointHistorylistView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("listview", "on click");
-                activity.enableInput(false);
-                AnimationUtil.revealView(ecopointGridlayoutMasterLayout, true, 500);
-                AnimationUtil.revealView(ecopointHistorySwiperefresh, false, 500);
-                activity.handler.postDelayed(() -> activity.enableInput(true), 1000);
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
+
+        // ------ listener to change avatar ------
+        ecopointAvatarImageview.setOnClickListener((view -> {
+
+        }));
+
 
         // ------ get data and show ------
 
@@ -259,8 +254,21 @@ public class EcoPointFragment extends Fragment {
         getMyInfoToUpdateUserAndPoints(user.getToken());
 
         // show gridlayout
-        ecopointGridlayoutMasterLayout.setVisibility(View.VISIBLE);
+        ecopointGridlayout.setVisibility(View.VISIBLE);
+        isShowingGrid = true;
 
+    }
+
+    /**
+     * Convenient method to switch between grid and list
+     *
+     * @param showGrid is going to show Grid and hide List
+     */
+    private void switchBetweenGridAndList(boolean showGrid) {
+        activity.enableInput(false);
+        AnimationUtil.revealView(ecopointGridlayout, showGrid, 500);
+        AnimationUtil.revealView(ecopointHistorySwiperefresh, !showGrid, 500);
+        activity.handler.postDelayed(() -> activity.enableInput(true), 750);
     }
 
     /**
@@ -293,21 +301,12 @@ public class EcoPointFragment extends Fragment {
                         Log.d("getMyInfo not valid", errorStr);
 
                         if (errorStr.contains("token")) {
-                            activity.runOnUiThread(() -> {
-                                Toast.makeText(activity,
-                                        "Session expiré", Toast.LENGTH_SHORT).show();
-                                activity.handler.postDelayed(() -> {
-                                    Intent intent = new Intent(activity, LoginActivity.class);
-                                    startActivity(intent);
-                                    activity.finish();
-                                }, 1000);
-                            });
-                            return;
+                            activity.backToLoginActivity();
                         } else {
                             activity.runOnUiThread(() -> Toast.makeText(activity,
                                     errorStr, Toast.LENGTH_SHORT).show());
-                            return;
                         }
+                        return;
 
 
                     }
@@ -315,15 +314,10 @@ public class EcoPointFragment extends Fragment {
                     // if valid
 
                     // remove current user
-                    SmartUser currentUser = activity.getCurrentUser();
-                    SmartLogin smartLogin;
-                    if (currentUser != null) {
-                        smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-                        smartLogin.logout(activity);
-                    }
+                    activity.removeCurrentUserFromSession();
 
                     // set new user session
-                    currentUser = UserUtil.populateBingBinUser(json.getJSONObject("data"), token);
+                    SmartUser currentUser = UserUtil.populateBingBinUser(json.getJSONObject("data"), token);
                     UserSessionManager.setUserSession(activity, currentUser);
 
                     // refresh user info
@@ -356,21 +350,58 @@ public class EcoPointFragment extends Fragment {
         Callback cb = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                activity.runOnUiThread(() -> {
+                    Toast.makeText(activity,
+                            "Erreur de connexion", Toast.LENGTH_SHORT).show();
+                    ecopointHistorySwiperefresh.setRefreshing(false);
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    activity.runOnUiThread(() -> {
+                        Toast.makeText(activity,
+                                "Request not success", Toast.LENGTH_SHORT).show();
+                        ecopointHistorySwiperefresh.setRefreshing(false);
+                    });
+                    return;
+                }
+
+                String body = response.body().string();
+                try {
+                    JSONObject json = new JSONObject(body);
+                    if(!json.getBoolean("valid")) {
+                        String errorStr = json.getString("error");
+                        if(errorStr.contains("token")) {
+                            activity.backToLoginActivity();
+                        } else {
+                            activity.runOnUiThread(() -> {
+                                Toast.makeText(activity,
+                                        errorStr, Toast.LENGTH_SHORT).show();
+                                ecopointHistorySwiperefresh.setRefreshing(false);
+                            });
+                        }
+                        return;
+                    }
+
+                    // if valid
+                    JSONArray historyArray = json.getJSONArray("history");
+                    showRecycleHistoryData(historyArray);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    activity.runOnUiThread(() -> {
+                        Toast.makeText(activity,
+                                "Json parse error", Toast.LENGTH_SHORT).show();
+                        ecopointHistorySwiperefresh.setRefreshing(false);
+                    });
+                }
             }
         };
 
         activity.runOnUiThread(() -> ecopointHistorySwiperefresh.setRefreshing(true));
-        try {
-            showRecycleHistoryData(new JSONArray());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //activity.bbh.getScanHistory(cb, token);
+        activity.bbh.getMyRecycleHistory(cb, token);
     }
 
     /**
@@ -382,41 +413,28 @@ public class EcoPointFragment extends Fragment {
     private void showRecycleHistoryData(JSONArray array) throws JSONException {
         recycleHistoryDataToShow.clear();
 
-        /*for (int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
             JSONObject json = array.getJSONObject(i);
             Map<String, Object> map = new HashMap<>();
 
-            String date = json.getString("date");
-            String category = json.getString("category");
-            int pt = json.getInt("point");
+            long timestamp = json.getLong("date_of_scan");
+            int id_type = json.getInt("id_type");
+            int eco_point = json.getInt("eco_point");
+
+            String date = (new SimpleDateFormat("dd-MM-yy", Locale.FRANCE)).format(new Date(timestamp * 1000));
 
             map.put("date", date);
-            map.put("category", category);
-            map.put("point", pt);
+            map.put("category", Category.getFrenchNameById(id_type));
+            map.put("point", eco_point);
             recycleHistoryDataToShow.add(map);
-        }*/
-
-        // TODO delete below when interface is ready
-        Map<String, Object> map = new HashMap<>();
-        map.put("date", "01.02.18");
-        map.put("category", "plastique");
-        map.put("point", "35 pts");
-        recycleHistoryDataToShow.add(map);
-        map = new HashMap<>();
-        map.put("date", "02.02.18");
-        map.put("category", "metal");
-        map.put("point", "5 pts");
-        recycleHistoryDataToShow.add(map);
-        map = new HashMap<>();
-        map.put("date", "03.02.18");
-        map.put("category", "hahaha");
-        map.put("point", "233 pts");
-        recycleHistoryDataToShow.add(map);
-        // TODO delete above when interface is ready
+        }
 
         // show data in list
-        mAdapter.notifyDataSetChanged();
-        ecopointHistorySwiperefresh.setRefreshing(false);
+        activity.runOnUiThread(() -> {
+            mAdapter.notifyDataSetChanged();
+            ecopointHistorySwiperefresh.setRefreshing(false);
+        });
+
     }
 
     /**
@@ -428,22 +446,88 @@ public class EcoPointFragment extends Fragment {
         Callback cb = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                activity.runOnUiThread(() -> {
+                    Toast.makeText(activity,
+                            "Erreur de connexion", Toast.LENGTH_SHORT).show();
+                    ecopointHistorySwiperefresh.setRefreshing(false);
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                if(!response.isSuccessful()) {
+                    activity.runOnUiThread(() -> {
+                        Toast.makeText(activity,
+                                "Request not success", Toast.LENGTH_SHORT).show();
+                        ecopointHistorySwiperefresh.setRefreshing(false);
+                    });
+                    return;
+                }
 
+                String body = response.body().string();
+                try {
+                    JSONObject json = new JSONObject(body);
+                    if(!json.getBoolean("valid")) {
+                        String errorStr = json.getString("error");
+                        if(errorStr.contains("token")) {
+                            activity.backToLoginActivity();
+                        } else {
+                            activity.runOnUiThread(() -> {
+                                Toast.makeText(activity,
+                                        errorStr, Toast.LENGTH_SHORT).show();
+                                ecopointHistorySwiperefresh.setRefreshing(false);
+                            });
+                        }
+                        return;
+                    }
+
+                    // if valid
+                    JSONArray historyArray = json.getJSONArray("summary");
+                    showRecycleCountData(historyArray);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    activity.runOnUiThread(() -> {
+                        Toast.makeText(activity,
+                                "Json parse error", Toast.LENGTH_SHORT).show();
+                        ecopointHistorySwiperefresh.setRefreshing(false);
+                    });
+                }
             }
         };
-        //activity.bbh.getCountByCategory(cb, token);
+        activity.bbh.getMyRecycleCounts(cb, token);
+    }
 
-        // TODO delete below when interface is ready
-        try {
-            showRecycleHistoryData(new JSONArray());
-        } catch (JSONException e) {
-            e.printStackTrace();
+    /**
+     * populate recycle count data from json array to TextViews in grid
+     *
+     * @param array json array
+     * @throws JSONException    json exception
+     */
+    private void showRecycleCountData(JSONArray array) throws JSONException {
+        int[] counts = new int[12];
+
+        // copy json array data to an array
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject json = array.getJSONObject(i);
+            int type_trash = json.getInt("type_trash");
+            int quantity = json.getInt("quantity");
+
+            if(type_trash <= 12) {
+                counts[type_trash - 1] = quantity;
+            } // ignore 99 (other)
         }
+
+        // show data
+        TextView[] textViews = {ecopointCountText1, ecopointCountText2, ecopointCountText3,
+                ecopointCountText4, ecopointCountText5, ecopointCountText6,
+                ecopointCountText7, ecopointCountText8, ecopointCountText9,
+                ecopointCountText10, ecopointCountText11, ecopointCountText12};
+        activity.runOnUiThread(() -> {
+            for(int i = 0; i < 12; i++) {
+                textViews[i].setText(String.valueOf(counts[i]));
+            }
+        });
     }
 
     @Override

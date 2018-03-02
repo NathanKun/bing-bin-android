@@ -69,7 +69,8 @@ dependencies {
 
     // dagger2 dependency injection
     compileOnly 'com.google.dagger:dagger-android:2.11'
-    implementation 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
+    implementation 'com.google.dagger:dagger-android-support:2.11'
+    // if you use the support libraries
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
 
@@ -95,6 +96,9 @@ dependencies {
 
     // material camera fragment
     implementation 'com.afollestad:material-camera:0.4.4'
+
+    // floating action button
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
 
     // smart login
     implementation project(':smartloginlibrary')

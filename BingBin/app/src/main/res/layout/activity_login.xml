@@ -45,15 +45,15 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/login_bottom_glass"
+            android:id="@+id/login_bottom_grass"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:contentDescription="login_bottom_glass"
+            android:contentDescription="login_bottom_grass"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/bottom_glass" />
+            app:srcCompat="@drawable/bottom_grass" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/login_bottom_ball"
@@ -82,7 +82,7 @@
         android:background="@color/white"
         app:cardCornerRadius="4dp"
         app:cardElevation="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/login_bottom_glass"
+        app:layout_constraintBottom_toBottomOf="@+id/login_bottom_grass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,22 +1,21 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_home"
     tools:context="io.bingbin.bingbinandroid.views.mainActivity.EcoPointFragment">
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/appCompatImageView"
+        android:id="@+id/login_bottom_grass"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:contentDescription="login_bottom_glass"
+        android:contentDescription="login_bottom_grass"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/bottom_glass" />
+        app:srcCompat="@drawable/bottom_grass" />
 
     <TextView
         android:id="@+id/home_welcome_textview"
@@ -36,13 +35,15 @@
         android:id="@+id/welcome_bin_img"
         android:layout_width="212dp"
         android:layout_height="179dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:src="@drawable/img_welcome_bin"
+        app:layout_constraintBottom_toTopOf="@+id/login_bottom_grass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
 
     <Button
         android:id="@+id/welcome_image_btn"
@@ -69,18 +70,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome_image_btn" />
 
-    <Button
-        android:id="@+id/logout_btn"
-        android:layout_width="233dp"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/welcome_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/logout_text"
-        app:layout_constraintBottom_toTopOf="@+id/appCompatImageView"
+        app:fab_addButtonColorNormal="@color/primary_color"
+        app:fab_addButtonColorPressed="@color/dark_primary_color"
+        app:fab_addButtonPlusIconColor="@color/black"
+        app:fab_addButtonSize="normal"
+        app:fab_labelStyle="@style/fab_menu_labels_style"
+        app:fab_labelsPosition="left"
+        app:fab_expandDirection="down"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_camera_btn" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/welcome_fab_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_person_outline_black_24dp"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/dark_primary_color"
+            app:fab_size="mini"
+            app:fab_title="Changer mon avatar" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/welcome_fab_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_info_outline_black_24dp"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/dark_primary_color"
+            app:fab_size="mini"
+            app:fab_title="Information" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/welcome_fab_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_logout"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/dark_primary_color"
+            app:fab_size="mini"
+            app:fab_title="Déconnexion" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.constraint.ConstraintLayout>

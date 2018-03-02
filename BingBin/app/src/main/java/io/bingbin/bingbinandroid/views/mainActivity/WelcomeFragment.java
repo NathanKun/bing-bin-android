@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,12 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.views.avatarActivity.AvatarActivity;
+import io.bingbin.bingbinandroid.views.infoActivity.InfoActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
@@ -41,8 +47,10 @@ public class WelcomeFragment extends Fragment {
     Button welcomeCameraBtn;
     @BindView(R.id.home_welcome_textview)
     TextView homeWelcomeTextview;
-    @BindView(R.id.logout_btn)
-    Button logoutBtn;
+    @BindView(R.id.welcome_fab)
+    FloatingActionsMenu welcomeFab;
+    @BindView(R.id.fragment_home)
+    ConstraintLayout fragmentHome;
 
     private MainActivity activity;
     private Unbinder unbinder;
@@ -104,8 +112,9 @@ public class WelcomeFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick(R.id.logout_btn)
+    @OnClick(R.id.welcome_fab_logout)
     void logoutOnClick(View view) {
+        welcomeFab.toggle();
         SmartUser currentUser = activity.getCurrentUser();
         SmartLogin smartLogin;
         if (currentUser != null) {
@@ -125,5 +134,17 @@ public class WelcomeFragment extends Fragment {
                 Log.d("Smart Login", "Logout failed");
             }
         }
+    }
+
+    @OnClick(R.id.welcome_fab_avatar)
+    void changeAvatarOnClick(View view) {
+        welcomeFab.toggle();
+        startActivity(new Intent(activity, AvatarActivity.class));
+    }
+
+    @OnClick(R.id.welcome_fab_info)
+    void infoOnClick(View view) {
+        welcomeFab.toggle();
+        startActivity(new Intent(activity, InfoActivity.class));
     }
 }

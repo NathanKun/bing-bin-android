@@ -28,6 +28,10 @@ import io.bingbin.bingbinandroid.utils.BingBinMainViewPager;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
 import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
+import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
+import studios.codelight.smartloginlibrary.LoginType;
+import studios.codelight.smartloginlibrary.SmartLogin;
+import studios.codelight.smartloginlibrary.SmartLoginFactory;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 
@@ -217,11 +221,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void enableInput(boolean enable) {
-        if(enable) {
+        if (enable) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } else {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    void backToLoginActivity() {
+        runOnUiThread(() -> {
+            Toast.makeText(this,
+                    "Session expiré", Toast.LENGTH_SHORT).show();
+
+            removeCurrentUserFromSession();
+
+            handler.postDelayed(() -> {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }, 1000);
+        });
+    }
+
+    void removeCurrentUserFromSession() {
+        if (currentUser != null) {
+            SmartLoginFactory.build(LoginType.CustomLogin).logout(this);
         }
     }
 }

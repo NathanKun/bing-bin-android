@@ -88,8 +88,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     @BindView(R.id.login_logo)
     LinearLayoutCompat loginLogo;
-    @BindView(R.id.login_bottom_glass)
-    AppCompatImageView loginBottomGlass;
+    @BindView(R.id.login_bottom_grass)
+    AppCompatImageView loginBottomGrass;
     @BindView(R.id.login_cardview)
     CardView loginCardview;
     @BindView(R.id.login_masterlayout)
@@ -131,7 +131,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         constraintSet.applyTo(loginMasterlayout);
 
         loginMasterlayout.post(
-                () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show glass
+                () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show grass
                         () -> AnimationUtil.revealView(loginLogo, true, // show logo
                                 () -> {                                      // move up logo
                                     // start constraint layout auto animation
@@ -209,8 +209,10 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                     // use bbh to synchronous get bingbintoken
                     if (user instanceof SmartGoogleUser) {
                         res = bbh.googleLogin(((SmartGoogleUser) user).getIdToken());
+                        SmartLoginFactory.build(LoginType.Google).logout(this);
                     } else if (user instanceof SmartFacebookUser) {
                         res = bbh.facebookLogin(((SmartFacebookUser) user).getAccessToken().getToken());
+                        SmartLoginFactory.build(LoginType.Facebook).logout(this);
                     }
 
                     if (res != null) {

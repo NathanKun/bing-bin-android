@@ -10,12 +10,12 @@
         android:id="@+id/getecopoint_footer_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:contentDescription="login_bottom_glass"
+        android:contentDescription="bottom_grass"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/bottom_glass" />
+        app:srcCompat="@drawable/bottom_grass" />
 
     <TextView
         android:id="@+id/getecopoint_ecopoint_textView"

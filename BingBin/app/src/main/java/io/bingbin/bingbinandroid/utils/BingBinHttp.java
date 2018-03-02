@@ -122,6 +122,7 @@ public class BingBinHttp {
             RequestBody requestBody = new FormBody.Builder()
                     .add("BingBinToken", bingBinToken)
                     .add("Duration", duration)
+                    .add("limit", String.valueOf(50))
                     .build();
 
             Request request = new Request.Builder()
@@ -248,6 +249,7 @@ public class BingBinHttp {
     public void getMyRecycleHistory(Callback callback, String bingBinToken) {
         Map<String, String> map = new HashMap<>();
         map.put("BingBinToken", bingBinToken);
+        map.put("limit", String.valueOf(50));
         asynPost(callback, "app/getMyScanHistory", map);
     }
 

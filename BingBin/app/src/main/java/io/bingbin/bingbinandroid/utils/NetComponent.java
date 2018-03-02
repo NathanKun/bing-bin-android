@@ -3,6 +3,7 @@ package io.bingbin.bingbinandroid.utils;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import io.bingbin.bingbinandroid.views.avatarActivity.AvatarActivity;
 import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.RegisterActivity;
@@ -21,4 +22,5 @@ public interface NetComponent {
     void inject(LoginActivity activity);
     void inject(RegisterActivity activity);
     void inject(ClassifyActivity activity);
+    void inject(AvatarActivity activity);
 }

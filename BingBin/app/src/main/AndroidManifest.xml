@@ -69,6 +69,8 @@
             android:name=".views.instructionActivity.InstructionActivity"
             android:label="@string/title_activity_instruction"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".views.infoActivity.InfoActivity" />
+        <activity android:name=".views.avatarActivity.AvatarActivity"></activity>
     </application>
 
 </manifest>
