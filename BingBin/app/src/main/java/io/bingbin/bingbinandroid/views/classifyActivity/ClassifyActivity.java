@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -77,9 +78,9 @@ public class ClassifyActivity extends AppCompatActivity {
     @BindView(R.id.classify_finish_trashbin_imageview)
     ImageView classifyFinishTrashbinImageview;
     @BindView(R.id.classify_finish_trier_btn)
-    Button instructionTrierBtn;
+    Button classifyFinishTrierBtn;
     @BindView(R.id.classify_finish_recycle_btn)
-    Button instructionRecycleBtn;
+    Button classifyFinishRecycleItBtn;
     @BindView(R.id.classify_finish_rectangle)
     View classifyFinishRectangle;
     @BindView(R.id.classify_finish_constraintlayout)
@@ -357,14 +358,14 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyFinishTrashbinImageview.setImageBitmap(trashbinImg);
 
 
-        instructionTrierBtn.setOnClickListener(view -> {
+        classifyFinishTrierBtn.setOnClickListener(view -> {
             Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
             intent.putExtra("ecopoint", ecoPoint);
             setResult(CLASSIFY_END_TRIER, intent);
             finish();
         });
-        instructionRecycleBtn.setOnClickListener(view -> {
+        classifyFinishRecycleItBtn.setOnClickListener(view -> {
             Intent intent = new Intent(ClassifyActivity.this, InstructionActivity.class);
             intent.putExtra("category", category);
             startActivity(intent);
@@ -373,14 +374,28 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyFinishConstraintLayout.setVisibility(View.VISIBLE);
         classifyYesnoConstraintLayout.setVisibility(View.GONE);
 
-        // adjust image size to improve layout
-        int rectangleBottom = classifyFinishRectangle.getBottom();
-        int recycleBtnBottom = instructionRecycleBtn.getBottom();
-        int imageHeight = classifyFinishTrashbinImageview.getLayoutParams().height;
+        classifyFinishConstraintLayout.post(() -> {
+            // adjust image size to improve layout
+            int rectangleBottom = classifyFinishRectangle.getBottom();
+            int recycleBtnBottom = classifyFinishRecycleItBtn.getBottom();
+            int imageHeight = classifyFinishTrashbinImageview.getHeight();
+            int targetHeight = imageHeight + rectangleBottom - 32 - recycleBtnBottom;
 
-        ViewGroup.LayoutParams layoutParams = classifyFinishTrashbinImageview.getLayoutParams();
-        layoutParams.height = imageHeight + rectangleBottom - 32 - recycleBtnBottom;
-        classifyFinishTrashbinImageview.setLayoutParams(layoutParams);
+            if(targetHeight < classifyFinishConstraintLayout.getHeight() / 6) {
+                targetHeight = classifyFinishConstraintLayout.getHeight() / 6;
+                classifyFinishLongtext.setTextSize(14);
+            }
+
+            ViewGroup.LayoutParams layoutParams = classifyFinishTrashbinImageview.getLayoutParams();
+            layoutParams.height = targetHeight;
+            classifyFinishTrashbinImageview.setLayoutParams(layoutParams);
+
+            Log.d("trashbin height adjust",
+                    "rectangleBottom : " + rectangleBottom +
+                            " recycleBtnBottom : " + recycleBtnBottom +
+                            " imageHeight : " + imageHeight +
+                            " new height : " + layoutParams.height);
+        });
     }
 
     /**
