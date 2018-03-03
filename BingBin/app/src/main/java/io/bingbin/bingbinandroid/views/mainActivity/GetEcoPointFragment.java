@@ -63,8 +63,8 @@ public class GetEcoPointFragment extends Fragment {
     void shareOnClick(View view) {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        String shareBody = "Here is the share content body";
-        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
+        String shareBody = "Bing Bin app reconnaît les déchets et propose la poubelle appropriée. Le tri n'a jamais été si simple et amusant avec Bing Bin:)";
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Trion mieux, vivons mieux - Bing Bin");
         sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
