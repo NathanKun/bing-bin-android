@@ -22,6 +22,8 @@
     <string name="logout_text">DECONNEXION</string>
 
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="camera_retry">Réessayer</string>
+    <string name="camera_ok">OK</string>
 
     <string name="home_homefragment">%1$s, want to throw something?</string>
     <string name="btn_gallary">Open Gallery</string>

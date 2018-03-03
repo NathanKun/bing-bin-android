@@ -420,6 +420,9 @@ public class ClassifyActivity extends AppCompatActivity {
                 .audioDisabled(true)
                 .stillShot()
                 .allowRetry(true)
+                .labelRetry(R.string.camera_retry)
+                .labelConfirm(R.string.camera_ok)
+                .forceCamera1() // Pixel 2 XL crash in Camera2
                 .start(CAMERA_RQ);
     }
 
