@@ -139,12 +139,12 @@ public class WelcomeFragment extends Fragment {
     @OnClick(R.id.welcome_fab_avatar)
     void changeAvatarOnClick(View view) {
         welcomeFab.toggle();
-        startActivity(new Intent(activity, AvatarActivity.class));
+        activity.startAvatarActivity();
     }
 
     @OnClick(R.id.welcome_fab_info)
     void infoOnClick(View view) {
         welcomeFab.toggle();
-        startActivity(new Intent(activity, InfoActivity.class));
+        activity.startInfoActivity();
     }
 }

@@ -3,7 +3,11 @@ package io.bingbin.bingbinandroid.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.renderscript.Allocation;
@@ -66,6 +70,13 @@ public abstract class CommonUtil {
         return bitmap;
     }
 
+    /**
+     * Blur a bitmap
+     * @param context   context
+     * @param source    original bitmap
+     * @param radius    radius of blur
+     * @return  blur bitmap
+     */
     public static Bitmap rsBlur(Context context, Bitmap source, int radius) {
 
         //初始化一个RenderScript Context
@@ -87,5 +98,28 @@ public abstract class CommonUtil {
         renderScript.destroy();
 
         return source;
+    }
+
+    /**
+     * Process a bitmap to gray scale
+     * @param bmpOriginal   original bitmap
+     * Ref: https://stackoverflow.com/questions/3373860/convert-a-bitmap-to-grayscale-in-android
+     * @return  gray scale bitmap
+     */
+    public static Bitmap toGrayscale(Bitmap bmpOriginal)
+    {
+        int width, height;
+        height = bmpOriginal.getHeight();
+        width = bmpOriginal.getWidth();
+
+        Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmpGrayscale);
+        Paint paint = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(0);
+        ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+        paint.setColorFilter(f);
+        c.drawBitmap(bmpOriginal, 0, 0, paint);
+        return bmpGrayscale;
     }
 }

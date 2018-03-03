@@ -307,7 +307,7 @@ public class RankFragment extends Fragment {
 
             int rabbitId = json.getInt("id_rabbit");
             int leafId = json.getInt("id_leaf");
-            Bitmap avatar = AvatarHelper.generateAvarat(activity, rabbitId, leafId);
+            Bitmap avatar = AvatarHelper.generateAvatar(activity, rabbitId, leafId);
 
             map.put("username", name);
             map.put("point", pt);

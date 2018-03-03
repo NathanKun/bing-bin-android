@@ -27,7 +27,9 @@ import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import io.bingbin.bingbinandroid.utils.BingBinMainViewPager;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
+import io.bingbin.bingbinandroid.views.avatarActivity.AvatarActivity;
 import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
+import io.bingbin.bingbinandroid.views.infoActivity.InfoActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private final int CLASSIFY = 6;
     private final int CLASSIFY_END_TRIER = 66;
     private final int CLASSIFY_END_CANCEL = 666;
+    private final int CHANGE_AVATAR = 6666;
 
     final Handler handler = new Handler();
 
@@ -123,15 +126,17 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == CLASSIFY) {
             if (resultCode == CLASSIFY_END_TRIER) {
                 Log.d("Classify End", "To trier fragment");
-                int ecopoint = data.getIntExtra("ecopoint", 0);
-                if (ecopoint == 0) {
+                int ecoPoint = data.getIntExtra("ecopoint", 0);
+                if (ecoPoint == 0) {
                     Log.e("ecopoint gain", "ecopoint gain 0");
                 }
                 viewPager.setCurrentItem(3);
-                ((GetEcoPointFragment) adapter.getRegisteredFragment(3)).setEcoPoint(ecopoint);
+                ((GetEcoPointFragment) adapter.getRegisteredFragment(3)).setEcoPoint(ecoPoint);
             } else if (resultCode == CLASSIFY_END_CANCEL) {
                 Log.d("Classify End", "CANCEL");
             }
+        } else if (requestCode == CHANGE_AVATAR){
+            ((EcoPointFragment)adapter.getRegisteredFragment(0)).getMyInfoToUpdateUserAndPoints(currentUser.getToken());
         }
     }
 
@@ -208,6 +213,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ClassifyActivity.class);
         intent.putExtra("uri", uri);
         startActivityForResult(intent, CLASSIFY);
+    }
+
+    public void startAvatarActivity() {
+        startActivityForResult(new Intent(this, AvatarActivity.class), CHANGE_AVATAR);
+    }
+
+    public void startInfoActivity() {
+        startActivity(new Intent(this, InfoActivity.class));
     }
 
     void showLoader(boolean show) {

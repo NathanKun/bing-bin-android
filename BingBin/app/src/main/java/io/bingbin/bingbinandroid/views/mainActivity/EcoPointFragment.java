@@ -1,6 +1,5 @@
 package io.bingbin.bingbinandroid.views.mainActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -25,8 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,13 +38,9 @@ import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
-import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import studios.codelight.smartloginlibrary.LoginType;
-import studios.codelight.smartloginlibrary.SmartLogin;
-import studios.codelight.smartloginlibrary.SmartLoginFactory;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 import studios.codelight.smartloginlibrary.util.UserUtil;
@@ -184,7 +177,7 @@ public class EcoPointFragment extends Fragment {
         // ------ show user info ------
 
         // generate avatar
-        ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvarat(
+        ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
                 activity, user.getRabbit(), user.getLeaf()));
 
         // show username
@@ -276,7 +269,7 @@ public class EcoPointFragment extends Fragment {
      *
      * @param token BingBinToken of the current user
      */
-    private void getMyInfoToUpdateUserAndPoints(String token) {
+    void getMyInfoToUpdateUserAndPoints(String token) {
         Callback cb = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -307,8 +300,6 @@ public class EcoPointFragment extends Fragment {
                                     errorStr, Toast.LENGTH_SHORT).show());
                         }
                         return;
-
-
                     }
 
                     // if valid
@@ -326,7 +317,7 @@ public class EcoPointFragment extends Fragment {
                         ecopointEcopointTextview.setText(String.valueOf(finalCurrentUser.getEcoPoint()));
                         ecopointSunpointTextview.setText(String.valueOf(finalCurrentUser.getSunPoint()));
 
-                        ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvarat(
+                        ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
                                 activity, finalCurrentUser.getRabbit(), finalCurrentUser.getLeaf()));
                     });
 
@@ -425,7 +416,7 @@ public class EcoPointFragment extends Fragment {
 
             map.put("date", date);
             map.put("category", Category.getFrenchNameById(id_type));
-            map.put("point", eco_point);
+            map.put("point", String.valueOf(eco_point) + " pts");
             recycleHistoryDataToShow.add(map);
         }
 

@@ -253,6 +253,42 @@ public class BingBinHttp {
         asynPost(callback, "app/getMyScanHistory", map);
     }
 
+    // synchronous modifyRabbit and modifyLeaf
+    public Response[] modifyAvatar(String bingBinToken, int rabbitId, int leafId) {
+        try {
+            FormBody body = new FormBody.Builder()
+                    .add("BingBinToken", bingBinToken)
+                    .add("rabbitId", String.valueOf(rabbitId))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(baseUrl + "app/modifyRabbit")
+                    .post(body)
+                    .build();
+            Response resRabbit = client.newCall(request).execute();
+
+            body = new FormBody.Builder()
+                    .add("BingBinToken", bingBinToken)
+                    .add("leafId", String.valueOf(leafId))
+                    .build();
+            request = new Request.Builder()
+                    .url(baseUrl + "app/modifyLeaf")
+                    .post(body)
+                    .build();
+            Response resLeaf = client.newCall(request).execute();
+
+            return new Response[] {resRabbit, resLeaf};
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * general method for make a asynchronous POST
+     * @param callback  callback
+     * @param url       url for adding to the base url
+     * @param params    parameters for POST
+     */
     private void asynPost(Callback callback, String url, Map<String, String> params) {
         try {
             Iterator it = params.entrySet().iterator();
