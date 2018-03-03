@@ -15,8 +15,8 @@ public enum TrashBin {
     COMPOST(R.drawable.trashbin_compost, "Compost"),
     SUPERMARKET(R.drawable.trashbin_store, "Supermarché"),
     PHARMACY(R.drawable.trashbin_pharmacy, "Pharmacie"),
-    LEBONCOIN(R.drawable.rabbit_1, "Leboncoin"),
-    OTHER(R.drawable.rabbit_1, "Autre");
+    LEBONCOIN(R.drawable.trashbin_leboncoin, "Leboncoin"),
+    OTHER(R.drawable.trashbin_black, "Autre");
 
     private int imageResource;
     private String frenchName;
