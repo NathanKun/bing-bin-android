@@ -217,9 +217,9 @@ public class ClassifyActivity extends AppCompatActivity {
                 final int ivHeight = iv.getMeasuredHeight();
                 Log.d("blur", String.valueOf(ivWidth));
                 Log.d("blur", String.valueOf(ivHeight));
-                bm = CommonUtil.scaleBitmapToCropFill(bm, ivHeight, ivWidth);
+                //bm = CommonUtil.scaleBitmapToCropFill(bm, ivHeight, ivWidth);
 
-                Bitmap blurImg = Bitmap.createBitmap(ivWidth, ivHeight, Bitmap.Config.ARGB_8888);
+                Bitmap blurImg = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(blurImg);
                 canvas.translate(-iv.getLeft(), -iv.getTop());
                 Paint paint = new Paint();
