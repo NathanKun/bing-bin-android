@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/listview_rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
         android:layout_toEndOf="@+id/listview_avatar"
         android:orientation="vertical">
 
-        <TextView
+        <io.bingbin.bingbinandroid.views.BingBinTextView
             android:id="@+id/listview_ecopoint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             android:textSize="24sp"
             tools:text="233pt" />
 
-        <TextView
+        <io.bingbin.bingbinandroid.views.BingBinTextView
             android:id="@+id/listview_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

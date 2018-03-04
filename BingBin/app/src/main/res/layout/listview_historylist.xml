@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/historylist_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         android:textColor="@color/black"
         android:textSize="18sp" />
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/historylist_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         android:textColor="@color/black"
         android:textSize="18sp" />
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/historylist_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

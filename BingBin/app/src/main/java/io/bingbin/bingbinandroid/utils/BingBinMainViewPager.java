@@ -47,10 +47,10 @@ public class BingBinMainViewPager extends ViewPager {
         if(event.getAction() == MotionEvent.ACTION_MOVE) {
             try {
                 float diffX = event.getX() - x1;
-                if (diffX > 0 && direction == SwipeDirection.RIGHT ) {
+                if (diffX > -100 && direction == SwipeDirection.RIGHT ) {
                     // swipe from left to right detected
                     return false;
-                }else if (diffX < 0 && direction == SwipeDirection.LEFT ) {
+                }else if (diffX < 100 && direction == SwipeDirection.LEFT ) {
                     // swipe from right to left detected
                     return false;
                 }

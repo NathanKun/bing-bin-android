@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/instruction_title_textview" />
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/instruction_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,12 +54,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Retourner"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/instruction_footer_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/instruction_longtext_textview" />
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/instruction_longtext_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

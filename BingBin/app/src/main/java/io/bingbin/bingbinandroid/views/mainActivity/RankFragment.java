@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -65,7 +64,7 @@ public class RankFragment extends Fragment {
     ListView listView;
     @BindView(R.id.rank_swiperefresh)
     SwipeRefreshLayout rankSwiperefresh;
-    @BindView(R.id.rank_butbtonbar_all_btn)
+    @BindView(R.id.rank_buttonbar_all_btn)
     Button rankButbtonbarAllBtn;
     @BindView(R.id.rank_butbtonbar_day_btn)
     Button rankButbtonbarDayBtn;
@@ -136,8 +135,8 @@ public class RankFragment extends Fragment {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
 
-                ImageView b = view.findViewById(R.id.listview_sun);
-                b.setOnClickListener((v) -> {
+                ImageView sunButton = view.findViewById(R.id.listview_sun);
+                sunButton.setOnClickListener((v) -> {
                     Log.d("selected user id", (String) dataToShow.get(position).get("id"));
                     activity.showLoader(true);
 
@@ -183,6 +182,7 @@ public class RankFragment extends Fragment {
 
                                 activity.runOnUiThread(() -> {
                                     activity.showLoader(false);
+                                    AnimationUtil.revealView(sunButton, false, 500); // hide sun button
 
                                     // disable input + fade in => 0.5s => delay 2s => fade out => 0.5s => enable input
                                     activity.enableInput(false);
@@ -207,10 +207,12 @@ public class RankFragment extends Fragment {
 
                 }); // onClickListener end
 
+                // TODO if(dataToShow.get(position)) { sunButton.setVisibility(View.GONE); }
+
                 return view;
             }
 
-        }; // simpleadapter end
+        }; // new SimpleAdapter end
 
         mAdapter.setViewBinder((view, data, textRepresentation) -> {
             if (view instanceof ImageView && data instanceof Bitmap) {
@@ -332,9 +334,10 @@ public class RankFragment extends Fragment {
             String id = json.getString("id");
             int rank = json.getInt("rank");
             int pt = json.getInt("eco_point");
-
             int rabbitId = json.getInt("id_rabbit");
             int leafId = json.getInt("id_leaf");
+            // TODO boolean isSent = json.getBoolean("isSent");
+
             Bitmap avatar = AvatarHelper.generateAvatar(activity, rabbitId, leafId);
 
             map.put("username", name);
@@ -342,6 +345,7 @@ public class RankFragment extends Fragment {
             map.put("rank", rank);
             map.put("avatar", avatar);
             map.put("id", id);
+            // TODO map.put("isSent", isSent);
             dataToShow.add(map);
         }
 
@@ -352,7 +356,7 @@ public class RankFragment extends Fragment {
         }
     }
 
-    @OnClick({R.id.rank_butbtonbar_all_btn, R.id.rank_butbtonbar_day_btn,
+    @OnClick({R.id.rank_buttonbar_all_btn, R.id.rank_butbtonbar_day_btn,
             R.id.rank_butbtonbar_week_btn, R.id.rank_butbtonbar_month_btn})
     void buttonBarBtnOnClick(View view) {
         rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.black));
@@ -361,7 +365,7 @@ public class RankFragment extends Fragment {
         rankButbtonbarMonthBtn.setTextColor(getResources().getColor(R.color.black));
 
         switch (view.getId()) {
-            case R.id.rank_butbtonbar_all_btn:
+            case R.id.rank_buttonbar_all_btn:
                 currentDuration = BBH_DURATION_ALL;
                 rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
                 getData(currentDuration);

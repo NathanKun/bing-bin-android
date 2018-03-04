@@ -91,7 +91,7 @@
                 android:hint="Confirmation du mot de passe"
                 android:inputType="textPassword" />
 
-            <TextView
+            <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/hint_register_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <io.bingbin.bingbinandroid.views.BingBinTextView
             android:id="@+id/avatar_rabbit_title_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/vertical_halfheight_guideline">
 
-        <TextView
+        <io.bingbin.bingbinandroid.views.BingBinTextView
             android:id="@+id/avatar_leaf_title_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,6 +140,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginTop="8dp"
             android:text="OK"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

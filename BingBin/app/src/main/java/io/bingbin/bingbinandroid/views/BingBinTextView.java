@@ -28,7 +28,7 @@ public class BingBinTextView extends android.support.v7.widget.AppCompatTextView
     }
 
     public void init() {
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "font/futura_medium.ttf");
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "futura_medium.ttf");
         setTypeface(tf, Typeface.NORMAL);
 
     }

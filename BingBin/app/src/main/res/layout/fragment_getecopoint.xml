@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/bottom_grass" />
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/getecopoint_ecopoint_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/getecopoint_ecopoint_got_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/getecopoint_ecopoint_textView"
         app:layout_constraintVertical_bias="0.542" />
 
-    <TextView
+    <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/getecopoint_longtext_textView"
         android:layout_width="233dp"
         android:layout_height="wrap_content"
@@ -75,6 +75,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="Partage"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/getecopoint_myecopoint_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,6 +91,7 @@
         android:layout_marginTop="4dp"
         android:backgroundTint="@color/lightblue"
         android:text="Mes eco points"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/getecopoint_footer_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
