@@ -34,6 +34,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
@@ -246,6 +247,7 @@ public class EcoPointFragment extends Fragment {
         getRecycleByCategoryData(user.getToken());
         getMyInfoToUpdateUserAndPoints(user.getToken());
 
+
         // show gridlayout
         ecopointGridlayout.setVisibility(View.VISIBLE);
         isShowingGrid = true;
@@ -314,11 +316,15 @@ public class EcoPointFragment extends Fragment {
                     // refresh user info
                     SmartUser finalCurrentUser = currentUser;
                     activity.runOnUiThread(() -> {
-                        ecopointEcopointTextview.setText(String.valueOf(finalCurrentUser.getEcoPoint()));
-                        ecopointSunpointTextview.setText(String.valueOf(finalCurrentUser.getSunPoint()));
+                        // when swiping real fast, possible that calling these code when view is destroyed
+                        if (ecopointEcopointTextview != null && ecopointSunpointTextview != null && ecopointAvatarImageview != null) {
+                            ecopointEcopointTextview.setText(String.valueOf(finalCurrentUser.getEcoPoint()));
+                            ecopointSunpointTextview.setText(String.valueOf(finalCurrentUser.getSunPoint()));
 
-                        ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
-                                activity, finalCurrentUser.getRabbit(), finalCurrentUser.getLeaf()));
+                            ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
+                                    activity, finalCurrentUser.getRabbit(), finalCurrentUser.getLeaf()));
+                        }
+
                     });
 
                 } catch (JSONException e) {
@@ -350,7 +356,7 @@ public class EcoPointFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(!response.isSuccessful()) {
+                if (!response.isSuccessful()) {
                     activity.runOnUiThread(() -> {
                         Toast.makeText(activity,
                                 "Request not success", Toast.LENGTH_SHORT).show();
@@ -362,9 +368,9 @@ public class EcoPointFragment extends Fragment {
                 String body = response.body().string();
                 try {
                     JSONObject json = new JSONObject(body);
-                    if(!json.getBoolean("valid")) {
+                    if (!json.getBoolean("valid")) {
                         String errorStr = json.getString("error");
-                        if(errorStr.contains("token")) {
+                        if (errorStr.contains("token")) {
                             activity.backToLoginActivity();
                         } else {
                             activity.runOnUiThread(() -> {
@@ -422,8 +428,10 @@ public class EcoPointFragment extends Fragment {
 
         // show data in list
         activity.runOnUiThread(() -> {
-            mAdapter.notifyDataSetChanged();
-            ecopointHistorySwiperefresh.setRefreshing(false);
+            if (ecopointHistorySwiperefresh != null) {
+                mAdapter.notifyDataSetChanged();
+                ecopointHistorySwiperefresh.setRefreshing(false);
+            }
         });
 
     }
@@ -440,17 +448,21 @@ public class EcoPointFragment extends Fragment {
                 activity.runOnUiThread(() -> {
                     Toast.makeText(activity,
                             "Erreur de connexion", Toast.LENGTH_SHORT).show();
-                    ecopointHistorySwiperefresh.setRefreshing(false);
+                    if (ecopointHistorySwiperefresh != null) {
+                        ecopointHistorySwiperefresh.setRefreshing(false);
+                    }
                 });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if(!response.isSuccessful()) {
+                if (!response.isSuccessful()) {
                     activity.runOnUiThread(() -> {
                         Toast.makeText(activity,
                                 "Request not success", Toast.LENGTH_SHORT).show();
-                        ecopointHistorySwiperefresh.setRefreshing(false);
+                        if (ecopointHistorySwiperefresh != null) {
+                            ecopointHistorySwiperefresh.setRefreshing(false);
+                        }
                     });
                     return;
                 }
@@ -458,15 +470,17 @@ public class EcoPointFragment extends Fragment {
                 String body = response.body().string();
                 try {
                     JSONObject json = new JSONObject(body);
-                    if(!json.getBoolean("valid")) {
+                    if (!json.getBoolean("valid")) {
                         String errorStr = json.getString("error");
-                        if(errorStr.contains("token")) {
+                        if (errorStr.contains("token")) {
                             activity.backToLoginActivity();
                         } else {
                             activity.runOnUiThread(() -> {
                                 Toast.makeText(activity,
                                         errorStr, Toast.LENGTH_SHORT).show();
-                                ecopointHistorySwiperefresh.setRefreshing(false);
+                                if (ecopointHistorySwiperefresh != null) {
+                                    ecopointHistorySwiperefresh.setRefreshing(false);
+                                }
                             });
                         }
                         return;
@@ -481,7 +495,9 @@ public class EcoPointFragment extends Fragment {
                     activity.runOnUiThread(() -> {
                         Toast.makeText(activity,
                                 "Json parse error", Toast.LENGTH_SHORT).show();
-                        ecopointHistorySwiperefresh.setRefreshing(false);
+                        if (ecopointHistorySwiperefresh != null) {
+                            ecopointHistorySwiperefresh.setRefreshing(false);
+                        }
                     });
                 }
             }
@@ -493,7 +509,7 @@ public class EcoPointFragment extends Fragment {
      * populate recycle count data from json array to TextViews in grid
      *
      * @param array json array
-     * @throws JSONException    json exception
+     * @throws JSONException json exception
      */
     private void showRecycleCountData(JSONArray array) throws JSONException {
         int[] counts = new int[12];
@@ -504,7 +520,7 @@ public class EcoPointFragment extends Fragment {
             int type_trash = json.getInt("type_trash");
             int quantity = json.getInt("quantity");
 
-            if(type_trash <= 12) {
+            if (type_trash <= 12) {
                 counts[type_trash - 1] = quantity;
             } // ignore 99 (other)
         }
@@ -515,8 +531,10 @@ public class EcoPointFragment extends Fragment {
                 ecopointCountText7, ecopointCountText8, ecopointCountText9,
                 ecopointCountText10, ecopointCountText11, ecopointCountText12};
         activity.runOnUiThread(() -> {
-            for(int i = 0; i < 12; i++) {
-                textViews[i].setText(String.valueOf(counts[i]));
+            if (ecopointCountText1 != null) {
+                for (int i = 0; i < 12; i++) {
+                    textViews[i].setText(String.valueOf(counts[i]));
+                }
             }
         });
     }
@@ -525,5 +543,10 @@ public class EcoPointFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.ecopoint_avatar_imageview)
+    void avatarOnClick(View v) {
+        activity.startAvatarActivity();
     }
 }

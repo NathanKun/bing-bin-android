@@ -136,10 +136,10 @@ public abstract class CommonUtil {
     public static String saveBitmap(Context context, Bitmap bitmap) {
         //Write file
         String filename = (new SimpleDateFormat("yyyyMMdd-HHmmssSSS", Locale.FRANCE).format(new Date())) + ".png";
-        FileOutputStream stream = null;
+        FileOutputStream stream;
         try {
             stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             //Cleanup
             stream.close();
             bitmap.recycle();

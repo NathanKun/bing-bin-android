@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,8 +38,18 @@ public abstract class ClassifyHelper {
 
         int previewHeight, previewWidth, sensorOrientation;
 
-        // 读取图片
-        rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true); // mutable
+        // 读取图
+        try {
+            rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        } catch (OutOfMemoryError e) { // compress bitmap
+            e.printStackTrace();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            rgbFrameBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+            byte[] bitmapdata = bos.toByteArray();
+            rgbFrameBitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
+            rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true); // mutable
+        }
+
         previewHeight = rgbFrameBitmap.getHeight();
         previewWidth = rgbFrameBitmap.getWidth();
         sensorOrientation = previewHeight > previewWidth ? 0 : 1;

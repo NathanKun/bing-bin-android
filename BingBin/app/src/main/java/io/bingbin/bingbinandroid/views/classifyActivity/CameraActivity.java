@@ -31,6 +31,7 @@ public class CameraActivity extends AppCompatActivity {
     ImageButton stillshotBtn;
     @BindView(R.id.camera_control_layout)
     RelativeLayout cameraCameraControlLayout;
+    private boolean captured;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
 
-        cameraView.setMethod(CameraKit.Constants.METHOD_STILL);
+        cameraView.setMethod(CameraKit.Constants.METHOD_STANDARD);
         cameraView.setCropOutput(false);
         cameraView.setFlash(CameraKit.Constants.FLASH_AUTO);
         cameraView.setFocus(CameraKit.Constants.FOCUS_TAP);
@@ -77,17 +78,21 @@ public class CameraActivity extends AppCompatActivity {
                 break;
 
             case R.id.camera_stillshot:
-                cameraView.captureImage(cameraKitImage -> {
-                    Bitmap img = cameraKitImage.getBitmap();
-                    cameraView.stop();
-                    String filename = CommonUtil.saveBitmap(this, img); // save img
+                if(!captured) {
+                    captured = true;
+                    cameraView.captureImage(cameraKitImage -> {
+                        runOnUiThread(() -> cameraView.stop());
 
-                    Intent intent = new Intent(this, PreviewActivity.class);
-                    intent.putExtra("filename", filename);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT); // pass result to preview activity
-                    startActivity(intent);
-                    finish();
-                });
+                        Bitmap img = cameraKitImage.getBitmap();
+                        String filename = CommonUtil.saveBitmap(this, img); // save img
+
+                        Intent intent = new Intent(this, PreviewActivity.class);
+                        intent.putExtra("filename", filename);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT); // pass result to preview activity
+                        startActivity(intent);
+                        finish();
+                    });
+                }
                 break;
         }
     }

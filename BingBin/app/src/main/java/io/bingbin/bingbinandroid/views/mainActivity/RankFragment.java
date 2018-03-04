@@ -232,14 +232,22 @@ public class RankFragment extends Fragment {
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
                 Log.d("Get Ladder", "Call Failed");
-                activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
+                activity.runOnUiThread(() -> {
+                    if(rankSwiperefresh != null) {
+                        rankSwiperefresh.setRefreshing(false);
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     Log.d("Get Ladder", "Request not successful");
-                    activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
+                    activity.runOnUiThread(() -> {
+                        if(rankSwiperefresh != null) {
+                            rankSwiperefresh.setRefreshing(false);
+                        }
+                    });
                     return;
                 }
 
@@ -249,7 +257,11 @@ public class RankFragment extends Fragment {
 
                     if (!json.getBoolean("valid")) {
                         Log.d("Get Ladder", "Not valid: " + json.getString("error"));
-                        activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
+                        activity.runOnUiThread(() -> {
+                            if(rankSwiperefresh != null) {
+                                rankSwiperefresh.setRefreshing(false);
+                            }
+                        });
                         return;
                     }
 
@@ -271,13 +283,21 @@ public class RankFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.d("Get Ladder", "Showdata JSON parse error");
-                            activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
+                            activity.runOnUiThread(() -> {
+                                if(rankSwiperefresh != null) {
+                                    rankSwiperefresh.setRefreshing(false);
+                                }
+                            });
                         }
                     });
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("Get Ladder", "JSON parse error");
-                    activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(false));
+                    activity.runOnUiThread(() -> {
+                        if(rankSwiperefresh != null) {
+                            rankSwiperefresh.setRefreshing(false);
+                        }
+                    });
                 }
             }
         };
@@ -319,7 +339,9 @@ public class RankFragment extends Fragment {
 
         // show data in list
         mAdapter.notifyDataSetChanged();
-        rankSwiperefresh.setRefreshing(false);
+        if(rankSwiperefresh != null) {
+            rankSwiperefresh.setRefreshing(false);
+        }
     }
 
     @OnClick({R.id.rank_butbtonbar_all_btn, R.id.rank_butbtonbar_day_btn,

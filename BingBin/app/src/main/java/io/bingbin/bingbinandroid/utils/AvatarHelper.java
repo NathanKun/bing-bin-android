@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
-import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +78,18 @@ public abstract class AvatarHelper {
      * @return  bitmap compose by rabbit and leaf
      */
     public static Bitmap generateAvatar(Context context, int rabbitId, int leafId) {
-        Bitmap rabbit = BitmapFactory.decodeResource(context.getResources(), rabbitIds[rabbitId - 1]);
-        Bitmap leaf = BitmapFactory.decodeResource(context.getResources(), leafIds[leafId - 1]);
+        Bitmap rabbit;
+        Bitmap leaf;
+        try {
+            rabbit = BitmapFactory.decodeResource(context.getResources(), rabbitIds[rabbitId - 1]);
+            leaf = BitmapFactory.decodeResource(context.getResources(), leafIds[leafId - 1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            Log.d("IndexOutOfBounds", "rabbidId = " + rabbitId + " leafId = " + leafId);
+
+            rabbit = BitmapFactory.decodeResource(context.getResources(), rabbitIds[0]);
+            leaf = BitmapFactory.decodeResource(context.getResources(), leafIds[0]);
+        }
 
         Bitmap bmOverlay = Bitmap.createBitmap(rabbit.getWidth(), rabbit.getHeight(), rabbit.getConfig());
         Canvas canvas = new Canvas(bmOverlay);

@@ -21,17 +21,11 @@
     <string name="sign_in_google">Google</string>
     <string name="logout_text">DECONNEXION</string>
 
-    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="camera_retry">Réessayer</string>
     <string name="camera_ok">OK</string>
 
-    <string name="home_homefragment">%1$s, want to throw something?</string>
-    <string name="btn_gallary">Open Gallery</string>
-    <string name="btn_takephoto">Open Camera</string>
-    <string name="imageview_preview_description">preview image for recognition</string>
-    <string name="camera_icon">camera icon</string>
+    <string name="home_homefragment">%1$s, tu veux jeter quelque choses?</string>
     <string name="blur_image">Blur image</string>
-    <string name="btn_recycle">Recycler mon déchet</string>
     <string name="btn_trier">Trier</string>
     <string name="recycle_it">Recycle it</string>
     <string name="trashbin_image_description">Trash bin with color</string>
