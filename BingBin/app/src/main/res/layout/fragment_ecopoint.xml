@@ -57,7 +57,7 @@
             android:gravity="center"
             android:text="10086"
             android:textAlignment="center"
-            android:textColor="@color/dark_primary_color"
+            android:textColor="@color/primary_color"
             android:textSize="60sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ecopoint_avatar_imageview"

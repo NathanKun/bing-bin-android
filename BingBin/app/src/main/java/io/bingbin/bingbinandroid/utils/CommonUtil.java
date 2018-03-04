@@ -135,7 +135,7 @@ public abstract class CommonUtil {
      */
     public static String saveBitmap(Context context, Bitmap bitmap) {
         //Write file
-        String filename = (new SimpleDateFormat("yyyyMMdd-HHmmssSSS", Locale.FRANCE).format(new Date())) + ".png";
+        String filename = (new SimpleDateFormat("yyyyMMdd-HHmmssSSS", Locale.FRANCE).format(new Date())) + ".JPEG";
         FileOutputStream stream;
         try {
             stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -161,5 +161,39 @@ public abstract class CommonUtil {
             e.printStackTrace();
         }
         return bmp;
+    }
+
+    /**
+     * @param dir you can get from many places like Environment.getExternalStorageDirectory() or mContext.getFilesDir() depending on where you want to save the image.
+     * @param fileName The file name.
+     * @param bm The Bitmap you want to save.
+     * @param quality quality goes from 1 to 100. (Percentage).
+     * @return true if the Bitmap was saved successfully, false otherwise.
+     */
+    public static boolean saveBitmapToFile(File dir, String fileName, Bitmap bm, int quality) {
+
+        File imageFile = new File(dir, fileName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(imageFile);
+
+            bm.compress(Bitmap.CompressFormat.PNG, quality, fos);
+
+            fos.close();
+
+            return true;
+        }
+        catch (IOException e) {
+            Log.e("app",e.getMessage());
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return false;
     }
 }
