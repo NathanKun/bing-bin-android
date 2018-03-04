@@ -8,8 +8,11 @@ import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -155,11 +158,10 @@ public class BingBinHttp {
     }
 
     // app/uploadscan
-    public void uploadscan(Callback callback, String bingBinToken, String trashName, String trashCategory, File image) {
+    public void uploadscan(Callback callback, String bingBinToken, String trashName, String trashCategory, Bitmap bmp) {
         try {
 
             //Compress Image
-            Bitmap bmp = BitmapFactory.decodeFile(image.getAbsolutePath());
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
 
@@ -170,7 +172,7 @@ public class BingBinHttp {
                     .addFormDataPart("BingBinToken", bingBinToken)
                     .addFormDataPart("trashName", trashName)
                     .addFormDataPart("trashCategory", trashCategory)
-                    .addFormDataPart("img", image.getName(),
+                    .addFormDataPart("img", (new SimpleDateFormat("yyyyMMdd-HHmmssSSS", Locale.FRANCE).format(new Date())),
                             RequestBody.create(MediaType.parse("image/*"), bos.toByteArray()))
                     .build();
 

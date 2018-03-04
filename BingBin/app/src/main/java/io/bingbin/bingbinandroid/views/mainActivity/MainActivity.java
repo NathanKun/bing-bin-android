@@ -28,6 +28,7 @@ import io.bingbin.bingbinandroid.utils.BingBinMainViewPager;
 import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
 import io.bingbin.bingbinandroid.views.avatarActivity.AvatarActivity;
+import io.bingbin.bingbinandroid.views.classifyActivity.CameraActivity;
 import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import io.bingbin.bingbinandroid.views.infoActivity.InfoActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     protected final int GALLERY_PICTURE = 233;
     private final int CLASSIFY = 6;
     private final int CLASSIFY_END_TRIER = 66;
-    private final int CLASSIFY_END_CANCEL = 666;
     private final int CHANGE_AVATAR = 6666;
 
     final Handler handler = new Handler();
@@ -121,8 +121,9 @@ public class MainActivity extends AppCompatActivity {
         // WelcomeFragment, Gallery btn, image selected, start ClassifyActivity
         if (requestCode == GALLERY_PICTURE && resultCode == RESULT_OK && null != data) {
             Uri uri = data.getData();
-            assert uri != null;
-            startClassifyActivity(uri.toString());
+            if (uri != null) {
+                startClassifyActivity(uri);
+            }
         } else if (requestCode == CLASSIFY) {
             if (resultCode == CLASSIFY_END_TRIER) {
                 Log.d("Classify End", "To trier fragment");
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 viewPager.setCurrentItem(3);
                 ((GetEcoPointFragment) adapter.getRegisteredFragment(3)).setEcoPoint(ecoPoint);
-            } else if (resultCode == CLASSIFY_END_CANCEL) {
+            } else {
                 Log.d("Classify End", "CANCEL");
             }
         } else if (requestCode == CHANGE_AVATAR){
@@ -208,11 +209,15 @@ public class MainActivity extends AppCompatActivity {
     // Methods
     // ============
 
-    public void startClassifyActivity(String uri) {
-        // start camera activity, with no uri, so ClassifyActivity will start camera activity.
+    public void startClassifyActivity(Uri uri) {
+        // call after gallery end
         Intent intent = new Intent(this, ClassifyActivity.class);
         intent.putExtra("uri", uri);
         startActivityForResult(intent, CLASSIFY);
+    }
+
+    public void startCameraActivity() {
+        startActivityForResult(new Intent(this, CameraActivity.class), CLASSIFY);
     }
 
     public void startAvatarActivity() {

@@ -18,8 +18,8 @@ android {
         applicationId "io.bingbin.bingbinandroid"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 10
-        versionName "0.3.2"
+        versionCode 11
+        versionName "0.4.0"
         //renderscriptTargetApi 27
         //renderscriptSupportModeEnabled true
     }
@@ -95,7 +95,10 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-android:1.2.0-preview'
 
     // material camera fragment
-    implementation 'com.afollestad:material-camera:0.4.4'
+    //implementation 'com.afollestad:material-camera:0.4.4'
+
+    // camerakit
+    implementation 'com.wonderkiln:camerakit:0.13.1'
 
     // floating action button
     implementation 'com.getbase:floatingactionbutton:1.10.1'

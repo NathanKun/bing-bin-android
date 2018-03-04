@@ -33,12 +33,11 @@ public abstract class ClassifyHelper {
     private static final String MODEL_FILE = "file:///android_asset/graph.pb";
     private static final String LABEL_FILE = "file:///android_asset/labels.txt";
 
-    public static String classify(Activity activity, File imgFile) {
+    public static String classify(Activity activity, Bitmap rgbFrameBitmap) {
 
         int previewHeight, previewWidth, sensorOrientation;
 
         // 读取图片
-        Bitmap rgbFrameBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
         rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true); // mutable
         previewHeight = rgbFrameBitmap.getHeight();
         previewWidth = rgbFrameBitmap.getWidth();

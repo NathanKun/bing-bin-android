@@ -33,9 +33,7 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
 
 
 /**
- * Fragment contains button to gallery and button to CameraActivity.
- * This fragment doesn't contain any business logic of camera.
- * The real activity of camera is CameraActivity
+ * Welcome activity
  *
  * @author Junyang HE
  */
@@ -88,16 +86,6 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // button to start gallery
-        welcomeImageBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            activity.startActivityForResult(intent, activity.GALLERY_PICTURE);
-        });
-
-        // button to start camera activity
-        welcomeCameraBtn.setOnClickListener(view -> {
-            activity.startClassifyActivity(""); // no uri, so ClassifyActivity will start CameraActivity
-        });
     }
 
     @Override
@@ -146,5 +134,19 @@ public class WelcomeFragment extends Fragment {
     void infoOnClick(View view) {
         welcomeFab.toggle();
         activity.startInfoActivity();
+    }
+
+
+    // button to start gallery
+    @OnClick(R.id.welcome_image_btn)
+    void imageBtnOnClick(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        activity.startActivityForResult(intent, activity.GALLERY_PICTURE);
+    }
+
+    // button to start camera activity
+    @OnClick(R.id.welcome_camera_btn)
+    void cameraBtnOnClick(View view) {
+        activity.startCameraActivity();
     }
 }

@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -27,12 +26,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialcamera.MaterialCamera;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -54,10 +52,9 @@ import okhttp3.Response;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 
 public class ClassifyActivity extends AppCompatActivity {
-    private final int CAMERA_RQ = 2333;
+    private final int CAMERA_ACTIVITY = 2333;
     private final int PERMISSIONS_REQUEST = 23333;
     private final int CLASSIFY_END_TRIER = 66;
-    private final int CLASSIFY_END_CANCEL = 666;
 
     private Category category;
 
@@ -148,42 +145,24 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyFinishConstraintLayout.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
-        String uriStr = intent.getStringExtra("uri");
-
-        // uri exists, mean
-        if (uriStr.equals("")) {
-            // start camera
-            startCameraActivity();
-        } else {
-            // show image and ask if is good category
-            initComponents(CommonUtil.uriToFile(Uri.parse(uriStr), this));
+        Uri uri = intent.getParcelableExtra("uri");
+        if(uri != null) { // from gallery
+            try {
+                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+                initComponents(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else { // from camera
+            String filename = intent.getStringExtra("filename");
+            initComponents(CommonUtil.loadBitmap(this, filename));
         }
     }
 
     // ============
     // On results
     // ============
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Received recording or error from MaterialCamera
-        if (requestCode == CAMERA_RQ) {
-            if (resultCode == RESULT_OK) {
-                // show image and ask if is good category
-                initComponents(CommonUtil.uriToFile(
-                        Uri.parse(data.getDataString()), this));
-            } else if (data != null) {
-                Exception e = (Exception) data.getSerializableExtra(MaterialCamera.ERROR_EXTRA);
-                e.printStackTrace();
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            } else { // if camera fragment canceled
-                Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                setResult(CLASSIFY_END_CANCEL, intent);
-                finish();
-            }
-        }
-    }
-
+/*
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
@@ -203,7 +182,7 @@ public class ClassifyActivity extends AppCompatActivity {
             }
         }
     }
-
+*/
     // ============
     // Methods
     // ============
@@ -211,12 +190,11 @@ public class ClassifyActivity extends AppCompatActivity {
     /**
      * show blurred image and result
      *
-     * @param imgFile image file to show
+     * @param bitmap image to show
      */
-    private void initComponents(File imgFile) {
-        Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getPath());
+    private void initComponents(Bitmap bitmap) {
         // classify result
-        String classifyResultStr = ClassifyHelper.classify(this, imgFile);
+        String classifyResultStr = ClassifyHelper.classify(this, bitmap);
 
         /*
          * YesNo
@@ -302,7 +280,7 @@ public class ClassifyActivity extends AppCompatActivity {
 
             showLoader(true);
             bbh.uploadscan(cb, UserSessionManager.getCurrentUser(this).getToken(),
-                    category.name(), String.valueOf(category.getCategoryId()), imgFile);
+                    category.name(), String.valueOf(category.getCategoryId()), bitmap);
         });
 
         // init btn "NON"
@@ -360,7 +338,6 @@ public class ClassifyActivity extends AppCompatActivity {
 
         classifyFinishTrierBtn.setOnClickListener(view -> {
             Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
             intent.putExtra("ecopoint", ecoPoint);
             setResult(CLASSIFY_END_TRIER, intent);
             finish();
@@ -401,6 +378,7 @@ public class ClassifyActivity extends AppCompatActivity {
     /**
      * Check permissions and start camera activity
      */
+    /*
     private void startCameraActivity() {
         // check and request permission, onRequestPermissionsResult method in MainActivity
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -416,16 +394,10 @@ public class ClassifyActivity extends AppCompatActivity {
     }
 
     private void startCamera() {
-        new MaterialCamera(this)
-                .audioDisabled(true)
-                .stillShot()
-                .allowRetry(true)
-                .labelRetry(R.string.camera_retry)
-                .labelConfirm(R.string.camera_ok)
-                .forceCamera1() // Pixel 2 XL crash in Camera2
-                .start(CAMERA_RQ);
+        Intent intent = new Intent(this, CameraActivity.class);
+        startActivityForResult(intent, CAMERA_ACTIVITY);
     }
-
+*/
     private void showLoader(boolean show) {
         if (show) {
             classifyProgressBar.setVisibility(View.VISIBLE);

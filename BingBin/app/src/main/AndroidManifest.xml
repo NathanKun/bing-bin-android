@@ -58,19 +58,23 @@
             android:value="@string/facebook_app_id" />
 
         <!-- Material Camera -->
+        <!--
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity"
             android:theme="@style/MaterialCamera.CaptureActivity" />
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity2"
             android:theme="@style/MaterialCamera.CaptureActivity" />
+        -->
         <activity android:name=".views.classifyActivity.ClassifyActivity" />
         <activity
             android:name=".views.instructionActivity.InstructionActivity"
             android:label="@string/title_activity_instruction"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".views.infoActivity.InfoActivity" />
-        <activity android:name=".views.avatarActivity.AvatarActivity"></activity>
+        <activity android:name=".views.avatarActivity.AvatarActivity" />
+        <activity android:name=".views.classifyActivity.CameraActivity" />
+        <activity android:name=".views.classifyActivity.PreviewActivity"></activity>
     </application>
 
 </manifest>
