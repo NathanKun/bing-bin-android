@@ -23,7 +23,7 @@ public abstract class AvatarHelper {
 
     // threshold of ecopoint/sunpoint to unlock the next rabbit/leaf
     final static int[] thresholdRabbit = {3, 10, 25, 75, 150, 233, 666, 1024}; // 8
-    final static int[] thresholdLeaf = {1, 3, 6, 10, 15, 25, 50, 75, 100, 125, 150, 175, 200, 233, 666, 1024}; // 16
+    final static int[] thresholdLeaf = {1, 3, 6, 10, 15, 25, 50, 75, 100, 125, 150}; // 11
 
     final static int TYPE_RABBIT = 666;
     final static int TYPE_LEAF = 6666;
@@ -32,10 +32,9 @@ public abstract class AvatarHelper {
             R.drawable.rabbit_4, R.drawable.rabbit_5, R.drawable.rabbit_6,
             R.drawable.rabbit_7, R.drawable.rabbit_8, R.drawable.rabbit_9};
     final static int[] leafIds = {R.drawable.leaf_1, R.drawable.leaf_2, R.drawable.leaf_3,
-            R.drawable.leaf_4, R.drawable.leaf_5, R.drawable.leaf_6, R.drawable.leaf_17,
+            R.drawable.leaf_4, R.drawable.leaf_5, R.drawable.leaf_6, R.drawable.leaf_7,
             R.drawable.leaf_8, R.drawable.leaf_9, R.drawable.leaf_10, R.drawable.leaf_11,
-            R.drawable.leaf_12, R.drawable.leaf_13, R.drawable.leaf_14, R.drawable.leaf_15,
-            R.drawable.leaf_16, R.drawable.leaf_17, R.drawable.leaf_18, R.drawable.leaf_19};
+            R.drawable.leaf_12};
 
     public static int[] getThresholdRabbit() { return thresholdRabbit; }
 
@@ -92,7 +91,7 @@ public abstract class AvatarHelper {
         Bitmap bmOverlay = Bitmap.createBitmap(rabbit.getWidth(), rabbit.getHeight(), rabbit.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(rabbit, new Matrix(), null);
-        canvas.drawBitmap(leaf, (rabbit.getWidth() - leaf.getWidth()) / 2, rabbit.getHeight()/5, null);
+        canvas.drawBitmap(leaf, (rabbit.getWidth() - leaf.getWidth()) / 2, rabbit.getHeight() / 8, null);
 
         return bmOverlay;
     }
