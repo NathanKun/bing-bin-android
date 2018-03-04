@@ -15,6 +15,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,8 +86,9 @@ public class GetEcoPointFragment extends Fragment {
                     "Suivez nous: http://www.facebook.com/bingbinsort/";
 
             String filepath = saveShareImage();
+            File file = new File(filepath);
 
-            Uri imageUri = Uri.fromFile(new File(filepath));
+            Uri imageUri = FileProvider.getUriForFile(activity, "io.bingbin.bingbinandroid.fileprovider", file);
             Log.d("uri", imageUri.toString());
 
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
