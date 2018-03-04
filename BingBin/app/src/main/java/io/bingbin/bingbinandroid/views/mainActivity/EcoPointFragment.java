@@ -237,7 +237,7 @@ public class EcoPointFragment extends Fragment {
 
         // ------ listener to change avatar ------
         ecopointAvatarImageview.setOnClickListener((view -> {
-
+            activity.startAvatarActivity();
         }));
 
 
@@ -543,10 +543,5 @@ public class EcoPointFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @OnClick(R.id.ecopoint_avatar_imageview)
-    void avatarOnClick(View v) {
-        activity.startAvatarActivity();
     }
 }

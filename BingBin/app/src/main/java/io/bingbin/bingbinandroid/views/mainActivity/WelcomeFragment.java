@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -21,8 +19,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
-import io.bingbin.bingbinandroid.views.avatarActivity.AvatarActivity;
-import io.bingbin.bingbinandroid.views.infoActivity.InfoActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
@@ -47,9 +43,6 @@ public class WelcomeFragment extends Fragment {
     TextView homeWelcomeTextview;
     @BindView(R.id.welcome_fab)
     FloatingActionsMenu welcomeFab;
-    @BindView(R.id.fragment_home)
-    ConstraintLayout fragmentHome;
-
     private MainActivity activity;
     private Unbinder unbinder;
 

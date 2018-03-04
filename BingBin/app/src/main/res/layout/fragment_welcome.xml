@@ -1,7 +1,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_home"
+    android:id="@+id/welcome_masterlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="io.bingbin.bingbinandroid.views.mainActivity.EcoPointFragment">
@@ -21,29 +21,32 @@
         android:id="@+id/home_welcome_textview"
         android:layout_width="347dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/home_homefragment"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_bin_img" />
-
-    <ImageView
-        android:id="@+id/welcome_bin_img"
-        android:layout_width="212dp"
-        android:layout_height="179dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:src="@drawable/img_welcome_bin"
+        android:layout_marginTop="8dp"
+        android:text="@string/home_homefragment"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/primary_color"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/login_bottom_grass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.19999999" />
+
+    <ImageView
+        android:id="@+id/welcome_bin_img"
+        android:layout_width="212dp"
+        android:layout_height="181dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/img_welcome_bin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_welcome_textview" />
 
     <Button
         android:id="@+id/welcome_image_btn"
@@ -56,7 +59,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/home_welcome_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/welcome_bin_img" />
 
     <Button
         android:id="@+id/welcome_camera_btn"
@@ -64,7 +67,7 @@
         android:layout_height="48dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="8dp"
         android:text="Camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,9 +81,9 @@
         app:fab_addButtonColorPressed="@color/dark_primary_color"
         app:fab_addButtonPlusIconColor="@color/black"
         app:fab_addButtonSize="normal"
+        app:fab_expandDirection="down"
         app:fab_labelStyle="@style/fab_menu_labels_style"
         app:fab_labelsPosition="left"
-        app:fab_expandDirection="down"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -88,9 +91,9 @@
             android:id="@+id/welcome_fab_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_icon="@drawable/ic_person_outline_black_24dp"
             app:fab_colorNormal="@color/white"
             app:fab_colorPressed="@color/dark_primary_color"
+            app:fab_icon="@drawable/ic_person_outline_black_24dp"
             app:fab_size="mini"
             app:fab_title="Changer mon avatar" />
 
@@ -98,9 +101,9 @@
             android:id="@+id/welcome_fab_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_icon="@drawable/ic_info_outline_black_24dp"
             app:fab_colorNormal="@color/white"
             app:fab_colorPressed="@color/dark_primary_color"
+            app:fab_icon="@drawable/ic_info_outline_black_24dp"
             app:fab_size="mini"
             app:fab_title="Information" />
 
@@ -108,9 +111,9 @@
             android:id="@+id/welcome_fab_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fab_icon="@drawable/ic_logout"
             app:fab_colorNormal="@color/white"
             app:fab_colorPressed="@color/dark_primary_color"
+            app:fab_icon="@drawable/ic_logout"
             app:fab_size="mini"
             app:fab_title="Déconnexion" />
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

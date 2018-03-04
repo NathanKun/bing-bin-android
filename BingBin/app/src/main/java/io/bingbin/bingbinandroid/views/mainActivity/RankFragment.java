@@ -13,9 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.catprogrammer.android.utils.AnimationUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,7 +37,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
-import com.catprogrammer.android.utils.AnimationUtil;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -72,6 +75,8 @@ public class RankFragment extends Fragment {
     Button rankButbtonbarMonthBtn;
     @BindView(R.id.ranking_sendsun_layout)
     ConstraintLayout rankingSendsunLayout;
+    @BindView(R.id.rank_title_suncount)
+    TextView rankTitleSuncount;
 
     private MainActivity activity;
     private Unbinder unbinder;
@@ -79,7 +84,6 @@ public class RankFragment extends Fragment {
     private SimpleAdapter mAdapter;
 
     private List<Map<String, Object>> dataToShow = new ArrayList<>();
-    private List<String> avatarsUrl = new ArrayList<>();
 
     private String currentDuration = BBH_DURATION_ALL;
 
@@ -113,6 +117,10 @@ public class RankFragment extends Fragment {
 
         activity = (MainActivity) getActivity();
         assert activity != null;
+
+        // show user sunPt count
+        String sunPoint = activity.getCurrentUser().getSunPoint() + "x";
+        rankTitleSuncount.setText(sunPoint);
 
         // Make AllBtn green, look likes clicked
         rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
@@ -233,7 +241,7 @@ public class RankFragment extends Fragment {
                 e.printStackTrace();
                 Log.d("Get Ladder", "Call Failed");
                 activity.runOnUiThread(() -> {
-                    if(rankSwiperefresh != null) {
+                    if (rankSwiperefresh != null) {
                         rankSwiperefresh.setRefreshing(false);
                     }
                 });
@@ -244,7 +252,7 @@ public class RankFragment extends Fragment {
                 if (!response.isSuccessful()) {
                     Log.d("Get Ladder", "Request not successful");
                     activity.runOnUiThread(() -> {
-                        if(rankSwiperefresh != null) {
+                        if (rankSwiperefresh != null) {
                             rankSwiperefresh.setRefreshing(false);
                         }
                     });
@@ -258,7 +266,7 @@ public class RankFragment extends Fragment {
                     if (!json.getBoolean("valid")) {
                         Log.d("Get Ladder", "Not valid: " + json.getString("error"));
                         activity.runOnUiThread(() -> {
-                            if(rankSwiperefresh != null) {
+                            if (rankSwiperefresh != null) {
                                 rankSwiperefresh.setRefreshing(false);
                             }
                         });
@@ -284,7 +292,7 @@ public class RankFragment extends Fragment {
                             e.printStackTrace();
                             Log.d("Get Ladder", "Showdata JSON parse error");
                             activity.runOnUiThread(() -> {
-                                if(rankSwiperefresh != null) {
+                                if (rankSwiperefresh != null) {
                                     rankSwiperefresh.setRefreshing(false);
                                 }
                             });
@@ -294,7 +302,7 @@ public class RankFragment extends Fragment {
                     e.printStackTrace();
                     Log.d("Get Ladder", "JSON parse error");
                     activity.runOnUiThread(() -> {
-                        if(rankSwiperefresh != null) {
+                        if (rankSwiperefresh != null) {
                             rankSwiperefresh.setRefreshing(false);
                         }
                     });
@@ -339,7 +347,7 @@ public class RankFragment extends Fragment {
 
         // show data in list
         mAdapter.notifyDataSetChanged();
-        if(rankSwiperefresh != null) {
+        if (rankSwiperefresh != null) {
             rankSwiperefresh.setRefreshing(false);
         }
     }

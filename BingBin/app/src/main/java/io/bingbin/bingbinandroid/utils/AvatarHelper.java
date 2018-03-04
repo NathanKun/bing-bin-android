@@ -80,13 +80,11 @@ public abstract class AvatarHelper {
     public static Bitmap generateAvatar(Context context, int rabbitId, int leafId) {
         Bitmap rabbit;
         Bitmap leaf;
-        try {
+        if(rabbitId > 0 && rabbitId < rabbitIds.length && leafId > 0 && leafId < leafIds.length) {
             rabbit = BitmapFactory.decodeResource(context.getResources(), rabbitIds[rabbitId - 1]);
             leaf = BitmapFactory.decodeResource(context.getResources(), leafIds[leafId - 1]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-            Log.d("IndexOutOfBounds", "rabbidId = " + rabbitId + " leafId = " + leafId);
-
+        } else {
+            Log.d("id index out of bounds", "rabbitId = " + rabbitId + " leafId = " + leafId);
             rabbit = BitmapFactory.decodeResource(context.getResources(), rabbitIds[0]);
             leaf = BitmapFactory.decodeResource(context.getResources(), leafIds[0]);
         }
