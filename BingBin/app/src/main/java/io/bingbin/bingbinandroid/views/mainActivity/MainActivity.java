@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
         handler.postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
     void backToLoginActivity() {
         runOnUiThread(() -> {
-            Toast.makeText(this,
+            Toast.makeText(this.getApplicationContext(),
                     "Session expiré", Toast.LENGTH_SHORT).show();
 
             removeCurrentUserFromSession();

@@ -275,14 +275,14 @@ public class EcoPointFragment extends Fragment {
         Callback cb = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                activity.runOnUiThread(() -> Toast.makeText(activity,
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
                         "Erreur de connexion", Toast.LENGTH_SHORT).show());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    activity.runOnUiThread(() -> Toast.makeText(activity,
+                    activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
                             "Request not success", Toast.LENGTH_SHORT).show());
                     return;
                 }
@@ -298,7 +298,7 @@ public class EcoPointFragment extends Fragment {
                         if (errorStr.contains("token")) {
                             activity.backToLoginActivity();
                         } else {
-                            activity.runOnUiThread(() -> Toast.makeText(activity,
+                            activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
                                     errorStr, Toast.LENGTH_SHORT).show());
                         }
                         return;
@@ -329,7 +329,7 @@ public class EcoPointFragment extends Fragment {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    activity.runOnUiThread(() -> Toast.makeText(activity,
+                    activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
                             "JSON parse error", Toast.LENGTH_SHORT).show());
                 }
             }
@@ -348,7 +348,7 @@ public class EcoPointFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 activity.runOnUiThread(() -> {
-                    Toast.makeText(activity,
+                    Toast.makeText(activity.getApplicationContext(),
                             "Erreur de connexion", Toast.LENGTH_SHORT).show();
                     ecopointHistorySwiperefresh.setRefreshing(false);
                 });
@@ -358,7 +358,7 @@ public class EcoPointFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     activity.runOnUiThread(() -> {
-                        Toast.makeText(activity,
+                        Toast.makeText(activity.getApplicationContext(),
                                 "Request not success", Toast.LENGTH_SHORT).show();
                         ecopointHistorySwiperefresh.setRefreshing(false);
                     });
@@ -374,7 +374,7 @@ public class EcoPointFragment extends Fragment {
                             activity.backToLoginActivity();
                         } else {
                             activity.runOnUiThread(() -> {
-                                Toast.makeText(activity,
+                                Toast.makeText(activity.getApplicationContext(),
                                         errorStr, Toast.LENGTH_SHORT).show();
                                 ecopointHistorySwiperefresh.setRefreshing(false);
                             });
@@ -389,7 +389,7 @@ public class EcoPointFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     activity.runOnUiThread(() -> {
-                        Toast.makeText(activity,
+                        Toast.makeText(activity.getApplicationContext(),
                                 "Json parse error", Toast.LENGTH_SHORT).show();
                         ecopointHistorySwiperefresh.setRefreshing(false);
                     });
@@ -446,7 +446,7 @@ public class EcoPointFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 activity.runOnUiThread(() -> {
-                    Toast.makeText(activity,
+                    Toast.makeText(activity.getApplicationContext(),
                             "Erreur de connexion", Toast.LENGTH_SHORT).show();
                     if (ecopointHistorySwiperefresh != null) {
                         ecopointHistorySwiperefresh.setRefreshing(false);
@@ -458,7 +458,7 @@ public class EcoPointFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     activity.runOnUiThread(() -> {
-                        Toast.makeText(activity,
+                        Toast.makeText(activity.getApplicationContext(),
                                 "Request not success", Toast.LENGTH_SHORT).show();
                         if (ecopointHistorySwiperefresh != null) {
                             ecopointHistorySwiperefresh.setRefreshing(false);
@@ -476,7 +476,7 @@ public class EcoPointFragment extends Fragment {
                             activity.backToLoginActivity();
                         } else {
                             activity.runOnUiThread(() -> {
-                                Toast.makeText(activity,
+                                Toast.makeText(activity.getApplicationContext(),
                                         errorStr, Toast.LENGTH_SHORT).show();
                                 if (ecopointHistorySwiperefresh != null) {
                                     ecopointHistorySwiperefresh.setRefreshing(false);
@@ -493,7 +493,7 @@ public class EcoPointFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     activity.runOnUiThread(() -> {
-                        Toast.makeText(activity,
+                        Toast.makeText(activity.getApplicationContext(),
                                 "Json parse error", Toast.LENGTH_SHORT).show();
                         if (ecopointHistorySwiperefresh != null) {
                             ecopointHistorySwiperefresh.setRefreshing(false);

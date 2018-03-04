@@ -176,7 +176,7 @@ public class ClassifyActivity extends AppCompatActivity {
                 } else {
                     // permission denied
                     Log.d("request permission", "not ok");
-                    Toast.makeText(this, "Permission of camera and storage is needed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.getApplicationContext(), "Permission of camera and storage is needed", Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
@@ -243,7 +243,7 @@ public class ClassifyActivity extends AppCompatActivity {
                 public void onFailure(Call call, IOException e) {
                     e.printStackTrace();
                     runOnUiThread(() -> {
-                        Toast.makeText(ClassifyActivity.this,
+                        Toast.makeText(ClassifyActivity.this.getApplicationContext(),
                                 "Erreur de connextion", Toast.LENGTH_SHORT).show();
                         showLoader(false);
                     });
@@ -261,16 +261,16 @@ public class ClassifyActivity extends AppCompatActivity {
                                         runOnUiThread(() -> showFinishLayout(category, ecoPoint));
                             } else {
                                 String errorMsg = json.getString("error");
-                                runOnUiThread(() -> Toast.makeText(ClassifyActivity.this,
+                                runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
                                         errorMsg, Toast.LENGTH_SHORT).show());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            runOnUiThread(() -> Toast.makeText(ClassifyActivity.this,
+                            runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
                                     "json parse error", Toast.LENGTH_SHORT).show());
                         }
                     } else {
-                        runOnUiThread(() -> Toast.makeText(ClassifyActivity.this,
+                        runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
                                 "Request not successful", Toast.LENGTH_SHORT).show());
                     }
 

@@ -81,7 +81,7 @@ public class AvatarActivity extends AppCompatActivity {
                 selectedRabbitId = position + 1;
                 generateAvatar();
             } else {
-                Toast.makeText(this, "Vous devez avoir plus d'EcoPoint pour avoir cet avatar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getApplicationContext(), "Vous devez avoir plus d'EcoPoint pour avoir cet avatar", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -91,7 +91,7 @@ public class AvatarActivity extends AppCompatActivity {
                 selectedLeafId = position + 1;
                 generateAvatar();
             } else {
-                Toast.makeText(this, "Vous devez avoir plus de SunPoint pour avoir ce badge", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getApplicationContext(), "Vous devez avoir plus de SunPoint pour avoir ce badge", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -111,7 +111,8 @@ public class AvatarActivity extends AppCompatActivity {
 
             if( !(resRabbit.isSuccessful() && resLeaf.isSuccessful()) ) {
                 runOnUiThread(() -> {
-                    Toast.makeText(AvatarActivity.this, "Resquest not success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AvatarActivity.this.getApplicationContext(),
+                            "Resquest not success", Toast.LENGTH_SHORT).show();
                 });
                 return;
             }
@@ -127,7 +128,8 @@ public class AvatarActivity extends AppCompatActivity {
                 JSONObject jsonLeaf = new JSONObject(bodyLeaf);
                 if( !(jsonRabbit.getBoolean("valid") && jsonLeaf.getBoolean("valid")) ) {
                     runOnUiThread(() -> {
-                        Toast.makeText(AvatarActivity.this, "Not valid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AvatarActivity.this.getApplicationContext(),
+                                "Not valid", Toast.LENGTH_SHORT).show();
                     });
                     return;
                 }
@@ -138,12 +140,14 @@ public class AvatarActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
                 runOnUiThread(() -> {
-                    Toast.makeText(AvatarActivity.this, "Response IOException", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AvatarActivity.this.getApplicationContext(),
+                            "Response IOException", Toast.LENGTH_SHORT).show();
                 });
             } catch (JSONException e) {
                 e.printStackTrace();
                 runOnUiThread(() -> {
-                    Toast.makeText(AvatarActivity.this, "json parse error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AvatarActivity.this.getApplicationContext(),
+                            "json parse error", Toast.LENGTH_SHORT).show();
                 });
             }
 

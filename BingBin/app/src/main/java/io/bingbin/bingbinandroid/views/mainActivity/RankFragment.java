@@ -144,7 +144,7 @@ public class RankFragment extends Fragment {
                         @Override
                         public void onFailure(Call call, IOException e) {
                             activity.runOnUiThread(() -> {
-                                Toast.makeText(activity, "Erreur de connexion", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity.getApplicationContext(), "Erreur de connexion", Toast.LENGTH_SHORT).show();
                                 activity.showLoader(false);
                             });
                         }
@@ -153,7 +153,7 @@ public class RankFragment extends Fragment {
                         public void onResponse(Call call, Response response) throws IOException {
                             if (!response.isSuccessful()) {
                                 activity.runOnUiThread(() -> {
-                                    Toast.makeText(activity, "request de not success", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity.getApplicationContext(), "request de not success", Toast.LENGTH_SHORT).show();
                                     activity.showLoader(false);
                                 });
                                 return;
@@ -166,7 +166,7 @@ public class RankFragment extends Fragment {
 
                                 if (!json.getBoolean("valid")) {
                                     activity.runOnUiThread(() -> {
-                                        Toast.makeText(activity, "invalid", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity.getApplicationContext(), "invalid", Toast.LENGTH_SHORT).show();
                                         activity.showLoader(false);
                                     });
                                     return;
@@ -174,7 +174,7 @@ public class RankFragment extends Fragment {
 
                                 if (json.getBoolean("limit_reach")) {
                                     activity.runOnUiThread(() -> {
-                                        Toast.makeText(activity, "limit reached", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity.getApplicationContext(), "limit reached", Toast.LENGTH_SHORT).show();
                                         activity.showLoader(false);
                                     });
                                     return;
@@ -195,7 +195,7 @@ public class RankFragment extends Fragment {
                                 });
                             } catch (JSONException e) {
                                 activity.runOnUiThread(() -> {
-                                    Toast.makeText(activity, "json parse error", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity.getApplicationContext(), "json parse error", Toast.LENGTH_SHORT).show();
                                     activity.showLoader(false);
                                 });
                                 e.printStackTrace();

@@ -296,7 +296,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                     runOnUiThread(() -> {
                         // hide loader, enable touch
                         showLoader(false);
-                        Toast.makeText(LoginActivity.this, user.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this.getApplicationContext(), user.toString(), Toast.LENGTH_SHORT).show();
                         // go to main activity
                         checkIsLoggedIn();
                     });
@@ -343,7 +343,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                                 runOnUiThread(() -> {
                                     // hide loader, enable touch
                                     showLoader(false);
-                                    Toast.makeText(LoginActivity.this, user.toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this.getApplicationContext(),
+                                            user.toString(), Toast.LENGTH_SHORT).show();
                                     // go to main activity
                                     checkIsLoggedIn();
                                 });
@@ -376,7 +377,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         // hide loader, enable touch
         showLoader(false);
 
-        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
