@@ -383,8 +383,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
                     @Override
                     public void onValid(JSONObject json) throws JSONException {
-                        token = json.getString("token");
-                        userData = json.getJSONObject("data");
+                        userData = json;
+                        token = userData.getString("token");
                         smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
                         runOnUiThread(() -> smartLogin.login(config));
                     }

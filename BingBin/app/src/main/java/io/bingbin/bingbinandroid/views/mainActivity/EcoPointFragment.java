@@ -304,7 +304,7 @@ public class EcoPointFragment extends Fragment {
                 activity.removeCurrentUserFromSession();
 
                 // set new user session
-                SmartUser currentUser = UserUtil.populateBingBinUser(json.getJSONObject("data"), token);
+                SmartUser currentUser = UserUtil.populateBingBinUser(json, token);
                 UserSessionManager.setUserSession(activity, currentUser);
 
                 // refresh user info
@@ -406,11 +406,11 @@ public class EcoPointFragment extends Fragment {
             map.put("point", String.valueOf(eco_point) + " pts");
             recycleHistoryDataToShow.add(map);
         }
+        mAdapter.notifyDataSetChanged();
 
         // show data in list
         activity.runOnUiThread(() -> {
             if (ecopointHistorySwiperefresh != null) {
-                mAdapter.notifyDataSetChanged();
                 ecopointHistorySwiperefresh.setRefreshing(false);
             }
         });

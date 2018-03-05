@@ -262,7 +262,10 @@ public class ClassifyActivity extends AppCompatActivity {
                 @Override
                 public void onValid(JSONObject json) throws JSONException {
                     int ecoPoint = json.getInt("gain_eco_point");
-                    runOnUiThread(() -> showFinishLayout(category, ecoPoint));
+                    runOnUiThread(() -> {
+                        showFinishLayout(category, ecoPoint);
+                        showLoader(false);
+                    });
                 }
 
                 @Override

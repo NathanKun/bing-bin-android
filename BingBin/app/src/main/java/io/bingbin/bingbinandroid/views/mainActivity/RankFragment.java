@@ -218,8 +218,14 @@ public class RankFragment extends Fragment {
 
                 }); // onClickListener end
 
-                if((boolean)dataToShow.get(position).get("isSent")) {
+                // hide sun btn if sent today, or that row is the currentUser
+                if((boolean)dataToShow.get(position).get("isSent") ||
+                        activity.getCurrentUser().getUserId().equals(dataToShow.get(position).get("id"))) {
                     sunButton.setVisibility(View.GONE);
+                } else {
+                    // it is always the same listview, once imageview was hide
+                    // even we change dataset it won't re-show, have to reset visibility each time
+                    sunButton.setVisibility(View.VISIBLE);
                 }
 
                 return view;
@@ -294,9 +300,14 @@ public class RankFragment extends Fragment {
                 Log.d("Get Ladder", "data size: " + data.length());
                 Log.d("Get Ladder", "data: " + data.toString());
 
-                showData(data);
 
                 activity.runOnUiThread(() -> {
+                    try {
+                        showData(data);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        onJsonParseError();
+                    }
                     if (rankSwiperefresh != null) {
                         rankSwiperefresh.setRefreshing(false);
                     }
@@ -328,7 +339,6 @@ public class RankFragment extends Fragment {
      */
     private void showData(JSONArray array) throws JSONException {
         dataToShow.clear();
-        //avatarsUrl.clear();
 
         for (int i = 0; i < array.length(); i++) {
             JSONObject json = array.getJSONObject(i);

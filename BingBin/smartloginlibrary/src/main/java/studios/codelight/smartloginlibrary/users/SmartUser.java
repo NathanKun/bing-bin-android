@@ -126,9 +126,7 @@ public class SmartUser implements Serializable{
         this.ecoPoint = ecoPoint;
     }
 
-    public int getSunPoint() {
-        return sunPoint;
-    }
+    public int getSunPoint() { return sunPoint; }
 
     public void setSunPoint(int sunPoint) {
         this.sunPoint = sunPoint;

@@ -36,7 +36,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:4.28.0'
     // Google Play Services
     api 'com.google.android.gms:play-services-auth:11.8.0'
-    api 'com.google.firebase:firebase-auth:11.8.0'
+    api 'com.google.firebase:firebase-core:11.8.0'
     // GSON lib
     implementation 'com.google.code.gson:gson:2.8.0'
 }

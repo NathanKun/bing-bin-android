@@ -45,21 +45,6 @@ public class BingBinHttp {
 
     // app/loginAuthorize
     public void login(BingBinCallback callback, String email, String password) {
-        try {
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("email", email)
-                    .add("password", password)
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(baseUrl + "app/loginAuthorize")
-                    .post(requestBody)
-                    .build();
-
-            client.newCall(request).enqueue(callback);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         Map<String, String> map = new HashMap<>();
         map.put("email", email);
         map.put("password",  password);

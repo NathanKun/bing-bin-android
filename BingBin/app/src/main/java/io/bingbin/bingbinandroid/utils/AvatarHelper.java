@@ -142,7 +142,7 @@ public abstract class AvatarHelper {
         List<Bitmap> bitmaps = new ArrayList<>();
         for(int i = 0; i < ids.length; i++) {
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), ids[i]);
-            if(i <= maxAllow) {
+            if(i < maxAllow) {
                 bitmaps.add(bitmap);
             } else {
                 bitmaps.add(CommonUtil.toGrayscale(bitmap));

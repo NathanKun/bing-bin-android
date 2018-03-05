@@ -1,5 +1,7 @@
 package io.bingbin.bingbinandroid.utils;
 
+import android.util.Log;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +42,7 @@ public class BingBinCallback implements Callback {
 
         String res = response.body().string();
         try {
+            Log.d("BingBinCallback", res);
             JSONObject json = new JSONObject(res);
             if(!json.getBoolean("valid")) {
                 String errorStr = json.getString("error");

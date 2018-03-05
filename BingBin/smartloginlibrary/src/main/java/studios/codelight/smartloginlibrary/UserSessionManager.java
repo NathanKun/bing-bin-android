@@ -42,7 +42,7 @@ public class UserSessionManager {
                         break;
                 }
             }catch (Exception e){
-                Log.e("GSON", e.getMessage());
+                Log.e("UserSessionManager Get", e.getMessage());
             }
         }
         return smartUser;
@@ -71,7 +71,7 @@ public class UserSessionManager {
 
                 Gson gson = new Gson();
                 String sessionUser = gson.toJson(smartUser);
-                Log.d("GSON", sessionUser);
+                Log.d("UserSessionManager Set", sessionUser);
                 editor.putString(Constants.USER_SESSION, sessionUser);
                 editor.apply();
                 return true;
