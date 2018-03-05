@@ -34,6 +34,7 @@ public class BingBinApp extends Application {
         return netComponent;
     }
 
+    @SuppressWarnings("unused")
     public Context getAppContext() {
         return this.context;
     }

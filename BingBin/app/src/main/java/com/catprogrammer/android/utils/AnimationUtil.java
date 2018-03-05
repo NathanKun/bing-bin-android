@@ -1,17 +1,9 @@
 package com.catprogrammer.android.utils;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.os.Handler;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewPropertyAnimator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 
 /**
  *
@@ -20,6 +12,7 @@ import android.view.animation.DecelerateInterpolator;
  * @author Junyang HE
  * Created by Junyang HE on 22/02/2018.
  */
+@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue"})
 public abstract class AnimationUtil {
 
 

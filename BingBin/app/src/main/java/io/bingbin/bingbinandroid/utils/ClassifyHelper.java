@@ -8,7 +8,6 @@ import android.graphics.Matrix;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

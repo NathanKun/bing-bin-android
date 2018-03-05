@@ -1,17 +1,13 @@
 package io.bingbin.bingbinandroid.views.classifyActivity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
@@ -29,9 +25,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -41,20 +35,16 @@ import butterknife.OnClick;
 import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
+import io.bingbin.bingbinandroid.utils.BingBinCallback;
+import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 import io.bingbin.bingbinandroid.utils.CommonUtil;
 import io.bingbin.bingbinandroid.views.instructionActivity.InstructionActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 
 public class ClassifyActivity extends AppCompatActivity {
-    private final int CAMERA_ACTIVITY = 2333;
-    private final int PERMISSIONS_REQUEST = 23333;
-    private final int CLASSIFY_END_TRIER = 66;
 
     private Category category;
 
@@ -238,48 +228,53 @@ public class ClassifyActivity extends AppCompatActivity {
         // init btn "OUI"
         classifYesnoYesbtn.setOnClickListener((View view) -> {
             category = Category.fromFrenchName(classifySelectSelectedTextview.getText().toString());
-            Callback cb = new Callback() {
+            BingBinCallbackAction action = new BingBinCallbackAction() {
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                    runOnUiThread(() -> {
-                        Toast.makeText(ClassifyActivity.this.getApplicationContext(),
-                                "Erreur de connextion", Toast.LENGTH_SHORT).show();
-                        showLoader(false);
-                    });
+                public void onFailure() {
+                    runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
+                            R.string.bingbinhttp_onfailure, Toast.LENGTH_SHORT).show());
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        String res = response.body().string();
-                        try {
-                            JSONObject json = new JSONObject(res);
-                            if (json.getBoolean("valid")) {
-                                int ecoPoint = json.getInt("gain_eco_point");
-                                //int ecoPoint = category.getEcopoint();
-                                        runOnUiThread(() -> showFinishLayout(category, ecoPoint));
-                            } else {
-                                String errorMsg = json.getString("error");
-                                runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
-                                        errorMsg, Toast.LENGTH_SHORT).show());
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
-                                    "json parse error", Toast.LENGTH_SHORT).show());
-                        }
-                    } else {
-                        runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
-                                "Request not successful", Toast.LENGTH_SHORT).show());
-                    }
+                public void onResponseNotSuccess() {
+                    runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
+                            R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show());
+                }
 
+                @Override
+                public void onJsonParseError() {
+                    runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
+                            R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onNotValid(String errorStr) {
+                    runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
+                            errorStr, Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onTokenNotValid(String errorStr) {
+                    runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
+                        errorStr, Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onValid(JSONObject json) throws JSONException {
+                    int ecoPoint = json.getInt("gain_eco_point");
+                    runOnUiThread(() -> showFinishLayout(category, ecoPoint));
+                }
+
+                @Override
+                public void onAnyError() {
                     runOnUiThread(() -> showLoader(false));
                 }
             };
 
+
             showLoader(true);
-            bbh.uploadscan(cb, UserSessionManager.getCurrentUser(this).getToken(),
+            bbh.uploadscan(new BingBinCallback(action),
+                    UserSessionManager.getCurrentUser(this).getToken(),
                     category.name(), String.valueOf(category.getCategoryId()), bitmap);
         });
 
@@ -339,7 +334,7 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyFinishTrierBtn.setOnClickListener(view -> {
             Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
             intent.putExtra("ecopoint", ecoPoint);
-            setResult(CLASSIFY_END_TRIER, intent);
+            setResult(RESULT_OK, intent);
             finish();
         });
         classifyFinishRecycleItBtn.setOnClickListener(view -> {
@@ -375,29 +370,6 @@ public class ClassifyActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Check permissions and start camera activity
-     */
-    /*
-    private void startCameraActivity() {
-        // check and request permission, onRequestPermissionsResult method in MainActivity
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    this.PERMISSIONS_REQUEST);
-            return;
-        }
-        startCamera();
-    }
-
-    private void startCamera() {
-        Intent intent = new Intent(this, CameraActivity.class);
-        startActivityForResult(intent, CAMERA_ACTIVITY);
-    }
-*/
     private void showLoader(boolean show) {
         if (show) {
             classifyProgressBar.setVisibility(View.VISIBLE);

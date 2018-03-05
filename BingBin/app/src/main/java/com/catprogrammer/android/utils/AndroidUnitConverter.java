@@ -10,6 +10,7 @@ import android.util.TypedValue;
  * Created by jhe on 01/03/2018.
  */
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class AndroidUnitConverter {
 
     /**
@@ -19,8 +20,7 @@ public abstract class AndroidUnitConverter {
      * @return SP
      */
     public static int convertDpToPixels(float dp, Context context) {
-        int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-        return px;
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
     /**
@@ -30,8 +30,7 @@ public abstract class AndroidUnitConverter {
      * @return Pixel value
      */
     public static int convertSpToPixels(float sp, Context context) {
-        int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
-        return px;
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 
     /**
@@ -41,12 +40,10 @@ public abstract class AndroidUnitConverter {
      * @return SP value
      */
     public static int convertDpToSp(float dp, Context context) {
-        int sp = (int) (convertDpToPixels(dp, context) / (float) convertSpToPixels(dp, context));
-        return sp;
+        return (int) (convertDpToPixels(dp, context) / (float) convertSpToPixels(dp, context));
     }
 
     public static float convertPxToSp(int px, Context context) {
-        float sp = px / context.getResources().getDisplayMetrics().scaledDensity;
-        return sp;
+        return px / context.getResources().getDisplayMetrics().scaledDensity;
     }
 }

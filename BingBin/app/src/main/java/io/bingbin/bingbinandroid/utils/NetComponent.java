@@ -8,7 +8,6 @@ import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.RegisterActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
-import studios.codelight.smartloginlibrary.util.UserUtil;
 
 /**
  * Dagger component

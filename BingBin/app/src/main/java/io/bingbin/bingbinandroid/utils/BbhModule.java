@@ -12,6 +12,7 @@ import dagger.Provides;
  * Created by Junyang HE on 2018/2/13.
  */
 
+@SuppressWarnings("WeakerAccess")
 @Module
 public class BbhModule {
 

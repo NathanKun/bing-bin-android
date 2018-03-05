@@ -18,8 +18,6 @@ import io.bingbin.bingbinandroid.views.mainActivity.RankFragment;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    private int count = 4;
-
     public ViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
@@ -27,7 +25,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     // Returns total number of pages
     @Override
     public int getCount() {
-        return count;
+        return 4;
     }
 
     // Returns the fragment to display for that page
@@ -72,10 +70,5 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     public Fragment getRegisteredFragment(int position) {
         return registeredFragments.get(position);
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-        this.notifyDataSetChanged();
     }
 }

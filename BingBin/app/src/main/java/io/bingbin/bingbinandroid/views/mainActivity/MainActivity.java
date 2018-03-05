@@ -33,7 +33,6 @@ import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import io.bingbin.bingbinandroid.views.infoActivity.InfoActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import studios.codelight.smartloginlibrary.LoginType;
-import studios.codelight.smartloginlibrary.SmartLogin;
 import studios.codelight.smartloginlibrary.SmartLoginFactory;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartUser;
@@ -44,11 +43,11 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
  *
  * @author Junyang HE
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class MainActivity extends AppCompatActivity {
 
     protected final int GALLERY_PICTURE = 233;
     private final int CLASSIFY = 6;
-    private final int CLASSIFY_END_TRIER = 66;
     private final int CHANGE_AVATAR = 6666;
 
     final Handler handler = new Handler();
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 startClassifyActivity(uri);
             }
         } else if (requestCode == CLASSIFY) {
-            if (resultCode == CLASSIFY_END_TRIER) {
+            if (resultCode == RESULT_OK) {
                 Log.d("Classify End", "To trier fragment");
                 int ecoPoint = data.getIntExtra("ecopoint", 0);
                 if (ecoPoint == 0) {

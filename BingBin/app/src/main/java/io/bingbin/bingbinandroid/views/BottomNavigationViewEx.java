@@ -29,6 +29,8 @@ import java.lang.reflect.Field;
  * @see <a href='https://github.com/ittianyu/BottomNavigationViewEx/'>BottomNavigationViewEx</a>
  * Created by yu on 2016/11/10.
  */
+
+@SuppressWarnings("ALL")
 public class BottomNavigationViewEx extends BottomNavigationView {
     // used for animation
     private int mShiftAmount;

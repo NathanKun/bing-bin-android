@@ -31,4 +31,12 @@
     <string name="trashbin_image_description">Trash bin with color</string>
     <string name="title_activity_instruction">InstructionActivity</string>
     <string name="placeholder_space"> </string>
+    <string name="bingbinhttp_onfailure">Erreur de connexion</string>
+    <string name="bingbinhttp_onresponsenotsuccess">Request not success</string>
+    <string name="bingbinhttp_onjsonparseerror">Json parse error</string>
+    <string name="hint_login_no_email_pw">Veuillez entrer votre email et votre mot de pass</string>
+    <string name="hint_register_missing_fields">Veuillez renseigner tous les champs</string>
+    <string name="hint_register_email_not_correct">L\'adresse mail est incorrect</string>
+    <string name="hint_register_password_different">Les mots de passe sont différents</string>
+    <string name="hint_register_password_short">Le mots de passe est trop court</string>
 </resources>

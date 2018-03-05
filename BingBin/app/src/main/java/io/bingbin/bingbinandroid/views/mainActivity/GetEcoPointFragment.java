@@ -1,7 +1,6 @@
 package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,9 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +21,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

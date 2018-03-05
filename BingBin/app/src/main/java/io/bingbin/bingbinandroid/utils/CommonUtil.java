@@ -19,7 +19,6 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +32,7 @@ import java.util.Locale;
  *
  * @author Junyang HE
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class CommonUtil {
 
     /**
@@ -84,6 +84,7 @@ public abstract class CommonUtil {
      * @param radius    radius of blur
      * @return  blur bitmap
      */
+    @SuppressWarnings("SameParameterValue")
     public static Bitmap rsBlur(Context context, Bitmap source, int radius) {
 
         //初始化一个RenderScript Context
@@ -170,6 +171,7 @@ public abstract class CommonUtil {
      * @param quality quality goes from 1 to 100. (Percentage).
      * @return true if the Bitmap was saved successfully, false otherwise.
      */
+    @SuppressWarnings({"UnusedReturnValue", "SameParameterValue"})
     public static boolean saveBitmapToFile(File dir, String fileName, Bitmap bm, int quality) {
 
         File imageFile = new File(dir, fileName);

@@ -1,24 +1,17 @@
 package io.bingbin.bingbinandroid.views.loginActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.JsonReader;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.EditText;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -27,15 +20,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.utils.BingBinCallback;
+import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity {
-
-    private final int CANCEL = 2333;
-    private final int SUCCESS = 23333;
 
     @Inject
     BingBinHttp bbh;
@@ -69,85 +58,91 @@ public class RegisterActivity extends AppCompatActivity {
         String pwd = passwordRegistgerEdittext.getText().toString();
         String pwd2 = password2RegistgerEdittext.getText().toString();
         if(StringUtils.isAnyBlank(email, firstname, pwd, pwd2)) {
-            hintRegisterTextView.setText("Veuillez renseigner tous les champs");
+            hintRegisterTextView.setText(R.string.hint_register_missing_fields);
             return;
         }
         if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            hintRegisterTextView.setText("L'adresse mail est incorrect");
+            hintRegisterTextView.setText(R.string.hint_register_email_not_correct);
             return;
         }
         if(!pwd.equals(pwd2)) {
-            hintRegisterTextView.setText("Les mots de passe sont différents");
+            hintRegisterTextView.setText(R.string.hint_register_password_different);
             return;
         }
         if(pwd.length() < 6) {
-            hintRegisterTextView.setText("Le mots de passe est trop court");
+            hintRegisterTextView.setText(R.string.hint_register_password_short);
             return;
         }
-        registerProgressBar.setVisibility(View.VISIBLE);
+        showLoader(true);
 
         // BingBinHttp register
         // callback success => end activity and send user, loginProgressBar GONE
         // callback error => setText, loginProgressBar GONE
-        Callback callback = new Callback() {
+        BingBinCallbackAction action = new BingBinCallbackAction() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> {
-                    hintRegisterTextView.setText("Erreur de connexion");
-                    registerProgressBar.setVisibility(View.GONE);});
+            public void onFailure() {
+                runOnUiThread(() -> hintRegisterTextView.setText(R.string.bingbinhttp_onfailure));
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String hint = "";
-                if (!response.isSuccessful()){
-                    runOnUiThread(() -> hintRegisterTextView.setText("Request not success"));
-                } else {
-                    String body = response.body().string();
-                    Log.d("bbh register", body);
+            public void onResponseNotSuccess() {
+                runOnUiThread(() -> hintRegisterTextView.setText(R.string.bingbinhttp_onresponsenotsuccess));
+            }
 
-                    String token = "";
+            @Override
+            public void onJsonParseError() {
+                runOnUiThread(() -> hintRegisterTextView.setText(R.string.bingbinhttp_onjsonparseerror));
+            }
 
-                    try {
-                        JSONObject res = new JSONObject(body);
-                        if(res.getBoolean("valid")) {
-                            token = res.getString("token");
-                        } else {
-                            hint = res.getString("error");
-                        }
-                    } catch (JSONException e) {
-                        hint = "Response JSON error";
-                        e.printStackTrace();
-                    }
+            @Override
+            public void onNotValid(String errorStr) {
+                runOnUiThread(() -> hintRegisterTextView.setText(errorStr));
+            }
 
-                    if(StringUtils.isNotBlank(token)) {
-                        String finalToken = token;
-                        runOnUiThread(() -> {
-                            runOnUiThread(() -> registerProgressBar.setVisibility(View.GONE));
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            intent.putExtra("status", "success");
-                            intent.putExtra("token", finalToken);
-                            setResult(SUCCESS, intent);
-                            RegisterActivity.this.finish();
-                        });
-                    } else {
-                        String finalHint = hint;
-                        runOnUiThread(() -> {
-                            hintRegisterTextView.setText(finalHint);
-                            registerProgressBar.setVisibility(View.GONE);
-                        });
-                    }
-                }
+            @Override
+            public void onTokenNotValid(String errorStr) {
+                runOnUiThread(() -> hintRegisterTextView.setText(errorStr));
+            }
+
+            @Override
+            public void onValid(JSONObject json) throws JSONException {
+                String token = json.getString("token");
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.putExtra("status", "success");
+                intent.putExtra("token", token);
+
+                runOnUiThread(() -> {
+                    showLoader(false);
+                    setResult(RESULT_OK, intent);
+                    RegisterActivity.this.finish();
+                });
+            }
+
+            @Override
+            public void onAnyError() {
+                runOnUiThread(() -> showLoader(false));
             }
         };
 
-        bbh.register(callback, email, firstname, pwd);
+        bbh.register(new BingBinCallback(action), email, firstname, pwd);
+
     }
 
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        setResult(CANCEL, intent);
+        setResult(RESULT_CANCELED, intent);
         finish();
+    }
+
+    private void showLoader(boolean show) {
+        if (show) {
+            registerProgressBar.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            registerProgressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
     }
 }

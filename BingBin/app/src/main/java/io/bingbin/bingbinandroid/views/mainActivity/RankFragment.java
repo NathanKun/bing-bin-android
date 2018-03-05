@@ -24,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,9 +36,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import io.bingbin.bingbinandroid.utils.BingBinCallback;
+import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 
 
 /**
@@ -48,8 +46,8 @@ import okhttp3.Response;
  *
  * @author Junyang HE
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class RankFragment extends Fragment {
-
 
     final private String BBH_DURATION_ALL = "all";
     final private String BBH_DURATION_DAY = "day";
@@ -84,7 +82,7 @@ public class RankFragment extends Fragment {
 
     private List<Map<String, Object>> dataToShow = new ArrayList<>();
 
-    private String currentDuration = BBH_DURATION_ALL;
+    private String currentDuration = "all";
 
 
     public RankFragment() {
@@ -140,74 +138,89 @@ public class RankFragment extends Fragment {
                     Log.d("selected user id", (String) dataToShow.get(position).get("id"));
                     activity.showLoader(true);
 
-                    Callback cb = new Callback() {
+                    BingBinCallbackAction action = new BingBinCallbackAction() {
                         @Override
-                        public void onFailure(Call call, IOException e) {
-                            activity.runOnUiThread(() -> {
-                                Toast.makeText(activity.getApplicationContext(), "Erreur de connexion", Toast.LENGTH_SHORT).show();
-                                activity.showLoader(false);
-                            });
+                        public void onFailure() {
+                            activity.runOnUiThread(() -> Toast.makeText(
+                                    activity.getApplicationContext(),
+                                    R.string.bingbinhttp_onfailure,
+                                    Toast.LENGTH_SHORT).show());
                         }
 
                         @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (!response.isSuccessful()) {
+                        public void onResponseNotSuccess() {
+                            activity.runOnUiThread(() -> Toast.makeText(
+                                    activity.getApplicationContext(),
+                                    R.string.bingbinhttp_onresponsenotsuccess,
+                                    Toast.LENGTH_SHORT).show());
+                        }
+
+                        @Override
+                        public void onJsonParseError() {
+                            activity.runOnUiThread(() -> Toast.makeText(
+                                    activity.getApplicationContext(),
+                                    R.string.bingbinhttp_onjsonparseerror,
+                                    Toast.LENGTH_SHORT).show());
+                        }
+
+                        @Override
+                        public void onNotValid(String errorStr) {
+                            activity.runOnUiThread(() -> Toast.makeText(
+                                    activity.getApplicationContext(),
+                                    errorStr,
+                                    Toast.LENGTH_SHORT).show());
+                        }
+
+                        @Override
+                        public void onTokenNotValid(String errorStr) {
+                            activity.runOnUiThread(() -> Toast.makeText(
+                                    activity.getApplicationContext(),
+                                    errorStr,
+                                    Toast.LENGTH_SHORT).show());
+                        }
+
+                        @Override
+                        public void onValid(JSONObject json) throws JSONException {
+                            if (json.getBoolean("limit_reach")) {
                                 activity.runOnUiThread(() -> {
-                                    Toast.makeText(activity.getApplicationContext(), "request de not success", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity.getApplicationContext(),
+                                            "Vous ne pouvez qu'envoyer 5 soleil par jour",
+                                            Toast.LENGTH_SHORT).show();
                                     activity.showLoader(false);
                                 });
                                 return;
                             }
 
-                            String res = response.body().string();
-                            Log.d("sendSunPoint", res);
-                            try {
-                                JSONObject json = new JSONObject(res);
+                            activity.runOnUiThread(() -> {
+                                activity.showLoader(false);
+                                AnimationUtil.revealView(sunButton, false, 500); // hide sun button
 
-                                if (!json.getBoolean("valid")) {
-                                    activity.runOnUiThread(() -> {
-                                        Toast.makeText(activity.getApplicationContext(), "invalid", Toast.LENGTH_SHORT).show();
-                                        activity.showLoader(false);
-                                    });
-                                    return;
-                                }
+                                // disable input + fade in => 0.5s => delay 2s => fade out => 0.5s => enable input
+                                activity.enableInput(false);
+                                AnimationUtil.revealView(rankingSendsunLayout, true, 500);
+                                Handler handler = new Handler();
+                                handler.postDelayed(
+                                        () -> AnimationUtil.revealView(rankingSendsunLayout, false, 500), 1500);
+                                handler.postDelayed(
+                                        () -> activity.enableInput(true), 2500);
+                            });
+                        }
 
-                                if (json.getBoolean("limit_reach")) {
-                                    activity.runOnUiThread(() -> {
-                                        Toast.makeText(activity.getApplicationContext(), "limit reached", Toast.LENGTH_SHORT).show();
-                                        activity.showLoader(false);
-                                    });
-                                    return;
-                                }
+                        @Override
+                        public void onAnyError() {
+                            activity.runOnUiThread(() -> activity.showLoader(false));
+                        }
+                    };
 
-                                activity.runOnUiThread(() -> {
-                                    activity.showLoader(false);
-                                    AnimationUtil.revealView(sunButton, false, 500); // hide sun button
-
-                                    // disable input + fade in => 0.5s => delay 2s => fade out => 0.5s => enable input
-                                    activity.enableInput(false);
-                                    AnimationUtil.revealView(rankingSendsunLayout, true, 500);
-                                    Handler handler = new Handler();
-                                    handler.postDelayed(
-                                            () -> AnimationUtil.revealView(rankingSendsunLayout, false, 500), 1500);
-                                    handler.postDelayed(
-                                            () -> activity.enableInput(true), 2500);
-                                });
-                            } catch (JSONException e) {
-                                activity.runOnUiThread(() -> {
-                                    Toast.makeText(activity.getApplicationContext(), "json parse error", Toast.LENGTH_SHORT).show();
-                                    activity.showLoader(false);
-                                });
-                                e.printStackTrace();
-                            }
-                        } // onResponse end
-                    }; // call back end
-
-                    activity.bbh.sendSunPoint(cb, activity.getCurrentUser().getToken(), (String) dataToShow.get(position).get("id"));
+                    activity.bbh.sendSunPoint(new BingBinCallback(action),
+                            activity.getCurrentUser().getToken(),
+                            (String) dataToShow.get(position).get("id"));
 
                 }); // onClickListener end
 
-                // TODO if(dataToShow.get(position)) { sunButton.setVisibility(View.GONE); }
+                if((boolean)dataToShow.get(position).get("isSent")) {
+                    sunButton.setVisibility(View.GONE);
+                }
 
                 return view;
             }
@@ -237,83 +250,74 @@ public class RankFragment extends Fragment {
      * Use BingBinHttp class to get ladder, then call showData()
      */
     private void getData(String duration) {
-        Callback cb = new Callback() {
+        BingBinCallbackAction action = new BingBinCallbackAction() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                Log.d("Get Ladder", "Call Failed");
+            public void onFailure() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onfailure, Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponseNotSuccess() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onJsonParseError() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onNotValid(String errorStr) {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        errorStr, Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onTokenNotValid(String errorStr) {
+                activity.backToLoginActivity();
+            }
+
+            @Override
+            public void onValid(JSONObject json) throws JSONException {
+                JSONArray data = new JSONArray();
+                Object ladder = json.get("ladder");
+                if (ladder instanceof JSONObject) { // if no data, will be [] JSONArray
+                    Iterator it = ((JSONObject) ladder).keys();
+                    while (it.hasNext()) {
+                        data.put(((JSONObject) ladder).getJSONObject((String) it.next()));
+                    }
+                }
+
+                Log.d("Get Ladder", "data size: " + data.length());
+                Log.d("Get Ladder", "data: " + data.toString());
+
+                showData(data);
+
+                activity.runOnUiThread(() -> {
+                    if (rankSwiperefresh != null) {
+                        rankSwiperefresh.setRefreshing(false);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onAnyError() {
                 activity.runOnUiThread(() -> {
                     if (rankSwiperefresh != null) {
                         rankSwiperefresh.setRefreshing(false);
                     }
                 });
             }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    Log.d("Get Ladder", "Request not successful");
-                    activity.runOnUiThread(() -> {
-                        if (rankSwiperefresh != null) {
-                            rankSwiperefresh.setRefreshing(false);
-                        }
-                    });
-                    return;
-                }
-
-                String body = response.body().string();
-                try {
-                    JSONObject json = new JSONObject(body);
-
-                    if (!json.getBoolean("valid")) {
-                        Log.d("Get Ladder", "Not valid: " + json.getString("error"));
-                        activity.runOnUiThread(() -> {
-                            if (rankSwiperefresh != null) {
-                                rankSwiperefresh.setRefreshing(false);
-                            }
-                        });
-                        return;
-                    }
-
-                    JSONArray data = new JSONArray();
-                    Object ladder = json.get("ladder");
-                    if (ladder instanceof JSONObject) { // if no data, will be [] JSONArray
-                        Iterator it = ((JSONObject) ladder).keys();
-                        while (it.hasNext()) {
-                            data.put(((JSONObject) ladder).getJSONObject((String) it.next()));
-                        }
-                    }
-
-                    Log.d("Get Ladder", "data size: " + data.length());
-                    Log.d("Get Ladder", "data: " + data.toString());
-
-                    activity.runOnUiThread(() -> {
-                        try {
-                            showData(data);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Log.d("Get Ladder", "Showdata JSON parse error");
-                            activity.runOnUiThread(() -> {
-                                if (rankSwiperefresh != null) {
-                                    rankSwiperefresh.setRefreshing(false);
-                                }
-                            });
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.d("Get Ladder", "JSON parse error");
-                    activity.runOnUiThread(() -> {
-                        if (rankSwiperefresh != null) {
-                            rankSwiperefresh.setRefreshing(false);
-                        }
-                    });
-                }
-            }
         };
 
         activity.runOnUiThread(() -> rankSwiperefresh.setRefreshing(true));
-        activity.bbh.getLadder(cb, activity.getCurrentUser().getToken(), duration);
+        activity.bbh.getLadder(new BingBinCallback(action),
+                activity.getCurrentUser().getToken(),
+                duration);
     }
 
     /**
@@ -336,7 +340,7 @@ public class RankFragment extends Fragment {
             int pt = json.getInt("eco_point");
             int rabbitId = json.getInt("id_rabbit");
             int leafId = json.getInt("id_leaf");
-            // TODO boolean isSent = json.getBoolean("isSent");
+            boolean isSent = json.getBoolean("has_receive_sun_point");
 
             Bitmap avatar = AvatarHelper.generateAvatar(activity, rabbitId, leafId);
 
@@ -345,15 +349,12 @@ public class RankFragment extends Fragment {
             map.put("rank", rank);
             map.put("avatar", avatar);
             map.put("id", id);
-            // TODO map.put("isSent", isSent);
+            map.put("isSent", isSent);
             dataToShow.add(map);
         }
 
         // show data in list
         mAdapter.notifyDataSetChanged();
-        if (rankSwiperefresh != null) {
-            rankSwiperefresh.setRefreshing(false);
-        }
     }
 
     @OnClick({R.id.rank_buttonbar_all_btn, R.id.rank_butbtonbar_day_btn,

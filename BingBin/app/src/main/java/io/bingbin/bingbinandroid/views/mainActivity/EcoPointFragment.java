@@ -23,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,14 +33,12 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import io.bingbin.bingbinandroid.utils.BingBinCallback;
+import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 import studios.codelight.smartloginlibrary.util.UserUtil;
@@ -236,9 +233,7 @@ public class EcoPointFragment extends Fragment {
 
 
         // ------ listener to change avatar ------
-        ecopointAvatarImageview.setOnClickListener((view -> {
-            activity.startAvatarActivity();
-        }));
+        ecopointAvatarImageview.setOnClickListener((view -> activity.startAvatarActivity()));
 
 
         // ------ get data and show ------
@@ -272,70 +267,65 @@ public class EcoPointFragment extends Fragment {
      * @param token BingBinToken of the current user
      */
     void getMyInfoToUpdateUserAndPoints(String token) {
-        Callback cb = new Callback() {
+        BingBinCallbackAction action = new BingBinCallbackAction() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure() {
                 activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
-                        "Erreur de connexion", Toast.LENGTH_SHORT).show());
+                        R.string.bingbinhttp_onfailure, Toast.LENGTH_SHORT).show());
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
-                            "Request not success", Toast.LENGTH_SHORT).show());
-                    return;
-                }
+            public void onResponseNotSuccess() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show());
+            }
 
-                String body = response.body().string();
-                try {
-                    JSONObject json = new JSONObject(body);
+            @Override
+            public void onJsonParseError() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show());
+            }
 
-                    if (!json.getBoolean("valid")) {
-                        String errorStr = json.getString("error");
-                        Log.d("getMyInfo not valid", errorStr);
+            @Override
+            public void onNotValid(String errorStr) {
+                Log.d("getMyInfo not valid", errorStr);
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        errorStr, Toast.LENGTH_SHORT).show());
+            }
 
-                        if (errorStr.contains("token")) {
-                            activity.backToLoginActivity();
-                        } else {
-                            activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
-                                    errorStr, Toast.LENGTH_SHORT).show());
-                        }
-                        return;
+            @Override
+            public void onTokenNotValid(String errorStr) {
+                activity.backToLoginActivity();
+            }
+
+            @Override
+            public void onValid(JSONObject json) throws JSONException {
+                // remove current user
+                activity.removeCurrentUserFromSession();
+
+                // set new user session
+                SmartUser currentUser = UserUtil.populateBingBinUser(json.getJSONObject("data"), token);
+                UserSessionManager.setUserSession(activity, currentUser);
+
+                // refresh user info
+                activity.runOnUiThread(() -> {
+                    // when swiping real fast, possible that calling these code when view is destroyed
+                    if (ecopointEcopointTextview != null && ecopointSunpointTextview != null && ecopointAvatarImageview != null) {
+                        ecopointEcopointTextview.setText(String.valueOf(currentUser.getEcoPoint()));
+                        ecopointSunpointTextview.setText(String.valueOf(currentUser.getSunPoint()));
+
+                        ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
+                                activity, currentUser.getRabbit(), currentUser.getLeaf()));
                     }
 
-                    // if valid
-
-                    // remove current user
-                    activity.removeCurrentUserFromSession();
-
-                    // set new user session
-                    SmartUser currentUser = UserUtil.populateBingBinUser(json.getJSONObject("data"), token);
-                    UserSessionManager.setUserSession(activity, currentUser);
-
-                    // refresh user info
-                    SmartUser finalCurrentUser = currentUser;
-                    activity.runOnUiThread(() -> {
-                        // when swiping real fast, possible that calling these code when view is destroyed
-                        if (ecopointEcopointTextview != null && ecopointSunpointTextview != null && ecopointAvatarImageview != null) {
-                            ecopointEcopointTextview.setText(String.valueOf(finalCurrentUser.getEcoPoint()));
-                            ecopointSunpointTextview.setText(String.valueOf(finalCurrentUser.getSunPoint()));
-
-                            ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
-                                    activity, finalCurrentUser.getRabbit(), finalCurrentUser.getLeaf()));
-                        }
-
-                    });
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
-                            "JSON parse error", Toast.LENGTH_SHORT).show());
-                }
+                });
             }
+
+            @Override
+            public void onAnyError() { }
         };
 
-        activity.bbh.getMyInfo(cb, activity.getCurrentUser().getToken());
+        activity.bbh.getMyInfo(new BingBinCallback(action), activity.getCurrentUser().getToken());
     }
 
     /**
@@ -344,61 +334,52 @@ public class EcoPointFragment extends Fragment {
      * @param token BingBinToken of the current user
      */
     private void getRecycleHistoryData(String token) {
-        Callback cb = new Callback() {
+        BingBinCallbackAction action = new BingBinCallbackAction() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                activity.runOnUiThread(() -> {
-                    Toast.makeText(activity.getApplicationContext(),
-                            "Erreur de connexion", Toast.LENGTH_SHORT).show();
-                    ecopointHistorySwiperefresh.setRefreshing(false);
-                });
+            public void onFailure() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onfailure, Toast.LENGTH_SHORT).show());
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    activity.runOnUiThread(() -> {
-                        Toast.makeText(activity.getApplicationContext(),
-                                "Request not success", Toast.LENGTH_SHORT).show();
-                        ecopointHistorySwiperefresh.setRefreshing(false);
-                    });
-                    return;
-                }
+            public void onResponseNotSuccess() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show());
+            }
 
-                String body = response.body().string();
-                try {
-                    JSONObject json = new JSONObject(body);
-                    if (!json.getBoolean("valid")) {
-                        String errorStr = json.getString("error");
-                        if (errorStr.contains("token")) {
-                            activity.backToLoginActivity();
-                        } else {
-                            activity.runOnUiThread(() -> {
-                                Toast.makeText(activity.getApplicationContext(),
-                                        errorStr, Toast.LENGTH_SHORT).show();
-                                ecopointHistorySwiperefresh.setRefreshing(false);
-                            });
-                        }
-                        return;
-                    }
+            @Override
+            public void onJsonParseError() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show());
+            }
 
-                    // if valid
-                    JSONArray historyArray = json.getJSONArray("history");
-                    showRecycleHistoryData(historyArray);
+            @Override
+            public void onNotValid(String errorStr) {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        errorStr, Toast.LENGTH_SHORT).show());
+            }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    activity.runOnUiThread(() -> {
-                        Toast.makeText(activity.getApplicationContext(),
-                                "Json parse error", Toast.LENGTH_SHORT).show();
-                        ecopointHistorySwiperefresh.setRefreshing(false);
-                    });
+            @Override
+            public void onTokenNotValid(String errorStr) {
+                activity.backToLoginActivity();
+            }
+
+            @Override
+            public void onValid(JSONObject json) throws JSONException {
+                JSONArray historyArray = json.getJSONArray("history");
+                showRecycleHistoryData(historyArray);
+            }
+
+            @Override
+            public void onAnyError() {
+                if (ecopointHistorySwiperefresh != null) {
+                    ecopointHistorySwiperefresh.setRefreshing(false);
                 }
             }
         };
 
         activity.runOnUiThread(() -> ecopointHistorySwiperefresh.setRefreshing(true));
-        activity.bbh.getMyRecycleHistory(cb, token);
+        activity.bbh.getMyRecycleHistory(new BingBinCallback(action), token);
     }
 
     /**
@@ -442,67 +423,47 @@ public class EcoPointFragment extends Fragment {
      * @param token BingBinToken of the current user
      */
     private void getRecycleByCategoryData(String token) {
-        Callback cb = new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                activity.runOnUiThread(() -> {
-                    Toast.makeText(activity.getApplicationContext(),
-                            "Erreur de connexion", Toast.LENGTH_SHORT).show();
-                    if (ecopointHistorySwiperefresh != null) {
-                        ecopointHistorySwiperefresh.setRefreshing(false);
-                    }
-                });
-            }
+       BingBinCallbackAction action = new BingBinCallbackAction() {
+           @Override
+           public void onFailure() {
+               activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                       R.string.bingbinhttp_onfailure, Toast.LENGTH_SHORT).show());
+           }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    activity.runOnUiThread(() -> {
-                        Toast.makeText(activity.getApplicationContext(),
-                                "Request not success", Toast.LENGTH_SHORT).show();
-                        if (ecopointHistorySwiperefresh != null) {
-                            ecopointHistorySwiperefresh.setRefreshing(false);
-                        }
-                    });
-                    return;
-                }
+           @Override
+           public void onResponseNotSuccess() {
+               activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                       R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show());
+           }
 
-                String body = response.body().string();
-                try {
-                    JSONObject json = new JSONObject(body);
-                    if (!json.getBoolean("valid")) {
-                        String errorStr = json.getString("error");
-                        if (errorStr.contains("token")) {
-                            activity.backToLoginActivity();
-                        } else {
-                            activity.runOnUiThread(() -> {
-                                Toast.makeText(activity.getApplicationContext(),
-                                        errorStr, Toast.LENGTH_SHORT).show();
-                                if (ecopointHistorySwiperefresh != null) {
-                                    ecopointHistorySwiperefresh.setRefreshing(false);
-                                }
-                            });
-                        }
-                        return;
-                    }
+           @Override
+           public void onJsonParseError() {
+               activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                       R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show());
+           }
 
-                    // if valid
-                    JSONArray historyArray = json.getJSONArray("summary");
-                    showRecycleCountData(historyArray);
+           @Override
+           public void onNotValid(String errorStr) {
+               activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                       errorStr, Toast.LENGTH_SHORT).show());
+           }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    activity.runOnUiThread(() -> {
-                        Toast.makeText(activity.getApplicationContext(),
-                                "Json parse error", Toast.LENGTH_SHORT).show();
-                        if (ecopointHistorySwiperefresh != null) {
-                            ecopointHistorySwiperefresh.setRefreshing(false);
-                        }
-                    });
-                }
-            }
-        };
-        activity.bbh.getMyRecycleCounts(cb, token);
+           @Override
+           public void onTokenNotValid(String errorStr) {
+               activity.backToLoginActivity();
+           }
+
+           @Override
+           public void onValid(JSONObject json) throws JSONException {
+               JSONArray historyArray = json.getJSONArray("summary");
+               showRecycleCountData(historyArray);
+           }
+
+           @Override
+           public void onAnyError() { }
+       };
+
+        activity.bbh.getMyRecycleCounts(new BingBinCallback(action), token);
     }
 
     /**

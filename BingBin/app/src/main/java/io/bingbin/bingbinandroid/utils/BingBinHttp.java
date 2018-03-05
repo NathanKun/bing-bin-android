@@ -1,12 +1,9 @@
 package io.bingbin.bingbinandroid.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,8 +12,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -32,34 +27,24 @@ import okhttp3.Response;
  * @author Junyang HE, Yuzhou SONG
  */
 
+@SuppressWarnings("unused")
 public class BingBinHttp {
     private final OkHttpClient client = new OkHttpClient();
     private final String baseUrl = "https://bingbin.io/index.php/";
 
     // app/registerValidation
-    public void register(Callback callback, String email, String firstname, String password) {
-        try {
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("pseudo", firstname)
-                    .add("email", email)
-                    .add("password", password)
-                    .add("name", firstname)
-                    .add("firstname", firstname)
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(baseUrl + "app/registerValidation")
-                    .post(requestBody)
-                    .build();
-
-            client.newCall(request).enqueue(callback);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void register(BingBinCallback callback, String email, String firstname, String password) {
+        Map<String, String> map = new HashMap<>();
+        map.put("pseudo", firstname);
+        map.put("email",  email);
+        map.put("password",  password);
+        map.put("name",  firstname);
+        map.put("firstname",  firstname);
+        asynPost(callback, "app/registerValidation", map);
     }
 
     // app/loginAuthorize
-    public void login(Callback callback, String email, String password) {
+    public void login(BingBinCallback callback, String email, String password) {
         try {
             RequestBody requestBody = new FormBody.Builder()
                     .add("email", email)
@@ -75,10 +60,14 @@ public class BingBinHttp {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Map<String, String> map = new HashMap<>();
+        map.put("email", email);
+        map.put("password",  password);
+        asynPost(callback, "app/loginAuthorize", map);
     }
 
     // Google/authorizeLogin
-    public void googleLogin(Callback callback, String googleToken) {
+    public void googleLogin(BingBinCallback callback, String googleToken) {
         try {
             Request request = new Request.Builder()
                     .url(baseUrl + "Google/authorizeLogin/" + googleToken)
@@ -99,7 +88,7 @@ public class BingBinHttp {
     }
 
     // Facebook/authorizeLogin
-    public void facebookLogin(Callback callback, String facebookToken) {
+    public void facebookLogin(BingBinCallback callback, String facebookToken) {
         try {
             Request request = new Request.Builder()
                     .url(baseUrl + "Facebook/authorizeLogin/" + facebookToken)
@@ -120,45 +109,23 @@ public class BingBinHttp {
     }
 
     // Ranking/getLadder
-    public void getLadder(Callback callback, String bingBinToken, String duration) {
-        try {
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("BingBinToken", bingBinToken)
-                    .add("Duration", duration)
-                    .add("limit", String.valueOf(50))
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(baseUrl + "Ranking/getLadder")
-                    .post(requestBody)
-                    .build();
-
-            client.newCall(request).enqueue(callback);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void getLadder(BingBinCallback callback, String bingBinToken, String duration) {
+        Map<String, String> map = new HashMap<>();
+        map.put("BingBinToken", bingBinToken);
+        map.put("Duration", duration);
+        map.put("limit", String.valueOf(50));
+        asynPost(callback, "Ranking/getLadder", map);
     }
 
     // app/getmyinfo
-    public void getMyInfo(Callback callback, String bingBinToken) {
-        try {
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("BingBinToken", bingBinToken)
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(baseUrl + "app/getmyinfo")
-                    .post(requestBody)
-                    .build();
-
-            client.newCall(request).enqueue(callback);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void getMyInfo(BingBinCallback callback, String bingBinToken) {
+        Map<String, String> map = new HashMap<>();
+        map.put("BingBinToken", bingBinToken);
+        asynPost(callback, "app/getmyinfo", map);
     }
 
     // app/uploadscan
-    public void uploadscan(Callback callback, String bingBinToken, String trashName, String trashCategory, Bitmap bmp) {
+    public void uploadscan(BingBinCallback callback, String bingBinToken, String trashName, String trashCategory, Bitmap bmp) {
         try {
 
             //Compress Image
@@ -188,44 +155,22 @@ public class BingBinHttp {
     }
 
     // app/gettrashescategories
-    public void getTrashesCategories(Callback callback, String bingBinToken) {
-        try {
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("BingBinToken", bingBinToken)
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(baseUrl + "app/gettrashescategories")
-                    .post(requestBody)
-                    .build();
-
-            client.newCall(request).enqueue(callback);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void getTrashesCategories(BingBinCallback callback, String bingBinToken) {
+        Map<String, String> map = new HashMap<>();
+        map.put("BingBinToken", bingBinToken);
+        asynPost(callback, "app/gettrashescategories", map);
     }
 
     // app/sendSunPoint
-    public void sendSunPoint(Callback callback, String bingBinToken, String targetId) {
-        try {
-            RequestBody requestBody = new FormBody.Builder()
-                    .add("BingBinToken", bingBinToken)
-                    .add("targetId", targetId)
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(baseUrl + "app/sendSunPoint")
-                    .post(requestBody)
-                    .build();
-
-            client.newCall(request).enqueue(callback);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sendSunPoint(BingBinCallback callback, String bingBinToken, String targetId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("BingBinToken", bingBinToken);
+        map.put("targetId",  targetId);
+        asynPost(callback, "app/sendSunPoint", map);
     }
 
     // app/modifyRabbit
-    public void modifyRabbit(Callback callback, String bingBinToken, int rabbitId) {
+    public void modifyRabbit(BingBinCallback callback, String bingBinToken, int rabbitId) {
         Map<String, String> map = new HashMap<>();
         map.put("BingBinToken", bingBinToken);
         map.put("rabbitId",  String.valueOf(rabbitId));
@@ -233,7 +178,7 @@ public class BingBinHttp {
     }
 
     // app/modifyLeaf
-    public void modifyLeaf(Callback callback, String bingBinToken, int leafId) {
+    public void modifyLeaf(BingBinCallback callback, String bingBinToken, int leafId) {
         Map<String, String> map = new HashMap<>();
         map.put("BingBinToken", bingBinToken);
         map.put("leafId",  String.valueOf(leafId));
@@ -241,14 +186,14 @@ public class BingBinHttp {
     }
 
     // app/getMySummary
-    public void getMyRecycleCounts(Callback callback, String bingBinToken) {
+    public void getMyRecycleCounts(BingBinCallback callback, String bingBinToken) {
         Map<String, String> map = new HashMap<>();
         map.put("BingBinToken", bingBinToken);
         asynPost(callback, "app/getMySummary", map);
     }
 
     // app/getMyScanHistory
-    public void getMyRecycleHistory(Callback callback, String bingBinToken) {
+    public void getMyRecycleHistory(BingBinCallback callback, String bingBinToken) {
         Map<String, String> map = new HashMap<>();
         map.put("BingBinToken", bingBinToken);
         map.put("limit", String.valueOf(50));
@@ -291,7 +236,7 @@ public class BingBinHttp {
      * @param url       url for adding to the base url
      * @param params    parameters for POST
      */
-    private void asynPost(Callback callback, String url, Map<String, String> params) {
+    private void asynPost(BingBinCallback callback, String url, Map<String, String> params) {
         try {
             Iterator it = params.entrySet().iterator();
 
@@ -311,45 +256,4 @@ public class BingBinHttp {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args) {
-        Callback cb = new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                System.out.println(response.body().string());
-            }
-        };
-        BingBinHttp bbh = new BingBinHttp();
-
-        //bbh.register(cb, "email@em.ail", "first", "pw");
-        // {"valid":true,"token":"151820015184385505a818896df6f4679778383"}
-
-        //bbh.login(cb, "email@em.ail", "pw");
-        // {"valid":true,"data":{"id":"15184385505a818896de99a1.06775327","name":"first","firstname":"first","email":"email@em.ail","img_url":null,"date_nais":null,"eco_point":null,"fb_id":null,"google_id":null,"pseudo":"first"},"token":"444710015184386195a8188db2345d499310863"}
-
-        //bbh.getMyInfo(cb, "444710015184386195a8188db2345d499310863");
-        // {"valid":true,"data":{"name":"first","firstname":"first","email":"email@em.ail","img_url":null,"date_nais":null,"fb_id":null,"pseudo":"first","eco_point":null}}
-
-        //bbh.facebookLogin(cb, "EAAB3bAAZBH2EBAD5G5IITOa1hz0Lr7zxXcup6LrXToEINXXLHxMukIB6fiJY0TvOJ7q7RPi5T6S1Ldv0RFVrb1YZAyNJkZA03boMt509flxYQr6x6GUHyI4uZCtPT1DeOZBwiKP4JqLyhYHBncUdhhyXnQqcqI81rJZCsTm014FYouu6kZCKmXZCTsl28aL0ZBeKBkdQZACVAUWM5PNjrZCO7iOeYRsmyx3cyKx42Hi1pQ8ngZDZD");
-        // {"token":"984500015184422845a81972c48dd9634891465"}
-
-        //System.out.println(System.getProperty("user.dir"));
-        //File img = new File("jotun.png");
-        //System.out.println(img.getName());
-        //System.out.println(img.getAbsolutePath());
-        //System.out.println(img.getPath());
-        //System.out.println(img.exists());
-        //System.out.println(img.canRead());
-        //bbh.uploadscan(cb, "984500015184422845a81972c48dd9634891465", "test", "1", img);
-
-        bbh.modifyRabbit(cb, "081700015196769915a946e3f1a691990511820", 9);
-        bbh.modifyLeaf(cb, "081700015196769915a946e3f1a691990511820", 9);
-        bbh.getMyRecycleCounts(cb, "081700015196769915a946e3f1a691990511820");
-        bbh.getMyRecycleHistory(cb, "081700015196769915a946e3f1a691990511820");
-}
 }

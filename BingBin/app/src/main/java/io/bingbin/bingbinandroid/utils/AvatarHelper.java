@@ -19,19 +19,20 @@ import io.bingbin.bingbinandroid.R;
  * Created by Junyang HE on 22/02/2018.
  */
 
+@SuppressWarnings("unused")
 public abstract class AvatarHelper {
 
     // threshold of ecopoint/sunpoint to unlock the next rabbit/leaf
-    final static int[] thresholdRabbit = {3, 10, 25, 75, 150, 233, 666, 1024}; // 8
-    final static int[] thresholdLeaf = {1, 3, 6, 10, 15, 25, 50, 75, 100, 125, 150}; // 11
+    private final static int[] thresholdRabbit = {3, 10, 25, 75, 150, 233, 666, 1024}; // 8
+    private final static int[] thresholdLeaf = {1, 3, 6, 10, 15, 25, 50, 75, 100, 125, 150}; // 11
 
-    final static int TYPE_RABBIT = 666;
-    final static int TYPE_LEAF = 6666;
+    private final static int TYPE_RABBIT = 666;
+    private final static int TYPE_LEAF = 6666;
 
-    final static int[] rabbitIds = {R.drawable.rabbit_1, R.drawable.rabbit_2, R.drawable.rabbit_3,
+    private final static int[] rabbitIds = {R.drawable.rabbit_1, R.drawable.rabbit_2, R.drawable.rabbit_3,
             R.drawable.rabbit_4, R.drawable.rabbit_5, R.drawable.rabbit_6,
             R.drawable.rabbit_7, R.drawable.rabbit_8, R.drawable.rabbit_9};
-    final static int[] leafIds = {R.drawable.leaf_1, R.drawable.leaf_2, R.drawable.leaf_3,
+    private final static int[] leafIds = {R.drawable.leaf_1, R.drawable.leaf_2, R.drawable.leaf_3,
             R.drawable.leaf_4, R.drawable.leaf_5, R.drawable.leaf_6, R.drawable.leaf_7,
             R.drawable.leaf_8, R.drawable.leaf_9, R.drawable.leaf_10, R.drawable.leaf_11,
             R.drawable.leaf_12};

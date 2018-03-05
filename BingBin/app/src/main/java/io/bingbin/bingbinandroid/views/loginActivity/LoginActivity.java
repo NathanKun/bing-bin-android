@@ -2,7 +2,6 @@ package io.bingbin.bingbinandroid.views.loginActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.catprogrammer.android.utils.AnimationUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -36,12 +35,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
-import com.catprogrammer.android.utils.AnimationUtil;
-import io.bingbin.bingbinandroid.utils.BingBinCallBack;
+import io.bingbin.bingbinandroid.utils.BingBinCallback;
+import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Response;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
@@ -63,8 +60,6 @@ import studios.codelight.smartloginlibrary.util.UserUtil;
 public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     private final int REGISTER = 233;
-    private final int CANCEL = 2333;
-    private final int SUCCESS = 23333;
 
     @Inject
     BingBinHttp bbh;
@@ -154,7 +149,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     }
 
     /**
-     * Try find the logged in user, if found go to MainActivity
+     * Try find the logged in user with UserSessionManager, if found go to MainActivity
      */
     private void checkIsLoggedIn() {
         currentUser = UserSessionManager.getCurrentUser(this);
@@ -172,12 +167,12 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         if (smartLogin != null) {
             smartLogin.onActivityResult(requestCode, resultCode, data, config);
         } else if (requestCode == REGISTER) {
-            if (resultCode == CANCEL) {
+            if (resultCode == RESULT_CANCELED) {
                 Log.d("register activity", "cancel");
                 showLoader(false);
                 return;
             }
-            if (resultCode == SUCCESS) {
+            if (resultCode == RESULT_OK) {
                 String resultToken = data.getStringExtra("token");
                 Log.d("register activity", resultToken);
                 token = resultToken;
@@ -189,9 +184,15 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     }
 
     /**
-     * on social login success, login check or register success
+     * Call when social login success, doing normal login or register success
      *
-     * @param user
+     * If social login success, user will be a SmartGoogleUser or a SmartFacebookUser
+     *     then, use social token to do a second bingbin login, and return a SmartUser with bingbin info
+     *
+     * If normal login or normal sign up finish, user will be a new SmartUser()
+     *     then, will do a direct bingbin login, and return a SmartUser with bingbin info
+     *
+     * @param user  SmartGoogleUser, SmartFacebookUser or new SmartUser()
      */
     @Override
     public void onLoginSuccess(SmartUser user) {
@@ -223,16 +224,16 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                             // if json doesn't have the 'error' key, means social token correct
                             if (!json.has("error")) {
                                 // get the bingbintoken
-                                String resultToken = json.getString("token");
-                                // ask server for user data from the bingbintoken
+                                token = json.getString("token");
+                                // then bbh will ask server for user data from the bingbintoken
                                 // and this thread should end here
                                 // the thread of callback will start
-                                token = resultToken;
+
                             } else { // if social token not correct
                                 hint = "social token not valid";
                             }
                         } else { // if request failed
-                            hint = "Request not success";
+                            hint = getResources().getString(R.string.bingbinhttp_onresponsenotsuccess);
                         }
                     } else { // if request object is still null, means user object neither google nor fb, but token should not be null, so code won't reach here
                         hint = "what?";
@@ -240,10 +241,10 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
                 } catch (IOException e) { // bbh connexion error
                     e.printStackTrace();
-                    hint = "Erreur de connextion";
+                    hint = getResources().getString(R.string.bingbinhttp_onfailure);
                 } catch (JSONException e) { // json parse error
                     e.printStackTrace();
-                    hint = "Json error";
+                    hint = getResources().getString(R.string.bingbinhttp_onjsonparseerror);
                 }
 
                 // if no error code won't reach here
@@ -257,39 +258,38 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
             if (token == null) return;
 
-            Log.d("OnTokenGot", token);
+            Log.d("BingBin Login token", token);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Log.d("GetMyInfo", "High SDK");
-                Runnable onFailure = () -> {
-                    runOnUiThread(() -> hintLoginTextview.setText("Erreur de connexion"));
-                };
+            BingBinCallbackAction action = new BingBinCallbackAction() {
+                @Override
+                public void onFailure() {
+                    runOnUiThread(() -> hintLoginTextview.setText(R.string.bingbinhttp_onfailure));
+                }
 
-                Runnable onResponseNotSuccess = () -> {
-                    runOnUiThread(() -> hintLoginTextview.setText("Request not success"));
-                };
+                @Override
+                public void onResponseNotSuccess() {
+                    runOnUiThread(() -> hintLoginTextview.setText(R.string.bingbinhttp_onresponsenotsuccess));
+                }
 
-                Runnable onJsonParseError = () -> {
-                    runOnUiThread(() -> hintLoginTextview.setText("Json parse error"));
-                };
+                @Override
+                public void onJsonParseError() {
+                    runOnUiThread(() -> hintLoginTextview.setText(R.string.bingbinhttp_onjsonparseerror));
+                }
 
-                Consumer<String> onNotValid = (str) -> {
-                    runOnUiThread(() -> hintLoginTextview.setText(str));
-                };
+                @Override
+                public void onNotValid(String errorStr) {
+                    runOnUiThread(() -> hintLoginTextview.setText(errorStr));
+                }
 
-                Runnable onTokenNotValid = () -> {
-                    runOnUiThread(() -> hintLoginTextview.setText("BingBinToken not valid"));
-                };
+                @Override
+                public void onTokenNotValid(String errorStr) {
+                    runOnUiThread(() -> hintLoginTextview.setText(errorStr));
+                }
 
-                Consumer<JSONObject> onValid = (data) -> {
+                @Override
+                public void onValid(JSONObject json) throws JSONException{
                     // get user data from json obj and populate to SmartUser
-                    SmartUser u = null;
-                    try {
-                        u = UserUtil.populateBingBinUser(data, token);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        runOnUiThread(() -> hintLoginTextview.setText("Json parse error, data not correct"));
-                    }
+                    SmartUser u = UserUtil.populateBingBinUser(json, token);
                     // set user session
                     UserSessionManager.setUserSession(LoginActivity.this, u);
 
@@ -300,74 +300,14 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                         // go to main activity
                         checkIsLoggedIn();
                     });
-                };
+                }
 
-                Runnable onAllError = () -> showLoader(false);
+                @Override
+                public void onAnyError() { }
+            };
 
-                BingBinCallBack cb = new BingBinCallBack(
-                        onFailure, onResponseNotSuccess, onJsonParseError,
-                        onNotValid, onTokenNotValid, onValid, onAllError
-                );
-                bbh.getMyInfo(cb, token);
+            bbh.getMyInfo(new BingBinCallback(action), token);
 
-            } else {
-                Log.d("GetMyInfo", "Low SDK");
-                // callback for bbh.getMyInfo
-                Callback cb = new Callback() {
-                    private String token;
-
-                    // pass the bingbintoken in to inner class
-                    Callback init(String token) {
-                        this.token = token;
-                        return this;
-                    }
-
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        runOnUiThread(() -> hintLoginTextview.setText("Erreur de connexion"));
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String hint = "";
-                        try {
-                            // get json obj from response body
-                            JSONObject json = new JSONObject(response.body().string());
-                            // if token is valid
-                            if (json.getBoolean("valid")) {
-                                // get user data from json obj and populate to SmartUser
-                                SmartUser u = UserUtil.populateBingBinUser(json.getJSONObject("data"), token);
-                                // set user session
-                                UserSessionManager.setUserSession(LoginActivity.this, u);
-
-                                runOnUiThread(() -> {
-                                    // hide loader, enable touch
-                                    showLoader(false);
-                                    Toast.makeText(LoginActivity.this.getApplicationContext(),
-                                            user.toString(), Toast.LENGTH_SHORT).show();
-                                    // go to main activity
-                                    checkIsLoggedIn();
-                                });
-                            } else { // if token is not valid
-                                hint = "BingBinToken not valid";
-                            }
-                        } catch (JSONException e) { // if parse json error
-                            hint = "Json parse error";
-                            e.printStackTrace();
-                        }
-
-                        // if any error, show hint and hide loader
-                        // if no error, won't reach this
-                        String finalHint = hint;
-                        runOnUiThread(() -> {
-                            hintLoginTextview.setText(finalHint);
-                            showLoader(false);
-                        });
-                    }
-                }.init(token); // made sure token not null before
-
-                bbh.getMyInfo(cb, token);
-            }
         })).start();
 
     }
@@ -410,63 +350,54 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 String email = emailEditText.getText().toString();
                 String pwd = passwordEditText.getText().toString();
                 if (StringUtils.isAnyBlank(email, pwd)) {
-                    hintLoginTextview.setText("Veuillez entrer votre email et votre mot de pass");
+                    hintLoginTextview.setText(R.string.hint_login_no_email_pw);
                     showLoader(false);
                     return;
                 }
 
-                Callback callback = new Callback() {
+                BingBinCallbackAction action = new BingBinCallbackAction() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
-                        runOnUiThread(() -> {
-                            hintLoginTextview.setText("Erreur de connexion");
-                            showLoader(false);
-                        });
+                    public void onFailure() {
+                        runOnUiThread(() -> hintLoginTextview.setText(R.string.bingbinhttp_onfailure));
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if (!response.isSuccessful()) {
-                            runOnUiThread(() -> hintLoginTextview.setText("Request not success"));
-                        } else {
-                            String hint = "";
-                            String resultToken = "";
+                    public void onResponseNotSuccess() {
+                        runOnUiThread(() -> hintLoginTextview.setText(R.string.bingbinhttp_onresponsenotsuccess));
+                    }
 
-                            // check login result
-                            try {
-                                JSONObject json = new JSONObject(response.body().string());
-                                if (json.getBoolean("valid")) {
-                                    resultToken = json.getString("token");
-                                    userData = json.getJSONObject("data");
-                                } else {
-                                    hint = json.getString("error");
-                                }
-                            } catch (JSONException e) {
-                                hint = "Response JSON error";
-                                e.printStackTrace();
-                            }
+                    @Override
+                    public void onJsonParseError() {
+                        runOnUiThread(() -> hintLoginTextview.setText(R.string.bingbinhttp_onjsonparseerror));
+                    }
 
-                            // if login failed, end
-                            if (StringUtils.isNotBlank(hint)) {
-                                String finalHint = hint;
-                                runOnUiThread(() -> {
-                                    hintLoginTextview.setText(finalHint);
-                                    showLoader(false);
-                                });
-                                return;
-                            }
+                    @Override
+                    public void onNotValid(String errorStr) {
+                        runOnUiThread(() -> hintLoginTextview.setText(errorStr));
+                    }
 
-                            // if login success
-                            String finalResultToken = resultToken;
-                            runOnUiThread(() -> {
-                                token = finalResultToken;
-                                smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-                                smartLogin.login(config);
-                            });
-                        }
+                    @Override
+                    public void onTokenNotValid(String errorStr) {
+                        runOnUiThread(() -> hintLoginTextview.setText(errorStr));
+                    }
+
+                    @Override
+                    public void onValid(JSONObject json) throws JSONException {
+                        token = json.getString("token");
+                        userData = json.getJSONObject("data");
+                        smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+                        runOnUiThread(() -> smartLogin.login(config));
+                    }
+
+                    @Override
+                    public void onAnyError() {
+                        runOnUiThread(() -> showLoader(false));
                     }
                 };
-                bbh.login(callback, emailEditText.getText().toString(), passwordEditText.getText().toString());
+
+                bbh.login(new BingBinCallback(action),
+                        emailEditText.getText().toString(), passwordEditText.getText().toString());
+
                 break;
 
             case R.id.google_login_button:
