@@ -80,7 +80,7 @@ public class FacebookLogin extends SmartLogin {
                                     public void onCompleted(JSONObject object, GraphResponse response) {
                                         Log.v("LoginActivity", response.toString());
                                         try {
-                                            JSONObject graphObject = (JSONObject)response.getJSONObject();
+                                            JSONObject graphObject = response.getJSONObject();
                                             fbUser.setUsername(graphObject.getString("name"));
                                             fbUser.setEmail(graphObject.getString("email"));
 

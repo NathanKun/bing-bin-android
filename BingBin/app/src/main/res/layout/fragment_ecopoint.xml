@@ -79,7 +79,7 @@
                 android:id="@+id/ecopoint_sunpoint_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:text="666"
                 android:textSize="24sp" />
 

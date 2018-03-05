@@ -28,7 +28,8 @@
         app:layout_constraintBottom_toTopOf="@+id/instruction_longtext_textview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instruction_title_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/instruction_title_textview"
+        android:contentDescription="image for instruction" />
 
     <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/instruction_title_textview"

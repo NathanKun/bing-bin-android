@@ -46,7 +46,8 @@
         android:src="@drawable/img_welcome_bin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/home_welcome_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/home_welcome_textview"
+        android:contentDescription="image of trashbin for welcome fragment" />
 
     <Button
         android:id="@+id/welcome_image_btn"

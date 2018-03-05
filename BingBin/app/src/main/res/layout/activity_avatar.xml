@@ -130,7 +130,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/catg_6_food" />
+            app:srcCompat="@drawable/catg_6_food"
+            android:contentDescription="avatar preview" />
 
         <Button
             android:id="@+id/avatar_footer_ok_btn"
