@@ -85,7 +85,6 @@ public class FacebookLogin extends SmartLogin {
                                             // Save the user
                                             UserSessionManager.setUserSession(act, fbUser);
                                             callback.onLoginSuccess(fbUser);
-                                            // TODO: get avatar from url and upload image to server, get avatar link
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }

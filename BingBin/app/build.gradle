@@ -18,8 +18,8 @@ android {
         applicationId "io.bingbin.bingbinandroid"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 17
-        versionName "0.4.6"
+        versionCode 18
+        versionName "0.4.7"
         //renderscriptTargetApi 27
         //renderscriptSupportModeEnabled true
     }
@@ -28,11 +28,13 @@ android {
             shrinkResources true
             minifyEnabled true
             debuggable false
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
         debug {
             minifyEnabled false
+            useProguard false
             debuggable true
         }
     }
