@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -38,6 +39,7 @@ public class CameraActivity extends AppCompatActivity {
 
         cameraView.setMethod(CameraKit.Constants.METHOD_STANDARD);
         cameraView.setCropOutput(false);
+        cameraView.setJpegQuality(100);
         cameraView.setFlash(CameraKit.Constants.FLASH_AUTO);
         cameraView.setFocus(CameraKit.Constants.FOCUS_TAP);
     }
@@ -81,7 +83,11 @@ public class CameraActivity extends AppCompatActivity {
                         runOnUiThread(() -> cameraView.stop());
 
                         Bitmap img = cameraKitImage.getBitmap();
+
+                        Log.d("Photo taken", "size = " + img.getByteCount());
+
                         String filename = CommonUtil.saveBitmap(this, img); // save img
+                        img.recycle();
 
                         Intent intent = new Intent(this, PreviewActivity.class);
                         intent.putExtra("filename", filename);

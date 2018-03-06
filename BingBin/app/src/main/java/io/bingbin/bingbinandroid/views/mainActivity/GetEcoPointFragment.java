@@ -134,6 +134,7 @@ public class GetEcoPointFragment extends Fragment {
         }
         if (doSave) {
             CommonUtil.saveBitmapToFile(dir,"BingBin.png", shareImg, 100);
+            shareImg.recycle();
         }
         else {
             Log.e("Share","Couldn't create target directory.");

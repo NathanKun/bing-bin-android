@@ -139,6 +139,7 @@ public class TensorFlowImageClassifier implements Classifier {
       floatValues[i * 3 + 1] = (((val >> 8) & 0xFF) - imageMean) / imageStd;
       floatValues[i * 3 + 2] = ((val & 0xFF) - imageMean) / imageStd;
     }
+    bitmap.recycle();
     Trace.endSection();
 
     // Copy the input data into TensorFlow.

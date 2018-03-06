@@ -367,7 +367,14 @@ public class EcoPointFragment extends Fragment {
             @Override
             public void onValid(JSONObject json) throws JSONException {
                 JSONArray historyArray = json.getJSONArray("history");
-                showRecycleHistoryData(historyArray);
+                activity.runOnUiThread(() -> {
+                    try {
+                        showRecycleHistoryData(historyArray);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        onJsonParseError();
+                    }
+                });
             }
 
             @Override
@@ -409,11 +416,9 @@ public class EcoPointFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
 
         // show data in list
-        activity.runOnUiThread(() -> {
-            if (ecopointHistorySwiperefresh != null) {
-                ecopointHistorySwiperefresh.setRefreshing(false);
-            }
-        });
+        if (ecopointHistorySwiperefresh != null) {
+            ecopointHistorySwiperefresh.setRefreshing(false);
+        }
 
     }
 
@@ -492,8 +497,8 @@ public class EcoPointFragment extends Fragment {
                 ecopointCountText7, ecopointCountText8, ecopointCountText9,
                 ecopointCountText10, ecopointCountText11, ecopointCountText12};
         activity.runOnUiThread(() -> {
-            if (ecopointCountText1 != null) {
-                for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < 12; i++) {
+                if (textViews[i] != null) {
                     textViews[i].setText(String.valueOf(counts[i]));
                 }
             }

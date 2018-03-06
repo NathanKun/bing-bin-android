@@ -61,6 +61,10 @@ public class RegisterActivity extends AppCompatActivity {
             hintRegisterTextView.setText(R.string.hint_register_missing_fields);
             return;
         }
+        if(firstname.length() > 15) {
+            hintRegisterTextView.setText(R.string.hint_register_name_long);
+            return;
+        }
         if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             hintRegisterTextView.setText(R.string.hint_register_email_not_correct);
             return;
