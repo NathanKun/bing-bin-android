@@ -143,11 +143,6 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
     /**
      * Try find the logged in user with UserSessionManager, if found go to MainActivity
      */

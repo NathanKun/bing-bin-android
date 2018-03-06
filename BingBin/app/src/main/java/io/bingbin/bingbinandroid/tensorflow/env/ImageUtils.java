@@ -30,6 +30,7 @@ import java.nio.ByteBuffer;
 /**
  * Utility class for manipulating images.
  **/
+@SuppressWarnings("all")
 public class ImageUtils {
     @SuppressWarnings("unused")
     private static final Logger LOGGER = new Logger();

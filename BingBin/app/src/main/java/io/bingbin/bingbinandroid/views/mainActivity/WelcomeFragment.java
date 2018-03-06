@@ -77,11 +77,6 @@ public class WelcomeFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onActivityCreated(Bundle b) {
         super.onActivityCreated(b);
         homeWelcomeTextview.setText(String.format(activity.getResources().getString(R.string.home_homefragment), activity.getCurrentUser().getFirstName()));

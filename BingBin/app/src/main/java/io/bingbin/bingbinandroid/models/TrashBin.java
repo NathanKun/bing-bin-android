@@ -18,8 +18,8 @@ public enum TrashBin {
     LEBONCOIN(R.drawable.trashbin_leboncoin, "Leboncoin"),
     OTHER(R.drawable.trashbin_black, "Autre");
 
-    private int imageResource;
-    private String frenchName;
+    private final int imageResource;
+    private final String frenchName;
 
     TrashBin(int id, String frenchName) {
         this.imageResource = id;

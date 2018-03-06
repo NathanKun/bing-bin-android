@@ -127,7 +127,7 @@ public class EcoPointFragment extends Fragment {
     private MainActivity activity;
     private Unbinder unbinder;
     private SimpleAdapter mAdapter;
-    private List<Map<String, Object>> recycleHistoryDataToShow = new ArrayList<>();
+    private final List<Map<String, Object>> recycleHistoryDataToShow = new ArrayList<>();
     private boolean isShowingGrid;
 
     public EcoPointFragment() {

@@ -15,7 +15,6 @@ limitations under the License.
 
 package io.bingbin.bingbinandroid.tensorflow.env;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.util.HashSet;
@@ -24,7 +23,7 @@ import java.util.Set;
 /**
  * Wrapper for the platform log function, allows convenient message prefixing and log disabling.
  */
-@SuppressLint("LogTagMismatch")
+@SuppressWarnings("all")
 public final class Logger {
   private static final String DEFAULT_TAG = "tensorflow";
   private static final int DEFAULT_MIN_LOG_LEVEL = Log.DEBUG;
@@ -33,7 +32,7 @@ public final class Logger {
   private static final Set<String> IGNORED_CLASS_NAMES;
 
   static {
-    IGNORED_CLASS_NAMES = new HashSet<String>(3);
+    IGNORED_CLASS_NAMES = new HashSet<>(3);
     IGNORED_CLASS_NAMES.add("dalvik.system.VMStack");
     IGNORED_CLASS_NAMES.add("java.lang.Thread");
     IGNORED_CLASS_NAMES.add(Logger.class.getCanonicalName());

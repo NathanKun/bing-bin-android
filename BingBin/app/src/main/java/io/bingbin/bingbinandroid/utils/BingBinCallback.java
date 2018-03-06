@@ -20,7 +20,7 @@ import okhttp3.Response;
 
 public class BingBinCallback implements Callback {
 
-    private BingBinCallbackAction action;
+    private final BingBinCallbackAction action;
     public BingBinCallback(BingBinCallbackAction action) {
         this.action = action;
     }

@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -22,9 +20,6 @@ import com.facebook.login.LoginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
@@ -39,7 +34,7 @@ import studios.codelight.smartloginlibrary.util.UserUtil;
 
 public class FacebookLogin extends SmartLogin {
 
-    private CallbackManager callbackManager;
+    private final CallbackManager callbackManager;
     public FacebookLogin() {
         //Facebook login callback
         callbackManager = CallbackManager.Factory.create();

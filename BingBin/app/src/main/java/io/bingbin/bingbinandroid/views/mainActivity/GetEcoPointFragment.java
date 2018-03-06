@@ -112,11 +112,6 @@ public class GetEcoPointFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle b) {
-        super.onActivityCreated(b);
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();

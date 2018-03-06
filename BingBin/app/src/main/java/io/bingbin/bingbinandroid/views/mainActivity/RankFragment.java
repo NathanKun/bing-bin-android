@@ -80,7 +80,7 @@ public class RankFragment extends Fragment {
 
     private SimpleAdapter mAdapter;
 
-    private List<Map<String, Object>> dataToShow = new ArrayList<>();
+    private final List<Map<String, Object>> dataToShow = new ArrayList<>();
 
     private String currentDuration = "all";
 

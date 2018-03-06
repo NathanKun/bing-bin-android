@@ -21,10 +21,10 @@ public enum Category {
     MEDICINE("Médicament", TrashBin.PHARMACY, 12, "Les médicaments non utilisés présentent des risques d'intoxications par ingestion accidentelle"),
     OTHER("Autre", TrashBin.OTHER, 99, "Il faut que Bing Bin apprenne plus pour le valoriser");
 
-    private String frenchName;
-    private TrashBin trashbin;
-    private int categoryId;
-    private String text;
+    private final String frenchName;
+    private final TrashBin trashbin;
+    private final int categoryId;
+    private final String text;
 
     Category(String frenchName, TrashBin trashbin, int categoryId, String text) {
         this.frenchName = frenchName;

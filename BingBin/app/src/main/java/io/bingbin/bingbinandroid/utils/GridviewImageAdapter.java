@@ -19,8 +19,8 @@ import java.util.List;
  */
 
 public class GridviewImageAdapter extends BaseAdapter {
-    private Context context;
-    private List<Bitmap> bitmaps;
+    private final Context context;
+    private final List<Bitmap> bitmaps;
 
     public GridviewImageAdapter(Context context, List<Bitmap> bitmaps) {
         this.context = context;

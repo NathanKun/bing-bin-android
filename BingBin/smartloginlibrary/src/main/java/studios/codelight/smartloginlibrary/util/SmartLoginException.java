@@ -7,8 +7,9 @@ import studios.codelight.smartloginlibrary.LoginType;
  * Created by kalyandechiraju on 22/04/17.
  */
 
+@SuppressWarnings("all")
 public class SmartLoginException extends Exception {
-    private LoginType loginType;
+    private final LoginType loginType;
 
     public SmartLoginException(String message, LoginType loginType) {
         super(message);

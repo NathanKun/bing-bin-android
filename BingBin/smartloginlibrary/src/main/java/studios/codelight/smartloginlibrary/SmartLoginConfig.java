@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
@@ -12,13 +11,14 @@ import java.util.ArrayList;
  * Copyright (c) 2016 Codelight Studios
  * Created by Kalyan on 9/9/2015.
  */
+@SuppressWarnings("all")
 public class SmartLoginConfig {
 
     private String facebookAppId;
     private ArrayList<String> facebookPermissions;
     private GoogleSignInClient googleSignInClient;
-    private Activity activity;
-    private SmartLoginCallbacks callback;
+    private final Activity activity;
+    private final SmartLoginCallbacks callback;
 
 
     public SmartLoginConfig(@NonNull Activity activity, SmartLoginCallbacks callback) {

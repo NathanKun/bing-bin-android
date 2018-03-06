@@ -16,7 +16,7 @@ import io.bingbin.bingbinandroid.views.mainActivity.RankFragment;
  * Adapter for ViewPager
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    private SparseArray<Fragment> registeredFragments = new SparseArray<>();
+    private final SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     public ViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);

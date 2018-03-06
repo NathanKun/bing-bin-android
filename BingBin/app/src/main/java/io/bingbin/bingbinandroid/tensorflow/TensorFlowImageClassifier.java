@@ -27,12 +27,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Vector;
 
 /** A classifier specialized to label images using TensorFlow. */
+@SuppressWarnings("all")
 public class TensorFlowImageClassifier implements Classifier {
   private static final String TAG = "TFImageClassifier";
 
@@ -48,7 +48,7 @@ public class TensorFlowImageClassifier implements Classifier {
   private float imageStd;
 
   // Pre-allocated buffers.
-  private Vector<String> labels = new Vector<String>();
+  private final Vector<String> labels = new Vector<>();
   private int[] intValues;
   private float[] floatValues;
   private float[] outputs;
@@ -71,7 +71,6 @@ public class TensorFlowImageClassifier implements Classifier {
    * @param imageStd The assumed std of the image values.
    * @param inputName The label of the image input node.
    * @param outputName The label of the output node.
-   * @throws IOException
    */
   public static Classifier create(
       AssetManager assetManager,
@@ -159,15 +158,12 @@ public class TensorFlowImageClassifier implements Classifier {
 
     // Find the best classifications.
     PriorityQueue<Recognition> pq =
-        new PriorityQueue<Recognition>(
-            3,
-            new Comparator<Recognition>() {
-              @Override
-              public int compare(Recognition lhs, Recognition rhs) {
-                // Intentionally reversed to put high confidence at the head of the queue.
-                return Float.compare(rhs.getConfidence(), lhs.getConfidence());
-              }
-            });
+            new PriorityQueue<>(
+                    3,
+                    (lhs, rhs) -> {
+                      // Intentionally reversed to put high confidence at the head of the queue.
+                      return Float.compare(rhs.getConfidence(), lhs.getConfidence());
+                    });
     for (int i = 0; i < outputs.length; ++i) {
       if (outputs[i] > THRESHOLD) {
         pq.add(
@@ -175,7 +171,7 @@ public class TensorFlowImageClassifier implements Classifier {
                 "" + i, labels.size() > i ? labels.get(i) : "unknown", outputs[i], null));
       }
     }
-    final ArrayList<Recognition> recognitions = new ArrayList<Recognition>();
+    final ArrayList<Recognition> recognitions = new ArrayList<>();
     int recognitionsSize = Math.min(pq.size(), MAX_RESULTS);
     for (int i = 0; i < recognitionsSize; ++i) {
       recognitions.add(pq.poll());

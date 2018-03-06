@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     // ============
 
     // bottom navigation listener
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // fragment viewpager listener
-    private ViewPager.OnPageChangeListener onPageChangeListner = (new ViewPager.OnPageChangeListener() {
+    private final ViewPager.OnPageChangeListener onPageChangeListner = (new ViewPager.OnPageChangeListener() {
         // 滚动过程中会不断触发
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

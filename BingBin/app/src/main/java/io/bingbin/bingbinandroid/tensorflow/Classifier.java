@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * Generic interface for interacting with different recognition engines.
  */
+@SuppressWarnings("all")
 public interface Classifier {
   /**
    * An immutable result returned by a Classifier describing what was recognized.
