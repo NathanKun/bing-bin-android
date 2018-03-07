@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_marginTop="16dp"
-            android:text="Dis nous c'est ...."
+            android:text="Dis nous ce que c'est ...."
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/primary_color"

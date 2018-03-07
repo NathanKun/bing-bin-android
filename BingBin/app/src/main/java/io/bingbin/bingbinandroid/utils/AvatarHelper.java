@@ -5,7 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +97,9 @@ public abstract class AvatarHelper {
         canvas.drawBitmap(rabbit, new Matrix(), null);
         canvas.drawBitmap(leaf, (rabbit.getWidth() - leaf.getWidth()) / 2, rabbit.getHeight() / 8, null);
 
+        rabbit.recycle();
+        leaf.recycle();
+
         return bmOverlay;
     }
 
@@ -139,15 +145,60 @@ public abstract class AvatarHelper {
             ids = leafIds;
         }
 
+        int sample = findSampleOptionForAvatarGrid(context, type);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = sample;
+        options.inJustDecodeBounds = false;
+
         List<Bitmap> bitmaps = new ArrayList<>();
         for(int i = 0; i < ids.length; i++) {
-            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), ids[i]);
-            if(i < maxAllow) {
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), ids[i], options);
+            if(i <= maxAllow) {
                 bitmaps.add(bitmap);
             } else {
                 bitmaps.add(CommonUtil.toGrayscale(bitmap));
             }
         }
         return bitmaps;
+    }
+
+    /**
+     * find sample value for decode ressource
+     * @param context   activity
+     * @param type      rabbit or leaf
+     * @return          sample value
+     */
+    private static int findSampleOptionForAvatarGrid(Context context, int type) {
+        int[] ids = type == TYPE_RABBIT ? rabbitIds : leafIds;
+
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(), ids[0], bounds);
+
+        if (bounds.outWidth == -1) { return 1;}
+
+        int imgWidth = bounds.outWidth;
+        int minWidth = imgWidth;
+        int sample = 1;
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display;
+        if (wm != null) {
+            display = wm.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            minWidth = size.x / 6;
+        }
+
+        Log.d("min width", String.valueOf(minWidth));
+        Log.d("img width", String.valueOf(imgWidth));
+
+        while(minWidth < (imgWidth / sample)) {
+            sample *= 2;
+        }
+        sample = sample == 1 ? 1 : sample / 2;
+
+        Log.d("AvatarHelper sample", (type == TYPE_RABBIT ? "rabbit" : "leaf") + " : " + sample);
+        return sample;
     }
 }

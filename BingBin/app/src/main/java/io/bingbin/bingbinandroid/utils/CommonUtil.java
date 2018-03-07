@@ -128,6 +128,7 @@ public abstract class CommonUtil {
         ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
         paint.setColorFilter(f);
         c.drawBitmap(bmpOriginal, 0, 0, paint);
+        bmpOriginal.recycle();
         return bmpGrayscale;
     }
 
