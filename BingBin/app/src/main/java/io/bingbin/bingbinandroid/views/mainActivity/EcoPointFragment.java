@@ -508,9 +508,11 @@ public class EcoPointFragment extends Fragment {
 
             @Override
             public void onAnyError() {
-                if(ecopointCountSwiperefresh != null) {
-                    ecopointCountSwiperefresh.setRefreshing(false);
-                }
+                activity.runOnUiThread(() -> {
+                    if (ecopointCountSwiperefresh != null) {
+                        ecopointCountSwiperefresh.setRefreshing(false);
+                    }
+                });
             }
         };
 
@@ -553,7 +555,7 @@ public class EcoPointFragment extends Fragment {
                     textViews[i].setText(String.valueOf(recycleCountDataToShow[i]));
                 }
             }
-            if(ecopointCountSwiperefresh != null) {
+            if (ecopointCountSwiperefresh != null) {
                 ecopointCountSwiperefresh.setRefreshing(false);
             }
         });

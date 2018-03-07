@@ -138,14 +138,47 @@ public class ClassifyActivity extends AppCompatActivity {
         Uri uri = intent.getParcelableExtra("uri");
         if(uri != null) { // from gallery
             try {
-                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
-                initComponents(bitmap);
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+                    initComponents(bitmap);
+                } catch (OutOfMemoryError e) { // try again with sample bitmap
+                    e.printStackTrace();
+                    System.gc();
+
+                    // detect screen size and sample bitmap that bitmap smaller than screen
+                    int screenHeight = getResources().getDisplayMetrics().heightPixels;
+                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
+
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
+                            null, options);
+                    int imgWidth = options.outWidth;
+                    int imgHeigh = options.outHeight;
+                    int sample = 1;
+                    while(imgWidth > sample * screenWidth || imgHeigh > sample * screenHeight) {
+                        sample *= 2;
+                    }
+
+                    options.inSampleSize = sample;
+                    options.inJustDecodeBounds = false;
+                    Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
+                            null, options);
+                    initComponents(bitmap);
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         } else { // from camera
             String filename = intent.getStringExtra("filename");
-            initComponents(CommonUtil.loadBitmap(this, filename));
+            try {
+                initComponents(CommonUtil.loadBitmap(this, filename));
+            } catch (OutOfMemoryError e) { // try again with sample = 2
+                e.printStackTrace();
+                System.gc();
+
+                initComponents(CommonUtil.loadBitmap(this, filename, 2));
+            }
         }
     }
 
@@ -191,39 +224,28 @@ public class ClassifyActivity extends AppCompatActivity {
          */
 
         // run after layout rendered, show blurred image and category result
-        classifyYesnoConstraintLayout.post((new Runnable() {
-            ImageView iv;
-            Bitmap bm;
+        classifyYesnoConstraintLayout.post((() -> {
+            final int ivWidth = classifyBlurimgImageview.getMeasuredWidth();
+            final int ivHeight = classifyBlurimgImageview.getMeasuredHeight();
+            Log.d("blur", String.valueOf(ivWidth));
+            Log.d("blur", String.valueOf(ivHeight));
+            //bitmap = CommonUtil.scaleBitmapToCropFill(bm, ivHeight, ivWidth);
 
-            private Runnable init(Bitmap bm, ImageView iv) {
-                this.bm = bm;
-                this.iv = iv;
-                return this;
-            }
+            /*Bitmap blurImg = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(blurImg);
+            canvas.translate(-classifyBlurimgImageview.getLeft(), -classifyBlurimgImageview.getTop());
+            Paint paint = new Paint();
+            paint.setFlags(Paint.FILTER_BITMAP_FLAG);
+            canvas.drawBitmap(bitmap, 0, 0, paint);*/
 
-            @Override
-            public void run() {
-                final int ivWidth = iv.getMeasuredWidth();
-                final int ivHeight = iv.getMeasuredHeight();
-                Log.d("blur", String.valueOf(ivWidth));
-                Log.d("blur", String.valueOf(ivHeight));
-                //bm = CommonUtil.scaleBitmapToCropFill(bm, ivHeight, ivWidth);
+            Bitmap blurImg = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+            // bitmap.recycle(); // image will be upload later, should not recycle here
+            blurImg = CommonUtil.rsBlur(ClassifyActivity.this, blurImg, 25);
 
-                Bitmap blurImg = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(blurImg);
-                canvas.translate(-iv.getLeft(), -iv.getTop());
-                Paint paint = new Paint();
-                paint.setFlags(Paint.FILTER_BITMAP_FLAG);
-                canvas.drawBitmap(bm, 0, 0, paint);
-
-                blurImg = CommonUtil.rsBlur(ClassifyActivity.this, blurImg, 25);
-                iv.setImageBitmap(blurImg);
-
-                classifyYesnoResultTextview.setText(Category.getFrenchNameByName(classifyResultStr));
-
-                classifyYesnoConstraintLayout.setVisibility(View.VISIBLE);
-            }
-        }).init(bitmap, classifyBlurimgImageview));
+            classifyBlurimgImageview.setImageBitmap(blurImg);
+            classifyYesnoResultTextview.setText(Category.getFrenchNameByName(classifyResultStr));
+            classifyYesnoConstraintLayout.setVisibility(View.VISIBLE);
+        }));
 
         // init btn "OUI"
         classifYesnoYesbtn.setOnClickListener((View view) -> {

@@ -38,16 +38,7 @@ public abstract class ClassifyHelper {
         int previewHeight, previewWidth, sensorOrientation;
 
         // 读取图
-        try {
-            rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true);
-        } catch (OutOfMemoryError e) { // compress bitmap
-            e.printStackTrace();
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            rgbFrameBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-            byte[] bitmapdata = bos.toByteArray();
-            rgbFrameBitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
-            rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true); // mutable
-        }
+        rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
         previewHeight = rgbFrameBitmap.getHeight();
         previewWidth = rgbFrameBitmap.getWidth();

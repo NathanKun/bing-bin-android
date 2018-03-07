@@ -116,6 +116,7 @@ public class BingBinHttp {
             //Compress Image
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+            bmp.recycle();
 
             Log.d("uploadScan size", String.valueOf(bos.size()));
 

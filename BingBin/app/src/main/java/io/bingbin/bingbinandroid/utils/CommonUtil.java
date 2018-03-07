@@ -154,10 +154,18 @@ public abstract class CommonUtil {
     }
 
     public static Bitmap loadBitmap(Context context, String filename) {
+        return loadBitmap(context, filename, 1);
+    }
+
+    public static Bitmap loadBitmap(Context context, String filename, int sample) {
         Bitmap bmp = null;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = sample;
+
         try {
             FileInputStream is = context.openFileInput(filename);
-            bmp = BitmapFactory.decodeStream(is);
+            bmp = BitmapFactory.decodeStream(is, null, options);
             is.close();
         } catch (Exception e) {
             e.printStackTrace();
