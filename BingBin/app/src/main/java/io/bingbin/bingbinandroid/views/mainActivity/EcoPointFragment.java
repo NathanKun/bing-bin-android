@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -121,14 +120,17 @@ public class EcoPointFragment extends Fragment {
     ListView ecopointHistorylistView;
     @BindView(R.id.ecopoint_history_swiperefresh)
     SwipeRefreshLayout ecopointHistorySwiperefresh;
+    @BindView(R.id.ecopoint_count_swiperefresh)
+    SwipeRefreshLayout ecopointCountSwiperefresh;
     @BindView(R.id.ecopoint_gridlayout)
     GridLayout ecopointGridlayout;
 
     private MainActivity activity;
     private Unbinder unbinder;
-    private SimpleAdapter mAdapter;
-    private final List<Map<String, Object>> recycleHistoryDataToShow = new ArrayList<>();
+    private SimpleAdapter countDataListAdapter;
+    private final ArrayList<Map<String, Object>> recycleHistoryDataToShow = new ArrayList<>();
     private boolean isShowingGrid;
+    private int[] recycleCountDataToShow;
 
     public EcoPointFragment() {
         // Required empty public constructor
@@ -162,6 +164,7 @@ public class EcoPointFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onActivityCreated(Bundle b) {
         super.onActivityCreated(b);
 
@@ -187,6 +190,9 @@ public class EcoPointFragment extends Fragment {
 
 
         // ------ grid view ------
+
+        // add swipe down refresh listener, call getRecycleByCategoryData() when swipe down
+        ecopointCountSwiperefresh.setOnRefreshListener(() -> getRecycleByCategoryData(user.getToken()));
 
         // adjust grid icon size
         AppCompatImageView[] imgs = {ecopointIconImg1, ecopointIconImg2, ecopointIconImg3,
@@ -219,9 +225,9 @@ public class EcoPointFragment extends Fragment {
         ecopointHistorySwiperefresh.setOnRefreshListener(() -> getRecycleHistoryData(user.getToken()));
 
         // add adapter to listview, link recycleHistoryDataToShow to adapter
-        mAdapter = new SimpleAdapter(this.activity, recycleHistoryDataToShow, R.layout.listview_historylist,
+        countDataListAdapter = new SimpleAdapter(this.activity, recycleHistoryDataToShow, R.layout.listview_historylist,
                 KEYS, IDS);
-        ecopointHistorylistView.setAdapter(mAdapter);
+        ecopointHistorylistView.setAdapter(countDataListAdapter);
 
 
         // ------ listener to switch between grid and list ------
@@ -238,8 +244,33 @@ public class EcoPointFragment extends Fragment {
 
         // ------ get data and show ------
 
-        getRecycleHistoryData(user.getToken());
-        getRecycleByCategoryData(user.getToken());
+        if (b != null) {
+            // recycle history list
+            ArrayList list = (ArrayList) b.getSerializable("recycleHistoryData");
+            if (list != null) {
+                for (Object m : list) {
+                    recycleHistoryDataToShow.add((Map<String, Object>) m);
+                }
+                countDataListAdapter.notifyDataSetChanged();
+                Log.d("EcoPointFragment bundle", "History list size = " + list.size());
+
+            } else {
+                getRecycleHistoryData(user.getToken());
+            }
+
+            // recycle count grid
+            recycleCountDataToShow = b.getIntArray("recycleCountData");
+            if (recycleCountDataToShow != null && recycleCountDataToShow.length != 0) {
+                showRecycleCountData();
+                Log.d("EcoPointFragment bundle", "Count array size = " + recycleCountDataToShow.length);
+            } else {
+                getRecycleByCategoryData(user.getToken());
+            }
+        } else {
+            getRecycleHistoryData(user.getToken());
+            getRecycleByCategoryData(user.getToken());
+        }
+
         getMyInfoToUpdateUserAndPoints(user.getToken());
 
 
@@ -249,6 +280,13 @@ public class EcoPointFragment extends Fragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle b) {
+        super.onSaveInstanceState(b);
+        b.putSerializable("recycleHistoryData", recycleHistoryDataToShow);
+        b.putIntArray("recycleCountData", recycleCountDataToShow);
+    }
+
     /**
      * Convenient method to switch between grid and list
      *
@@ -256,7 +294,7 @@ public class EcoPointFragment extends Fragment {
      */
     private void switchBetweenGridAndList(boolean showGrid) {
         activity.enableInput(false);
-        AnimationUtil.revealView(ecopointGridlayout, showGrid, 500);
+        AnimationUtil.revealView(ecopointCountSwiperefresh, showGrid, 500);
         AnimationUtil.revealView(ecopointHistorySwiperefresh, !showGrid, 500);
         activity.handler.postDelayed(() -> activity.enableInput(true), 750);
     }
@@ -322,7 +360,8 @@ public class EcoPointFragment extends Fragment {
             }
 
             @Override
-            public void onAnyError() { }
+            public void onAnyError() {
+            }
         };
 
         activity.bbh.getMyInfo(new BingBinCallback(action), activity.getCurrentUser().getToken());
@@ -398,6 +437,7 @@ public class EcoPointFragment extends Fragment {
     private void showRecycleHistoryData(JSONArray array) throws JSONException {
         recycleHistoryDataToShow.clear();
 
+        // updata data set
         for (int i = 0; i < array.length(); i++) {
             JSONObject json = array.getJSONObject(i);
             Map<String, Object> map = new HashMap<>();
@@ -413,9 +453,11 @@ public class EcoPointFragment extends Fragment {
             map.put("point", String.valueOf(eco_point) + " pts");
             recycleHistoryDataToShow.add(map);
         }
-        mAdapter.notifyDataSetChanged();
 
         // show data in list
+        countDataListAdapter.notifyDataSetChanged();
+
+
         if (ecopointHistorySwiperefresh != null) {
             ecopointHistorySwiperefresh.setRefreshing(false);
         }
@@ -428,46 +470,51 @@ public class EcoPointFragment extends Fragment {
      * @param token BingBinToken of the current user
      */
     private void getRecycleByCategoryData(String token) {
-       BingBinCallbackAction action = new BingBinCallbackAction() {
-           @Override
-           public void onFailure() {
-               activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
-                       R.string.bingbinhttp_onfailure, Toast.LENGTH_SHORT).show());
-           }
+        BingBinCallbackAction action = new BingBinCallbackAction() {
+            @Override
+            public void onFailure() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onfailure, Toast.LENGTH_SHORT).show());
+            }
 
-           @Override
-           public void onResponseNotSuccess() {
-               activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
-                       R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show());
-           }
+            @Override
+            public void onResponseNotSuccess() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show());
+            }
 
-           @Override
-           public void onJsonParseError() {
-               activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
-                       R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show());
-           }
+            @Override
+            public void onJsonParseError() {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show());
+            }
 
-           @Override
-           public void onNotValid(String errorStr) {
-               activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
-                       errorStr, Toast.LENGTH_SHORT).show());
-           }
+            @Override
+            public void onNotValid(String errorStr) {
+                activity.runOnUiThread(() -> Toast.makeText(activity.getApplicationContext(),
+                        errorStr, Toast.LENGTH_SHORT).show());
+            }
 
-           @Override
-           public void onTokenNotValid(String errorStr) {
-               activity.backToLoginActivity();
-           }
+            @Override
+            public void onTokenNotValid(String errorStr) {
+                activity.backToLoginActivity();
+            }
 
-           @Override
-           public void onValid(JSONObject json) throws JSONException {
-               JSONArray historyArray = json.getJSONArray("summary");
-               showRecycleCountData(historyArray);
-           }
+            @Override
+            public void onValid(JSONObject json) throws JSONException {
+                JSONArray historyArray = json.getJSONArray("summary");
+                transformRecycleCountArrayToData(historyArray);
+            }
 
-           @Override
-           public void onAnyError() { }
-       };
+            @Override
+            public void onAnyError() {
+                if(ecopointCountSwiperefresh != null) {
+                    ecopointCountSwiperefresh.setRefreshing(false);
+                }
+            }
+        };
 
+        ecopointCountSwiperefresh.setRefreshing(true);
         activity.bbh.getMyRecycleCounts(new BingBinCallback(action), token);
     }
 
@@ -477,8 +524,8 @@ public class EcoPointFragment extends Fragment {
      * @param array json array
      * @throws JSONException json exception
      */
-    private void showRecycleCountData(JSONArray array) throws JSONException {
-        int[] counts = new int[12];
+    private void transformRecycleCountArrayToData(JSONArray array) throws JSONException {
+        recycleCountDataToShow = new int[12];
 
         // copy json array data to an array
         for (int i = 0; i < array.length(); i++) {
@@ -487,11 +534,15 @@ public class EcoPointFragment extends Fragment {
             int quantity = json.getInt("quantity");
 
             if (type_trash <= 12) {
-                counts[type_trash - 1] = quantity;
+                recycleCountDataToShow[type_trash - 1] = quantity;
             } // ignore 99 (other)
         }
 
         // show data
+        showRecycleCountData();
+    }
+
+    private void showRecycleCountData() {
         TextView[] textViews = {ecopointCountText1, ecopointCountText2, ecopointCountText3,
                 ecopointCountText4, ecopointCountText5, ecopointCountText6,
                 ecopointCountText7, ecopointCountText8, ecopointCountText9,
@@ -499,8 +550,11 @@ public class EcoPointFragment extends Fragment {
         activity.runOnUiThread(() -> {
             for (int i = 0; i < 12; i++) {
                 if (textViews[i] != null) {
-                    textViews[i].setText(String.valueOf(counts[i]));
+                    textViews[i].setText(String.valueOf(recycleCountDataToShow[i]));
                 }
+            }
+            if(ecopointCountSwiperefresh != null) {
+                ecopointCountSwiperefresh.setRefreshing(false);
             }
         });
     }

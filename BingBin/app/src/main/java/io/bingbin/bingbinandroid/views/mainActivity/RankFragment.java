@@ -27,7 +27,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -80,7 +79,7 @@ public class RankFragment extends Fragment {
 
     private SimpleAdapter mAdapter;
 
-    private final List<Map<String, Object>> dataToShow = new ArrayList<>();
+    private final ArrayList<Map<String, Object>> dataToShow = new ArrayList<>();
 
     private String currentDuration = "all";
 
@@ -109,11 +108,11 @@ public class RankFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onActivityCreated(Bundle b) {
         super.onActivityCreated(b);
 
         activity = (MainActivity) getActivity();
-        assert activity != null;
 
         // show user sunPt count
         String sunPoint = activity.getCurrentUser().getSunPoint() + "x";
@@ -219,7 +218,7 @@ public class RankFragment extends Fragment {
                 }); // onClickListener end
 
                 // hide sun btn if sent today, or that row is the currentUser
-                if((boolean)dataToShow.get(position).get("isSent") ||
+                if ((boolean) dataToShow.get(position).get("isSent") ||
                         activity.getCurrentUser().getUserId().equals(dataToShow.get(position).get("id"))) {
                     sunButton.setVisibility(View.GONE);
                 } else {
@@ -243,7 +242,29 @@ public class RankFragment extends Fragment {
         });
         listView.setAdapter(mAdapter);
 
-        getData(BBH_DURATION_ALL);
+
+        // restore data from bundle
+        if (b != null) {
+            ArrayList list = (ArrayList) b.getSerializable("dataToShow");
+            if (list != null) {
+                for(Object m : list) {
+                    dataToShow.add((Map<String, Object>)m);
+                }
+                mAdapter.notifyDataSetChanged();
+                Log.d("RankFragment bundle", "Rank list size = " + list.size());
+            } else {
+                getData(BBH_DURATION_ALL);
+            }
+        } else {
+            getData(BBH_DURATION_ALL);
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle b) {
+        super.onSaveInstanceState(b);
+        b.putSerializable("dataToShow", dataToShow);
     }
 
     @Override

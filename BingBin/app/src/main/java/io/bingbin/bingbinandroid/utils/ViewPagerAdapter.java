@@ -1,21 +1,22 @@
 package io.bingbin.bingbinandroid.utils;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import io.bingbin.bingbinandroid.views.mainActivity.GetEcoPointFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.WelcomeFragment;
 import io.bingbin.bingbinandroid.views.mainActivity.EcoPointFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.GetEcoPointFragment;
 import io.bingbin.bingbinandroid.views.mainActivity.RankFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.WelcomeFragment;
 
 /**
  * Adapter for ViewPager
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private final SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     public ViewPagerAdapter(FragmentManager fragmentManager) {
