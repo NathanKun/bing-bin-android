@@ -85,10 +85,6 @@ dependencies {
     // fb login
     implementation 'com.facebook.android:facebook-login:4.28.0'
 
-    // fresco http img loader
-    //implementation 'com.facebook.fresco:fresco:1.5.0'
-    //implementation 'com.facebook.fresco:webpsupport:1.5.0'
-
     // Glide image framwork
     //implementation 'com.github.bumptech.glide:glide:3.7.0'
 
@@ -100,10 +96,7 @@ dependencies {
     //implementation 'org.jsoup:jsoup:1.10.1'
 
     // tensorflow nnet
-    implementation 'org.tensorflow:tensorflow-android:1.2.0-preview'
-
-    // material camera fragment
-    //implementation 'com.afollestad:material-camera:0.4.4'
+    implementation 'org.tensorflow:tensorflow-android:1.6.0'
 
     // camerakit
     implementation 'com.wonderkiln:camerakit:0.13.1'
@@ -123,7 +116,6 @@ assert file(project.ext.ASSET_DIR + "/labels.txt").exists()
 repositories {
     google()
     jcenter()
-    maven { url "https://dl.bintray.com/drummer-aidan/maven" }
 }
 
 apply plugin: 'com.google.gms.google-services'

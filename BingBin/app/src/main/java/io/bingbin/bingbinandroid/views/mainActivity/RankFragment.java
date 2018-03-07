@@ -113,6 +113,7 @@ public class RankFragment extends Fragment {
         super.onActivityCreated(b);
 
         activity = (MainActivity) getActivity();
+        assert activity != null;
 
         // show user sunPt count
         String sunPoint = activity.getCurrentUser().getSunPoint() + "x";
@@ -252,6 +253,26 @@ public class RankFragment extends Fragment {
                 }
                 mAdapter.notifyDataSetChanged();
                 Log.d("RankFragment bundle", "Rank list size = " + list.size());
+
+                currentDuration = b.getString("selected");
+                assert currentDuration != null;
+
+                // Make btn green, look likes clicked
+                rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.black));
+                switch (currentDuration) {
+                    case BBH_DURATION_ALL:
+                        rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                        break;
+                    case BBH_DURATION_DAY:
+                        rankButbtonbarDayBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                        break;
+                    case BBH_DURATION_WEEK:
+                        rankButbtonbarWeekBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                        break;
+                    case BBH_DURATION_MONTH:
+                        rankButbtonbarMonthBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                        break;
+                }
             } else {
                 getData(BBH_DURATION_ALL);
             }
@@ -265,6 +286,7 @@ public class RankFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle b) {
         super.onSaveInstanceState(b);
         b.putSerializable("dataToShow", dataToShow);
+        b.putString("selected", currentDuration);
     }
 
     @Override
