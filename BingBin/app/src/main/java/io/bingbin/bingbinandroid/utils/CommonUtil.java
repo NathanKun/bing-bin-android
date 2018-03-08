@@ -162,6 +162,7 @@ public abstract class CommonUtil {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = sample;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         try {
             FileInputStream is = context.openFileInput(filename);

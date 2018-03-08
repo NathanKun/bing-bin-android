@@ -172,12 +172,13 @@ public class ClassifyActivity extends AppCompatActivity {
         } else { // from camera
             String filename = intent.getStringExtra("filename");
             try {
-                initComponents(CommonUtil.loadBitmap(this, filename));
+                initComponents(CommonUtil.loadBitmap(this, filename, 2));
             } catch (OutOfMemoryError e) { // try again with sample = 2
                 e.printStackTrace();
                 System.gc();
 
-                initComponents(CommonUtil.loadBitmap(this, filename, 2));
+                Bitmap bitmap = CommonUtil.loadBitmap(this, filename, 4);
+                initComponents(bitmap);
             }
         }
     }

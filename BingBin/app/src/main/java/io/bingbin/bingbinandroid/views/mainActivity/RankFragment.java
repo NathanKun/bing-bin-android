@@ -395,7 +395,7 @@ public class RankFragment extends Fragment {
             int leafId = json.getInt("id_leaf");
             boolean isSent = json.getBoolean("has_receive_sun_point");
 
-            Bitmap avatar = AvatarHelper.generateAvatar(activity, rabbitId, leafId);
+            Bitmap avatar = AvatarHelper.generateAvatar(activity, rabbitId, leafId, 4);
 
             map.put("username", name);
             map.put("point", pt);

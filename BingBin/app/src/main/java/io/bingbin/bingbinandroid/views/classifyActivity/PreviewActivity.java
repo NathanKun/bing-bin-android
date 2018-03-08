@@ -20,6 +20,7 @@ public class PreviewActivity extends AppCompatActivity {
     ImageView previewImageview;
 
     private String filename;
+    private Bitmap previewImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +30,8 @@ public class PreviewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         filename = intent.getStringExtra("filename");
-        Bitmap img = CommonUtil.loadBitmap(this, filename);
-        previewImageview.setImageBitmap(img);
+        previewImg = CommonUtil.loadBitmap(this, filename, 2);
+        previewImageview.setImageBitmap(previewImg);
     }
 
     @OnClick({R.id.preview_retry_btn, R.id.preview_ok_btn})
@@ -41,6 +42,7 @@ public class PreviewActivity extends AppCompatActivity {
                 break;
 
             case R.id.preview_ok_btn:
+                previewImg.recycle();
                 // go to classify activity
                 Intent intent = new Intent(this, ClassifyActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT); // pass result to classify activity

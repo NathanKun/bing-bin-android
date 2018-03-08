@@ -38,7 +38,8 @@ public abstract class ClassifyHelper {
         int previewHeight, previewWidth, sensorOrientation;
 
         // 读取图
-        rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        //rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        rgbFrameBitmap = rgbFrameBitmap.copy(Bitmap.Config.RGB_565, true);
 
         previewHeight = rgbFrameBitmap.getHeight();
         previewWidth = rgbFrameBitmap.getWidth();
@@ -64,7 +65,8 @@ public abstract class ClassifyHelper {
                         sensorOrientation, MAINTAIN_ASPECT);
 
         // 空的小图
-        Bitmap croppedBitmap = Bitmap.createBitmap(INPUT_SIZE, INPUT_SIZE, Bitmap.Config.ARGB_8888);
+        //Bitmap croppedBitmap = Bitmap.createBitmap(INPUT_SIZE, INPUT_SIZE, Bitmap.Config.ARGB_8888);
+        Bitmap croppedBitmap = Bitmap.createBitmap(INPUT_SIZE, INPUT_SIZE, Bitmap.Config.RGB_565);
 
         // 缩小图片
         final Canvas canvas = new Canvas(croppedBitmap);

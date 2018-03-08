@@ -80,12 +80,15 @@ public abstract class AvatarHelper {
      * @param leafId    leaf id
      * @return  bitmap compose by rabbit and leaf
      */
-    public static Bitmap generateAvatar(Context context, int rabbitId, int leafId) {
+    public static Bitmap generateAvatar(Context context, int rabbitId, int leafId, int sample) {
         Bitmap rabbit;
         Bitmap leaf;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = sample;
+
         if(rabbitId > 0 && rabbitId < rabbitIds.length && leafId > 0 && leafId < leafIds.length) {
-            rabbit = BitmapFactory.decodeResource(context.getResources(), rabbitIds[rabbitId - 1]);
-            leaf = BitmapFactory.decodeResource(context.getResources(), leafIds[leafId - 1]);
+            rabbit = BitmapFactory.decodeResource(context.getResources(), rabbitIds[rabbitId - 1], options);
+            leaf = BitmapFactory.decodeResource(context.getResources(), leafIds[leafId - 1], options);
         } else {
             Log.d("id index out of bounds", "rabbitId = " + rabbitId + " leafId = " + leafId);
             rabbit = BitmapFactory.decodeResource(context.getResources(), rabbitIds[0]);
@@ -101,6 +104,9 @@ public abstract class AvatarHelper {
         leaf.recycle();
 
         return bmOverlay;
+    }
+    public static Bitmap generateAvatar(Context context, int rabbitId, int leafId) {
+        return generateAvatar(context, rabbitId, leafId, 1);
     }
 
     /**
