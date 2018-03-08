@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -343,14 +344,10 @@ public class RankFragment extends Fragment {
                 Log.d("Get Ladder", "data size: " + data.length());
                 Log.d("Get Ladder", "data: " + data.toString());
 
+                final ArrayList<Map<String, Object>> arrayList = jsonArrayToArray(data);
 
                 activity.runOnUiThread(() -> {
-                    try {
-                        showData(data);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        onJsonParseError();
-                    }
+                    showData(arrayList);
                     if (rankSwiperefresh != null) {
                         rankSwiperefresh.setRefreshing(false);
                     }
@@ -375,16 +372,16 @@ public class RankFragment extends Fragment {
     }
 
     /**
-     * show ladder in listview
-     *
-     * @param array json array contains ladder
-     * @throws JSONException json exception
+     * Convert json array of ladders to Java ArrayList
+     * @param jsonArray json array with ladder
+     * @return  ArrayList
+     * @throws JSONException JSONException
      */
-    private void showData(JSONArray array) throws JSONException {
-        dataToShow.clear();
+    private ArrayList<Map<String, Object>> jsonArrayToArray(JSONArray jsonArray) throws JSONException {
+        ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
 
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject json = array.getJSONObject(i);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject json = jsonArray.getJSONObject(i);
             Map<String, Object> map = new HashMap<>();
 
             String name = json.getString("firstname");
@@ -403,8 +400,21 @@ public class RankFragment extends Fragment {
             map.put("avatar", avatar);
             map.put("id", id);
             map.put("isSent", isSent);
-            dataToShow.add(map);
+
+            arrayList.add(map);
         }
+
+        return arrayList;
+    }
+
+    /**
+     * show ladder in listview
+     *
+     * @param dataArray ArrayList contains ladder
+     */
+    private void showData(ArrayList<Map<String, Object>> dataArray) {
+        dataToShow.clear();
+        dataToShow.addAll(dataArray);
 
         // show data in list
         mAdapter.notifyDataSetChanged();

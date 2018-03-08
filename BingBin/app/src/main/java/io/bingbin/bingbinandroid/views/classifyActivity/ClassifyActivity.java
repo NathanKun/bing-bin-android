@@ -123,6 +123,7 @@ public class ClassifyActivity extends AppCompatActivity {
     ImageView classifyBlurimgImageview;
     @BindView(R.id.classify_progress_bar)
     ProgressBar classifyProgressBar;
+    private Bitmap blurImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,7 +240,7 @@ public class ClassifyActivity extends AppCompatActivity {
             paint.setFlags(Paint.FILTER_BITMAP_FLAG);
             canvas.drawBitmap(bitmap, 0, 0, paint);*/
 
-            Bitmap blurImg = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+            blurImg = bitmap.copy(Bitmap.Config.ARGB_8888, true);
             // bitmap.recycle(); // image will be upload later, should not recycle here
             blurImg = CommonUtil.rsBlur(ClassifyActivity.this, blurImg, 25);
 
@@ -358,6 +359,8 @@ public class ClassifyActivity extends AppCompatActivity {
 
 
         classifyFinishTrierBtn.setOnClickListener(view -> {
+            classifyBlurimgImageview.setImageBitmap(null);
+            blurImg.recycle();
             Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
             intent.putExtra("ecopoint", ecoPoint);
             setResult(RESULT_OK, intent);

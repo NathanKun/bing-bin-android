@@ -98,7 +98,7 @@ public class BingBinHttp {
         Map<String, String> map = new HashMap<>();
         map.put("BingBinToken", bingBinToken);
         map.put("Duration", duration);
-        map.put("limit", String.valueOf(50));
+        map.put("limit", String.valueOf(20));
         asynPost(callback, "Ranking/getLadder", map);
     }
 

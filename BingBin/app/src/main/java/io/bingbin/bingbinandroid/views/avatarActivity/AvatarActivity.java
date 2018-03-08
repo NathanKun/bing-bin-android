@@ -149,6 +149,6 @@ public class AvatarActivity extends AppCompatActivity {
 
     private void generateAvatar() {
         avatarFooterAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
-                this, selectedRabbitId, selectedLeafId));
+                this, selectedRabbitId, selectedLeafId, 2));
     }
 }
