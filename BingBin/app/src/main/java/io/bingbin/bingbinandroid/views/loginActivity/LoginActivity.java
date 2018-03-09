@@ -126,20 +126,30 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         constraintSet.applyTo(loginMasterlayout);
 
         loginMasterlayout.post(
-                () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show grass
-                        () -> AnimationUtil.revealView(loginLogo, true, // show logo
-                                () -> {                                      // move up logo
-                                    // start constraint layout auto animation
-                                    TransitionManager.beginDelayedTransition(loginMasterlayout);
-                                    // clear connection just added to move up logo
-                                    constraintSet.clone(loginMasterlayout);
-                                    constraintSet.clear(R.id.login_logo, ConstraintSet.BOTTOM);
-                                    constraintSet.applyTo(loginMasterlayout);
+            () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show grass
+                    () -> AnimationUtil.revealView(loginLogo, true, // show logo
+                            () -> {
+                                currentUser = UserSessionManager.getCurrentUser(this);
+                                if (currentUser != null) {
+                                    Log.d("Smart Login", "Logged in user: " + currentUser.toString());
+                                    toMainActivity();
+                                } else {                // move up logo
+                                // start constraint layout auto animation
+                                TransitionManager.beginDelayedTransition(loginMasterlayout);
+                                // clear connection just added to move up logo
+                                constraintSet.clone(loginMasterlayout);
+                                constraintSet.clear(R.id.login_logo, ConstraintSet.BOTTOM);
+                                constraintSet.applyTo(loginMasterlayout);
 
-                                    (new Handler()).postDelayed(this::checkIsLoggedIn, 1000);
-                                })
-                )
+                                (new Handler()).postDelayed(
+                                        () -> AnimationUtil.revealView(loginCardview,
+                                                true, null),
+                                        1000);
+                                }
+                            })
+            )
         );
+
 
     }
 
@@ -291,7 +301,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                     runOnUiThread(() -> {
                         // hide loader, enable touch
                         showLoader(false);
-                        Toast.makeText(LoginActivity.this.getApplicationContext(), user.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(LoginActivity.this.getApplicationContext(), user.toString(), Toast.LENGTH_SHORT).show();
                         // go to main activity
                         checkIsLoggedIn();
                     });
