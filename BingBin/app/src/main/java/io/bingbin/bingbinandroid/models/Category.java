@@ -17,7 +17,7 @@ public enum Category {
     CUMBERSOME("Encombrant", TrashBin.LEBONCOIN, 8, "Vent ton produit ou appel SMDO 0. 44 38 29 00"),
     ELECTRONIC("Equipement électronique", TrashBin.LEBONCOIN, 9, "Vent ton produit ou appel SMDO 0. 44 38 29 00"),
     BATTERY("Pile", TrashBin.SUPERMARKET, 10, "5000 ans pour décomposer une pile"),
-    CLOTHE("Vêtements usés", TrashBin.LEBONCOIN, 11, "Vent ton produit ou appel SMDO 0. 44 38 29 00"),
+    CLOTHE("Vêtements usés", TrashBin.CLOTHE, 11, "11 kg de textiles achetés par habitant par an"),
     MEDICINE("Médicament", TrashBin.PHARMACY, 12, "Les médicaments non utilisés présentent des risques d'intoxications par ingestion accidentelle"),
     OTHER("Autre", TrashBin.OTHER, 99, "Il faut que Bing Bin apprenne plus pour le valoriser");
 

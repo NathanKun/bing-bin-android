@@ -3,8 +3,6 @@ package io.bingbin.bingbinandroid.views.classifyActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -124,6 +122,8 @@ public class ClassifyActivity extends AppCompatActivity {
     @BindView(R.id.classify_progress_bar)
     ProgressBar classifyProgressBar;
     private Bitmap blurImg;
+
+    AppCompatImageView[] iconsImageviews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -311,18 +311,33 @@ public class ClassifyActivity extends AppCompatActivity {
             classifyYesnoConstraintLayout.setVisibility(View.GONE);
             classifySelectConstraintLayout.setVisibility(View.VISIBLE);
 
-            classifySelectGridGridlayout.post(() -> {
+            classifySelectConstraintLayout.post(() -> {
                 ViewGroup.LayoutParams params = classifySelectGridGridlayout.getLayoutParams();
                 params.height = classifySelectConfirmBtn.getTop()
                         - classifySelectSelectedbarLayout.getBottom() - 75;
                 params.width = classifySelectRectangle.getWidth();
-                Log.d("Adjust Grid btn top", String.valueOf(classifySelectConfirmBtn.getTop()));
-                Log.d("Adjust Grid text btm", String.valueOf(classifySelectSelectedbarLayout.getBottom()));
+
                 if (params.height >= 340) {
                     classifySelectGridGridlayout.setLayoutParams(params);
                     Log.d("Adjust Gridlayout", "Adjusted");
                 } else {
                     Log.d("Adjust Gridlayout", "Vertical Space not enough");
+                }
+
+                int[] bigImgIds = {R.drawable.catg_1_plastic, R.drawable.catg_2_metal, R.drawable.catg_3_cardboard,
+                        R.drawable.catg_4_paper, R.drawable.catg_5_glass, R.drawable.catg_6_food,
+                        R.drawable.catg_7_lightbulb, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
+                        R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_12_medicine};
+
+                iconsImageviews = new AppCompatImageView[] {classifySelectImg1, classifySelectImg2, classifySelectImg3,
+                        classifySelectImg4, classifySelectImg5, classifySelectImg6,
+                        classifySelectImg7, classifySelectImg8, classifySelectImg9,
+                        classifySelectImg10, classifySelectImg11, classifySelectImg12};
+
+                for(int i = 0; i < iconsImageviews.length; i++) {
+                    iconsImageviews[i].setImageBitmap(CommonUtil.decodeSampledBitmapFromResource(
+                            getResources(), bigImgIds[i], iconsImageviews[i].getWidth(), iconsImageviews[i].getHeight(),
+                            Bitmap.Config.ARGB_8888));
                 }
             });
         });
@@ -416,59 +431,66 @@ public class ClassifyActivity extends AppCompatActivity {
             R.id.classify_select_img_10, R.id.classify_select_img_11, R.id.classify_select_img_12,
             R.id.classify_select_other})
     void imageOnClick(View view) {
+        final int width = classifySelectSelectedImageview.getWidth();
+        final int height = classifySelectSelectedImageview.getHeight();
+        int res = 0;
+        String catgName = null;
         switch (view.getId()) {
             case R.id.classify_select_other:
-                classifySelectSelectedImageview.setImageResource(R.drawable.bingbin_icon);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(99));
+                res = R.drawable.bingbin_icon;
+                catgName = Category.getFrenchNameById(99);
                 break;
             case R.id.classify_select_img_1:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_1_plastic);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(1));
+                res = R.drawable.catg_1_plastic;
+                catgName = Category.getFrenchNameById(1);
                 break;
             case R.id.classify_select_img_2:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_2_metal);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(2));
+                res = R.drawable.catg_2_metal;
+                catgName = Category.getFrenchNameById(2);
                 break;
             case R.id.classify_select_img_3:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_3_cardboard);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(3));
+                res = R.drawable.catg_3_cardboard;
+                catgName = Category.getFrenchNameById(3);
                 break;
             case R.id.classify_select_img_4:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_4_paper);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(4));
+                res = R.drawable.catg_4_paper;
+                catgName = Category.getFrenchNameById(4);
                 break;
             case R.id.classify_select_img_5:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_5_glass);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(5));
+                res = R.drawable.catg_5_glass;
+                catgName = Category.getFrenchNameById(5);
                 break;
             case R.id.classify_select_img_6:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_6_food);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(6));
+                res = R.drawable.catg_6_food;
+                catgName = Category.getFrenchNameById(6);
                 break;
             case R.id.classify_select_img_7:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_7_lightbulb);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(7));
+                res = R.drawable.catg_7_lightbulb;
+                catgName = Category.getFrenchNameById(7);
                 break;
             case R.id.classify_select_img_8:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_8_cumbersome);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(8));
+                res = R.drawable.catg_8_cumbersome;
+                catgName = Category.getFrenchNameById(8);
                 break;
             case R.id.classify_select_img_9:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_9_electronic);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(9));
+                res = R.drawable.catg_9_electronic;
+                catgName = Category.getFrenchNameById(9);
                 break;
             case R.id.classify_select_img_10:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_10_battery);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(10));
+                res = R.drawable.catg_10_battery;
+                catgName = Category.getFrenchNameById(10);
                 break;
             case R.id.classify_select_img_11:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_11_clothe);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(11));
+                res = R.drawable.catg_11_clothe;
+                catgName = Category.getFrenchNameById(11);
                 break;
             case R.id.classify_select_img_12:
-                classifySelectSelectedImageview.setImageResource(R.drawable.catg_12_medicine);
-                classifySelectSelectedTextview.setText(Category.getFrenchNameById(12));
+                res = R.drawable.catg_12_medicine;
+                catgName = Category.getFrenchNameById(12);
                 break;
         }
+        classifySelectSelectedImageview.setImageBitmap(CommonUtil.decodeSampledBitmapFromResource(
+                getResources(), res, width, height, Bitmap.Config.ARGB_8888));
+        classifySelectSelectedTextview.setText(catgName);
     }
 }

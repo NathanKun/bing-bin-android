@@ -10,6 +10,7 @@
         android:id="@+id/getecopoint_footer_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:contentDescription="bottom_grass"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,25 +32,23 @@
         app:layout_constraintBottom_toTopOf="@+id/getecopoint_ecopoint_got_textview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.88" />
 
     <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/getecopoint_ecopoint_got_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="233"
         android:textAlignment="center"
         android:textColor="@color/primary_color"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/getecopoint_longtext_textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/getecopoint_ecopoint_textView"
-        app:layout_constraintVertical_bias="0.542" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/getecopoint_longtext_textView"
@@ -58,13 +57,11 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:text="Triez bien le produit,\nil va être recyclé grâce à vous.\nMerci beaucoup."
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/getecopoint_share_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/getecopoint_ecopoint_got_textview" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/getecopoint_share_btn"
@@ -73,27 +70,26 @@
         android:layout_marginBottom="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:text="Partage"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/getecopoint_myecopoint_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/getecopoint_longtext_textView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/getecopoint_myecopoint_btn"
         android:layout_width="233dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/lightblue"
         android:text="Mes eco points"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/getecopoint_footer_image"
+        app:layout_constraintBottom_toBottomOf="@+id/getecopoint_footer_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/getecopoint_share_btn" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.66999996" />
 </android.support.constraint.ConstraintLayout>

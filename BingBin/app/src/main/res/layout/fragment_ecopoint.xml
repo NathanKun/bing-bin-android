@@ -81,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="666"
+                android:textColor="@color/primary_color"
                 android:textSize="24sp" />
 
             <ImageView
@@ -113,7 +114,8 @@
             android:layout_height="match_parent"
             android:columnCount="3"
             android:rowCount="8"
-            android:useDefaultMargins="false">
+            android:useDefaultMargins="false"
+            android:visibility="visible">
 
             <!-- transparent view for clicking -->
 
@@ -126,8 +128,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="0"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_1_plastic" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_2"
@@ -138,8 +139,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="0"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_2_metal" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_3"
@@ -150,8 +150,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="0"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_3_cardboard" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_4"
@@ -162,8 +161,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="2"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_4_paper" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_5"
@@ -174,8 +172,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="2"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_5_glass" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_6"
@@ -186,8 +183,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="2"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_6_food" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_7"
@@ -198,8 +194,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="4"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_7_lightbulb" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_8"
@@ -210,8 +205,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="4"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_8_cumbersome" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_9"
@@ -222,8 +216,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="4"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_9_electronic" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_10"
@@ -234,8 +227,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="6"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_10_battery" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_11"
@@ -246,8 +238,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="6"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_11_clothe" />
+                android:scaleType="fitCenter" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/ecopoint_icon_img_12"
@@ -258,8 +249,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_row="6"
                 android:layout_rowWeight="5"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/catg_12_medicine" />
+                android:scaleType="fitCenter" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_1"

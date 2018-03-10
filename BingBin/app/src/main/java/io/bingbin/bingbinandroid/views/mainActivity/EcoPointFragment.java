@@ -1,5 +1,10 @@
 package io.bingbin.bingbinandroid.views.mainActivity;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -7,9 +12,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,6 +45,7 @@ import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import io.bingbin.bingbinandroid.utils.BingBinCallback;
 import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
+import io.bingbin.bingbinandroid.utils.CommonUtil;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 import studios.codelight.smartloginlibrary.util.UserUtil;
@@ -131,6 +139,7 @@ public class EcoPointFragment extends Fragment {
     private final ArrayList<Map<String, Object>> recycleHistoryDataToShow = new ArrayList<>();
     private boolean isShowingGrid;
     private int[] recycleCountDataToShow;
+    private AppCompatImageView[] imageviews;
 
     public EcoPointFragment() {
         // Required empty public constructor
@@ -171,7 +180,7 @@ public class EcoPointFragment extends Fragment {
         SmartUser user = activity.getCurrentUser();
 
         // hide gridlayout, listview
-        ecopointGridlayout.setVisibility(View.INVISIBLE);
+        ecopointCountSwiperefresh.setVisibility(View.INVISIBLE);
         ecopointHistorySwiperefresh.setVisibility(View.GONE);
 
 
@@ -195,28 +204,50 @@ public class EcoPointFragment extends Fragment {
         ecopointCountSwiperefresh.setOnRefreshListener(() -> getRecycleByCategoryData(user.getToken()));
 
         // adjust grid icon size
-        AppCompatImageView[] imgs = {ecopointIconImg1, ecopointIconImg2, ecopointIconImg3,
+        imageviews = new AppCompatImageView[]{ecopointIconImg1, ecopointIconImg2, ecopointIconImg3,
                 ecopointIconImg4, ecopointIconImg5, ecopointIconImg6,
                 ecopointIconImg7, ecopointIconImg8, ecopointIconImg9,
                 ecopointIconImg10, ecopointIconImg11, ecopointIconImg12
         };
 
-        int maxHeight = ecopointGridlayout.getHeight();
-        int numberHeight = ecopointCountText1.getHeight();
-        int targetHeight = (maxHeight - 4 * (numberHeight + 16)) / 4;
-        int maxWidth = ecopointGridlayout.getWidth();
-        int targetWidth = (maxWidth - 4 * 16) / 3;
-        int target = targetHeight < targetWidth ? targetHeight : targetWidth;
-        target = target > 200 ? 200 : target;
+        int[] bigImgIds = {R.drawable.catg_1_plastic, R.drawable.catg_2_metal, R.drawable.catg_3_cardboard,
+                R.drawable.catg_4_paper, R.drawable.catg_5_glass, R.drawable.catg_6_food,
+                R.drawable.catg_7_lightbulb, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
+                R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_12_medicine};
 
-        Log.d("Ecopoint grid newHeight", String.valueOf(target));
+        ecopointCountSwiperefresh.post(() -> {
+            int maxHeight = ecopointCountSwiperefresh.getHeight();
+            int numberHeight = ecopointCountText1.getHeight();
+            int targetHeight = (maxHeight - 4 * (numberHeight + 16)) / 4;
+            int maxWidth = ecopointCountSwiperefresh.getWidth();
+            int targetWidth = (maxWidth - 4 * 16) / 3;
+            int target = targetHeight < targetWidth ? targetHeight : targetWidth;
 
-        for (AppCompatImageView img : imgs) {
-            ViewGroup.LayoutParams params = img.getLayoutParams();
-            params.height = target;
-            params.width = target;
-            img.setLayoutParams(params);
-        }
+            int width = 200;
+            WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+            if (wm  != null) {
+                Display display = wm.getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                width = size.x / 7;
+            }
+
+            target = target > width ? width : target;
+
+            Log.d("Ecopoint grid newHeight", String.valueOf(target));
+
+            for (int i = 0; i < imageviews.length; i++) {
+                AppCompatImageView iv = imageviews[i];
+                ViewGroup.LayoutParams params = iv.getLayoutParams();
+                params.height = target;
+                params.width = target;
+                iv.setLayoutParams(params);
+
+                iv.setImageBitmap(CommonUtil.decodeSampledBitmapFromResource(
+                        getResources(), bigImgIds[i], target, target, Bitmap.Config.ARGB_8888));
+            }
+        });
+
 
 
         // ------ listview ------
@@ -275,7 +306,7 @@ public class EcoPointFragment extends Fragment {
 
 
         // show gridlayout
-        ecopointGridlayout.setVisibility(View.VISIBLE);
+        ecopointCountSwiperefresh.setVisibility(View.VISIBLE);
         isShowingGrid = true;
 
     }
@@ -564,6 +595,13 @@ public class EcoPointFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        for(ImageView iv : imageviews) {
+            Bitmap bitmap = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            iv.setImageBitmap(null);
+            bitmap.recycle();
+        }
+
         unbinder.unbind();
     }
 }

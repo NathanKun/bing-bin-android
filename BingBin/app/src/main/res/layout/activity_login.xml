@@ -50,24 +50,14 @@
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/login_bottom_grass"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             android:contentDescription="login_bottom_grass"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/bottom_grass" />
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/login_bottom_ball"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="login_bottom_ball"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/bottom_ball" />
+            app:srcCompat="@drawable/bottom_grass_with_ball" />
 
     </android.support.constraint.ConstraintLayout>
 

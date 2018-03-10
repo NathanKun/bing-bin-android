@@ -43,6 +43,7 @@ public class PreviewActivity extends AppCompatActivity {
 
             case R.id.preview_ok_btn:
                 previewImg.recycle();
+
                 // go to classify activity
                 Intent intent = new Intent(this, ClassifyActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT); // pass result to classify activity

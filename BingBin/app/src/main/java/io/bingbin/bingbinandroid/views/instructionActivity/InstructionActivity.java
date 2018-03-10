@@ -28,7 +28,7 @@ public class InstructionActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Category category = (Category) intent.getSerializableExtra("category");
-        instructionTitleTextview.setText(category.name());
+        instructionTitleTextview.setText(category.getTrashbin().getFrenchName());
     }
 
     @OnClick(R.id.instruction_return_btn)
