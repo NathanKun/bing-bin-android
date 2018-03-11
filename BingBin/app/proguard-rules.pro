@@ -19,3 +19,14 @@
 -keep public class android.support.design.internal.BottomNavigationMenuView { *; }
 -keep public class android.support.design.internal.BottomNavigationPresenter { *; }
 -keep public class android.support.design.internal.BottomNavigationItemView { *; }
+
+# glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+# target API 低于 Android API 27，请添加：
+#```pro
+-dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder

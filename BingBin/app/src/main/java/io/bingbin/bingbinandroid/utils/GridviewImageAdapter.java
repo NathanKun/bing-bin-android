@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 /**
@@ -53,7 +55,9 @@ public class GridviewImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageBitmap(bitmaps.get(position));
+        Glide.with(context)
+                .load(bitmaps.get(position))
+                .into(imageView);
         return imageView;
     }
 }

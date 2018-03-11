@@ -34,7 +34,8 @@
 
     <ProgressBar
         android:id="@+id/main_progress_bar"
-        style="@android:style/Widget.ProgressBar.Large"
+        style="Widget.ProgressBar.Large"
+        android:indeterminateDrawable="@drawable/bingbin_progress_indeterminate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

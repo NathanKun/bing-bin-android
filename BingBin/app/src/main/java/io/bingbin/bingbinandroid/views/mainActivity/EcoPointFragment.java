@@ -24,6 +24,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.catprogrammer.android.utils.AnimationUtil;
 
 import org.json.JSONArray;
@@ -45,7 +46,6 @@ import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import io.bingbin.bingbinandroid.utils.BingBinCallback;
 import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
-import io.bingbin.bingbinandroid.utils.CommonUtil;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 import studios.codelight.smartloginlibrary.util.UserUtil;
@@ -187,8 +187,9 @@ public class EcoPointFragment extends Fragment {
         // ------ show user info ------
 
         // generate avatar
-        ecopointAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
-                activity, user.getRabbit(), user.getLeaf()));
+        Glide.with(this)
+                .load(AvatarHelper.generateAvatar(activity, user.getRabbit(), user.getLeaf(), 2))
+                .into(ecopointAvatarImageview);
 
         // show username
         ecopointUsernameTextview.setText(user.getFirstName());
@@ -243,8 +244,9 @@ public class EcoPointFragment extends Fragment {
                 params.width = target;
                 iv.setLayoutParams(params);
 
-                iv.setImageBitmap(CommonUtil.decodeSampledBitmapFromResource(
-                        getResources(), bigImgIds[i], target, target, Bitmap.Config.ARGB_8888));
+                Glide.with(this)
+                        .load(bigImgIds[i])
+                        .into(iv);
             }
         });
 
@@ -595,13 +597,6 @@ public class EcoPointFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        for(ImageView iv : imageviews) {
-            Bitmap bitmap = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(null);
-            bitmap.recycle();
-        }
-
         unbinder.unbind();
     }
 }

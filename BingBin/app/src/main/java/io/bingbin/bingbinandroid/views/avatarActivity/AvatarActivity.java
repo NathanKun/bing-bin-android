@@ -8,6 +8,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -148,7 +150,8 @@ public class AvatarActivity extends AppCompatActivity {
     }
 
     private void generateAvatar() {
-        avatarFooterAvatarImageview.setImageBitmap(AvatarHelper.generateAvatar(
-                this, selectedRabbitId, selectedLeafId, 2));
+        Glide.with(this)
+                .load(AvatarHelper.generateAvatar(this, selectedRabbitId, selectedLeafId, 2))
+                .into(avatarFooterAvatarImageview);
     }
 }

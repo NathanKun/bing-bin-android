@@ -20,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -132,6 +134,7 @@ public class ClassifyActivity extends AppCompatActivity {
         ((BingBinApp) getApplication()).getNetComponent().inject(this);
         ButterKnife.bind(this);
 
+        showLoader(true);
         classifyYesnoConstraintLayout.setVisibility(View.INVISIBLE);
         classifyFinishConstraintLayout.setVisibility(View.INVISIBLE);
 
@@ -185,30 +188,6 @@ public class ClassifyActivity extends AppCompatActivity {
     }
 
     // ============
-    // On results
-    // ============
-/*
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    startCameraActivity();
-                } else {
-                    // permission denied
-                    Log.d("request permission", "not ok");
-                    Toast.makeText(this.getApplicationContext(), "Permission of camera and storage is needed", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-            }
-        }
-    }
-*/
-    // ============
     // Methods
     // ============
 
@@ -231,22 +210,18 @@ public class ClassifyActivity extends AppCompatActivity {
             final int ivHeight = classifyBlurimgImageview.getMeasuredHeight();
             Log.d("blur", String.valueOf(ivWidth));
             Log.d("blur", String.valueOf(ivHeight));
-            //bitmap = CommonUtil.scaleBitmapToCropFill(bm, ivHeight, ivWidth);
-
-            /*Bitmap blurImg = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(blurImg);
-            canvas.translate(-classifyBlurimgImageview.getLeft(), -classifyBlurimgImageview.getTop());
-            Paint paint = new Paint();
-            paint.setFlags(Paint.FILTER_BITMAP_FLAG);
-            canvas.drawBitmap(bitmap, 0, 0, paint);*/
 
             blurImg = bitmap.copy(Bitmap.Config.ARGB_8888, true);
             // bitmap.recycle(); // image will be upload later, should not recycle here
             blurImg = CommonUtil.rsBlur(ClassifyActivity.this, blurImg, 25);
 
-            classifyBlurimgImageview.setImageBitmap(blurImg);
+            Glide.with(this)
+                    .load(blurImg)
+                    .into(classifyBlurimgImageview);
             classifyYesnoResultTextview.setText(Category.getFrenchNameByName(classifyResultStr));
+
             classifyYesnoConstraintLayout.setVisibility(View.VISIBLE);
+            showLoader(false);
         }));
 
         // init btn "OUI"
@@ -335,9 +310,9 @@ public class ClassifyActivity extends AppCompatActivity {
                         classifySelectImg10, classifySelectImg11, classifySelectImg12};
 
                 for(int i = 0; i < iconsImageviews.length; i++) {
-                    iconsImageviews[i].setImageBitmap(CommonUtil.decodeSampledBitmapFromResource(
-                            getResources(), bigImgIds[i], iconsImageviews[i].getWidth(), iconsImageviews[i].getHeight(),
-                            Bitmap.Config.ARGB_8888));
+                    Glide.with(classifySelectGridGridlayout)
+                            .load(bigImgIds[i])
+                            .into(iconsImageviews[i]);
                 }
             });
         });
@@ -369,13 +344,11 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyFinishTitleTextview.setText(title);
         classifyFinishLongtext.setText(category.getText());
 
-        Bitmap trashbinImg = BitmapFactory.decodeResource(getResources(), category.getTrashbin().getImageResource());
-        classifyFinishTrashbinImageview.setImageBitmap(trashbinImg);
-
+        Glide.with(this)
+                .load(category.getTrashbin().getImageResource())
+                .into(classifyFinishTrashbinImageview);
 
         classifyFinishTrierBtn.setOnClickListener(view -> {
-            classifyBlurimgImageview.setImageBitmap(null);
-            blurImg.recycle();
             Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
             intent.putExtra("ecopoint", ecoPoint);
             setResult(RESULT_OK, intent);
@@ -437,7 +410,7 @@ public class ClassifyActivity extends AppCompatActivity {
         String catgName = null;
         switch (view.getId()) {
             case R.id.classify_select_other:
-                res = R.drawable.bingbin_icon;
+                res = R.drawable.bingbin_icon_no_bg;
                 catgName = Category.getFrenchNameById(99);
                 break;
             case R.id.classify_select_img_1:
@@ -489,8 +462,9 @@ public class ClassifyActivity extends AppCompatActivity {
                 catgName = Category.getFrenchNameById(12);
                 break;
         }
-        classifySelectSelectedImageview.setImageBitmap(CommonUtil.decodeSampledBitmapFromResource(
-                getResources(), res, width, height, Bitmap.Config.ARGB_8888));
+        Glide.with(this)
+                .load(res)
+                .into(classifySelectSelectedImageview);
         classifySelectSelectedTextview.setText(catgName);
     }
 }

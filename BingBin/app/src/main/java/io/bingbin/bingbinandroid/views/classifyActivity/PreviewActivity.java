@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,7 +33,9 @@ public class PreviewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         filename = intent.getStringExtra("filename");
         previewImg = CommonUtil.loadBitmap(this, filename, 2);
-        previewImageview.setImageBitmap(previewImg);
+        Glide.with(this)
+                .load(previewImg)
+                .into(previewImageview);
     }
 
     @OnClick({R.id.preview_retry_btn, R.id.preview_ok_btn})
