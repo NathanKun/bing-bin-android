@@ -23,10 +23,10 @@
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
-        android:largeHeap="true">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".views.loginActivity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,16 +58,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <!-- Material Camera -->
-        <!--
-        <activity
-            android:name="com.afollestad.materialcamera.CaptureActivity"
-            android:theme="@style/MaterialCamera.CaptureActivity" />
-        <activity
-            android:name="com.afollestad.materialcamera.CaptureActivity2"
-            android:theme="@style/MaterialCamera.CaptureActivity" />
-        -->
-        <activity android:name=".views.classifyActivity.ClassifyActivity" />
+        <activity android:name=".views.classifyActivity.ClassifyActivity"
+            android:process=":classify" />
         <activity
             android:name=".views.instructionActivity.InstructionActivity"
             android:label="@string/title_activity_instruction"
@@ -80,12 +72,13 @@
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="io.bingbin.bingbinandroid.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+
     </application>
 
 </manifest>

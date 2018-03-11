@@ -20,16 +20,14 @@
         android:id="@+id/instruction_image_img"
         android:layout_width="272dp"
         android:layout_height="185dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="image for instruction"
         android:src="@drawable/img_recycle"
-        app:layout_constraintBottom_toTopOf="@+id/instruction_longtext_textview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instruction_title_textview"
-        android:contentDescription="image for instruction" />
+        app:layout_constraintTop_toBottomOf="@+id/instruction_title_textview" />
 
     <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/instruction_title_textview"
@@ -38,25 +36,23 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:text="category_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/instruction_image_img"
+        app:layout_constraintBottom_toBottomOf="@+id/instruction_footer_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.17000002" />
 
     <Button
         android:id="@+id/instruction_return_btn"
         android:layout_width="233dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:text="Retourner"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/instruction_footer_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/instruction_longtext_textview" />
@@ -64,15 +60,13 @@
     <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/instruction_longtext_textview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_height="57dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:text="En cours de construction\nArriver bientôt~"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/instruction_return_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/instruction_image_img" />
