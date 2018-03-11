@@ -61,7 +61,7 @@ public abstract class AnimationUtil {
 
         animator.start();
 
-        if(!show) (new Handler()).postDelayed(() -> view.setVisibility(View.GONE), duration);
+        if(!show) (new Handler()).postDelayed(() -> view.setVisibility(View.INVISIBLE), duration);
     }
 
 }

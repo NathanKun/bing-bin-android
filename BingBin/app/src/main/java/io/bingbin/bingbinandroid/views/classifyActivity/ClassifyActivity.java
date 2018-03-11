@@ -134,57 +134,59 @@ public class ClassifyActivity extends AppCompatActivity {
         ((BingBinApp) getApplication()).getNetComponent().inject(this);
         ButterKnife.bind(this);
 
-        showLoader(true);
         classifyYesnoConstraintLayout.setVisibility(View.INVISIBLE);
         classifyFinishConstraintLayout.setVisibility(View.INVISIBLE);
+        showLoader(true);
 
-        Intent intent = getIntent();
-        Uri uri = intent.getParcelableExtra("uri");
-        if(uri != null) { // from gallery
-            try {
+        (new Thread(() -> {
+            Intent intent = getIntent();
+            Uri uri = intent.getParcelableExtra("uri");
+            if(uri != null) { // from gallery
                 try {
-                    Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
-                    initComponents(bitmap);
-                } catch (OutOfMemoryError e) { // try again with sample bitmap
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+                        initComponents(bitmap);
+                    } catch (OutOfMemoryError e) { // try again with sample bitmap
+                        e.printStackTrace();
+                        System.gc();
+
+                        // detect screen size and sample bitmap that bitmap smaller than screen
+                        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+                        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
+                                null, options);
+                        int imgWidth = options.outWidth;
+                        int imgHeigh = options.outHeight;
+                        int sample = 1;
+                        while(imgWidth > sample * screenWidth || imgHeigh > sample * screenHeight) {
+                            sample *= 2;
+                        }
+
+                        options.inSampleSize = sample;
+                        options.inJustDecodeBounds = false;
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
+                                null, options);
+                        initComponents(bitmap);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else { // from camera
+                String filename = intent.getStringExtra("filename");
+                try {
+                    initComponents(CommonUtil.loadBitmap(this, filename, 2));
+                } catch (OutOfMemoryError e) { // try again with sample = 2
                     e.printStackTrace();
                     System.gc();
 
-                    // detect screen size and sample bitmap that bitmap smaller than screen
-                    int screenHeight = getResources().getDisplayMetrics().heightPixels;
-                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
-
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
-                            null, options);
-                    int imgWidth = options.outWidth;
-                    int imgHeigh = options.outHeight;
-                    int sample = 1;
-                    while(imgWidth > sample * screenWidth || imgHeigh > sample * screenHeight) {
-                        sample *= 2;
-                    }
-
-                    options.inSampleSize = sample;
-                    options.inJustDecodeBounds = false;
-                    Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
-                            null, options);
+                    Bitmap bitmap = CommonUtil.loadBitmap(this, filename, 4);
                     initComponents(bitmap);
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
-        } else { // from camera
-            String filename = intent.getStringExtra("filename");
-            try {
-                initComponents(CommonUtil.loadBitmap(this, filename, 2));
-            } catch (OutOfMemoryError e) { // try again with sample = 2
-                e.printStackTrace();
-                System.gc();
-
-                Bitmap bitmap = CommonUtil.loadBitmap(this, filename, 4);
-                initComponents(bitmap);
-            }
-        }
+        })).start();
     }
 
     // ============
@@ -353,6 +355,7 @@ public class ClassifyActivity extends AppCompatActivity {
             intent.putExtra("ecopoint", ecoPoint);
             setResult(RESULT_OK, intent);
             finish();
+            blurImg.recycle();
         });
         classifyFinishRecycleItBtn.setOnClickListener(view -> {
             Intent intent = new Intent(ClassifyActivity.this, InstructionActivity.class);
@@ -364,28 +367,6 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyYesnoConstraintLayout.setVisibility(View.GONE);
 
         classifyFinishConstraintLayout.post(() -> {
-            /*
-            // adjust image size to improve layout
-            int rectangleBottom = classifyFinishRectangle.getBottom();
-            int recycleBtnBottom = classifyFinishRecycleItBtn.getBottom();
-            int imageHeight = classifyFinishTrashbinImageview.getHeight();
-            int targetHeight = imageHeight + rectangleBottom - 32 - recycleBtnBottom;
-
-            if(targetHeight < classifyFinishConstraintLayout.getHeight() / 6) {
-                targetHeight = classifyFinishConstraintLayout.getHeight() / 6;
-                classifyFinishLongtext.setTextSize(14);
-            }
-
-            ViewGroup.LayoutParams layoutParams = classifyFinishTrashbinImageview.getLayoutParams();
-            layoutParams.height = targetHeight;
-            classifyFinishTrashbinImageview.setLayoutParams(layoutParams);
-
-            Log.d("trashbin height adjust",
-                    "rectangleBottom : " + rectangleBottom +
-                            " recycleBtnBottom : " + recycleBtnBottom +
-                            " imageHeight : " + imageHeight +
-                            " new height : " + layoutParams.height);*/
-
             int imageHeight = classifyFinishTrashbinImageview.getHeight();
             if(imageHeight < 100) {
                 classifyFinishLongtext.setTextSize(14);
@@ -410,8 +391,6 @@ public class ClassifyActivity extends AppCompatActivity {
             R.id.classify_select_img_10, R.id.classify_select_img_11, R.id.classify_select_img_12,
             R.id.classify_select_other})
     void imageOnClick(View view) {
-        final int width = classifySelectSelectedImageview.getWidth();
-        final int height = classifySelectSelectedImageview.getHeight();
         int res = 0;
         String catgName = null;
         switch (view.getId()) {

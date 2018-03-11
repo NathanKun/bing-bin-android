@@ -264,7 +264,7 @@ public class RankFragment extends Fragment {
                 rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.black));
                 switch (currentDuration) {
                     case BBH_DURATION_ALL:
-                        // done
+                        rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
                         break;
                     case BBH_DURATION_DAY:
                         rankButbtonbarDayBtn.setTextColor(getResources().getColor(R.color.primary_color));
@@ -297,6 +297,7 @@ public class RankFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        // should not recycle avatars' bitmap here, because they are saved into bundle, for loading later
     }
 
     /**
@@ -416,6 +417,9 @@ public class RankFragment extends Fragment {
      * @param dataArray ArrayList contains ladder
      */
     private void showData(ArrayList<Map<String, Object>> dataArray) {
+        for(Map m : dataToShow) {
+            ((Bitmap) m.get("avatar")).recycle();
+        }
         dataToShow.clear();
         dataToShow.addAll(dataArray);
 

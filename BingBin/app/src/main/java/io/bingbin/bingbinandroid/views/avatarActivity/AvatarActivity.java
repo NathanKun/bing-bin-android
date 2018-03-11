@@ -1,11 +1,14 @@
 package io.bingbin.bingbinandroid.views.avatarActivity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -40,6 +44,8 @@ public class AvatarActivity extends AppCompatActivity {
     GridView avatarLeafGridview;
     @BindView(R.id.avatar_footer_avatar_imageview)
     ImageView avatarFooterAvatarImageview;
+    @BindView(R.id.avatar_progress_bar)
+    ProgressBar avatarProgressBar;
 
     private int maxAllowRabbitId;
     private int maxAllowLeafId;
@@ -48,6 +54,10 @@ public class AvatarActivity extends AppCompatActivity {
     private int selectedLeafId;
 
     private SmartUser currentUser;
+
+    private List<Bitmap> rabbitImgs;
+    private List<Bitmap> leafImgs;
+    private Bitmap footerAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,18 +78,21 @@ public class AvatarActivity extends AppCompatActivity {
         selectedRabbitId = currentUser.getRabbit();
         selectedLeafId = currentUser.getLeaf();
 
+        rabbitImgs = AvatarHelper.getRabbitBitmapsForChangingAvatar(this, currentUser.getEcoPoint());
+        leafImgs = AvatarHelper.getLeafBitmapsForChangingAvatar(this, currentUser.getSunPoint());
+
         // show all rabbits and leaves
         avatarRabbitGridview.post(() -> avatarRabbitGridview.setAdapter(new GridviewImageAdapter(this,
-                AvatarHelper.getRabbitBitmapsForChangingAvatar(this, currentUser.getEcoPoint()))));
+                rabbitImgs)));
         avatarRabbitGridview.post(() -> avatarLeafGridview.setAdapter(new GridviewImageAdapter(this,
-                AvatarHelper.getLeafBitmapsForChangingAvatar(this, currentUser.getSunPoint()))));
+                leafImgs)));
 
         // show user current avatar
         generateAvatar();
 
         // rabbit grid items onClick listeners
         avatarRabbitGridview.setOnItemClickListener((parent, view, position, id) -> {
-            if(position <= maxAllowRabbitId) {
+            if (position <= maxAllowRabbitId) {
                 selectedRabbitId = position + 1;
                 generateAvatar();
             } else {
@@ -89,7 +102,7 @@ public class AvatarActivity extends AppCompatActivity {
 
         // leaf grid items onClick listeners
         avatarLeafGridview.setOnItemClickListener((parent, view, position, id) -> {
-            if(position <= maxAllowLeafId) {
+            if (position <= maxAllowLeafId) {
                 selectedLeafId = position + 1;
                 generateAvatar();
             } else {
@@ -100,20 +113,23 @@ public class AvatarActivity extends AppCompatActivity {
 
     @OnClick(R.id.avatar_footer_ok_btn)
     void okOnClick(View view) {
-
+        showLoader(true);
         (new Thread(() -> {
             Response[] responses = bbh.modifyAvatar(currentUser.getToken(), selectedRabbitId, selectedLeafId);
 
-            if(responses == null) {
+            if (responses == null) {
                 return;
             }
 
             Response resRabbit = responses[0];
             Response resLeaf = responses[1];
 
-            if( !(resRabbit.isSuccessful() && resLeaf.isSuccessful()) ) {
-                runOnUiThread(() -> Toast.makeText(AvatarActivity.this.getApplicationContext(),
-                        R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show());
+            if (!(resRabbit.isSuccessful() && resLeaf.isSuccessful())) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(AvatarActivity.this.getApplicationContext(),
+                            R.string.bingbinhttp_onresponsenotsuccess, Toast.LENGTH_SHORT).show();
+                        showLoader(false);
+                });
                 return;
             }
 
@@ -126,32 +142,72 @@ public class AvatarActivity extends AppCompatActivity {
 
                 JSONObject jsonRabbit = new JSONObject(bodyRabbit);
                 JSONObject jsonLeaf = new JSONObject(bodyLeaf);
-                if( !(jsonRabbit.getBoolean("valid") && jsonLeaf.getBoolean("valid")) ) {
-                    runOnUiThread(() -> Toast.makeText(AvatarActivity.this.getApplicationContext(),
-                            "Not valid", Toast.LENGTH_SHORT).show());
+                if (!(jsonRabbit.getBoolean("valid") && jsonLeaf.getBoolean("valid"))) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(AvatarActivity.this.getApplicationContext(),
+                            "Not valid", Toast.LENGTH_SHORT).show();
+                        showLoader(false);
+                    });
                     return;
                 }
 
                 // all valid
                 finish();
+                runOnUiThread(() -> recycleBitmaps());
 
             } catch (IOException e) {
                 e.printStackTrace();
-                runOnUiThread(() -> Toast.makeText(AvatarActivity.this.getApplicationContext(),
-                        "Response IOException", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+                    Toast.makeText(AvatarActivity.this.getApplicationContext(),
+                            "Response IOException", Toast.LENGTH_SHORT).show();
+                    showLoader(false);
+                });
             } catch (JSONException e) {
                 e.printStackTrace();
-                runOnUiThread(() -> Toast.makeText(AvatarActivity.this.getApplicationContext(),
-                        R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+                    Toast.makeText(AvatarActivity.this.getApplicationContext(),
+                            R.string.bingbinhttp_onjsonparseerror, Toast.LENGTH_SHORT).show();
+                    showLoader(false);
+                });
             }
-
-            finish();
         })).start();
     }
 
     private void generateAvatar() {
+        footerAvatar = AvatarHelper.generateAvatar(this, selectedRabbitId, selectedLeafId, 2);
         Glide.with(this)
-                .load(AvatarHelper.generateAvatar(this, selectedRabbitId, selectedLeafId, 2))
+                .load(footerAvatar)
                 .into(avatarFooterAvatarImageview);
+    }
+
+    private void showLoader(boolean show) {
+        if (show) {
+            avatarProgressBar.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            avatarProgressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        recycleBitmaps();
+    }
+
+    private void recycleBitmaps() {
+        avatarRabbitGridview.setAdapter(null);
+        avatarLeafGridview.setAdapter(null);
+        avatarFooterAvatarImageview.setImageBitmap(null);
+        footerAvatar.recycle();
+        for(Bitmap bm : rabbitImgs) {
+            bm.recycle();
+        }
+        for(Bitmap bm : leafImgs) {
+            bm.recycle();
+        }
     }
 }

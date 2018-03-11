@@ -81,7 +81,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     @BindView(R.id.hint_login_textview)
     TextView hintLoginTextview;
 
-    @BindView(R.id.login_logo)
+    @BindView(R.id.login_logo_layout)
     LinearLayoutCompat loginLogo;
     @BindView(R.id.login_bottom_grass)
     AppCompatImageView loginBottomGrass;
@@ -122,7 +122,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         // First put logo on center
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(loginMasterlayout);
-        constraintSet.connect(R.id.login_logo, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        constraintSet.connect(R.id.login_logo_layout, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
         constraintSet.applyTo(loginMasterlayout);
 
         loginMasterlayout.post(
@@ -138,7 +138,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                                 TransitionManager.beginDelayedTransition(loginMasterlayout);
                                 // clear connection just added to move up logo
                                 constraintSet.clone(loginMasterlayout);
-                                constraintSet.clear(R.id.login_logo, ConstraintSet.BOTTOM);
+                                constraintSet.clear(R.id.login_logo_layout, ConstraintSet.BOTTOM);
                                 constraintSet.applyTo(loginMasterlayout);
 
                                 (new Handler()).postDelayed(

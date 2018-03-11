@@ -140,6 +140,7 @@ public class EcoPointFragment extends Fragment {
     private boolean isShowingGrid;
     private int[] recycleCountDataToShow;
     private AppCompatImageView[] imageviews;
+    private Bitmap avatarBitmap;
 
     public EcoPointFragment() {
         // Required empty public constructor
@@ -187,8 +188,9 @@ public class EcoPointFragment extends Fragment {
         // ------ show user info ------
 
         // generate avatar
+        avatarBitmap = AvatarHelper.generateAvatar(activity, user.getRabbit(), user.getLeaf(), 2);
         Glide.with(this)
-                .load(AvatarHelper.generateAvatar(activity, user.getRabbit(), user.getLeaf(), 2))
+                .load(avatarBitmap)
                 .into(ecopointAvatarImageview);
 
         // show username
@@ -598,5 +600,7 @@ public class EcoPointFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+
+        avatarBitmap.recycle();
     }
 }
