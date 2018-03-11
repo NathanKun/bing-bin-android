@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/home_welcome_textview"
         android:contentDescription="image of trashbin for welcome fragment" />
 
-    <Button
+    <io.bingbin.bingbinandroid.views.BingBinButton
         android:id="@+id/welcome_image_btn"
         android:layout_width="233dp"
         android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome_bin_img" />
 
-    <Button
+    <io.bingbin.bingbinandroid.views.BingBinButton
         android:id="@+id/welcome_camera_btn"
         android:layout_width="233dp"
         android:layout_height="48dp"

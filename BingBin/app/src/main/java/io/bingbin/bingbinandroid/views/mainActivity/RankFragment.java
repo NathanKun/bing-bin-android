@@ -1,6 +1,7 @@
 package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.catprogrammer.android.utils.AnimationUtil;
 
 import org.json.JSONArray;
@@ -68,8 +70,6 @@ public class RankFragment extends Fragment {
     Button rankButbtonbarDayBtn;
     @BindView(R.id.rank_butbtonbar_week_btn)
     Button rankButbtonbarWeekBtn;
-    @BindView(R.id.rank_butbtonbar_month_btn)
-    Button rankButbtonbarMonthBtn;
     @BindView(R.id.ranking_sendsun_layout)
     ConstraintLayout rankingSendsunLayout;
     @BindView(R.id.rank_title_suncount)
@@ -122,6 +122,7 @@ public class RankFragment extends Fragment {
 
         // Make AllBtn green, look likes clicked
         rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
+        rankButbtonbarAllBtn.setTypeface(rankButbtonbarAllBtn.getTypeface(), Typeface.BOLD);
 
         // add swipe down refresh listener, call getData() when swipe down
         rankSwiperefresh.setOnRefreshListener(() -> getData(currentDuration));
@@ -222,7 +223,7 @@ public class RankFragment extends Fragment {
                 // hide sun btn if sent today, or that row is the currentUser
                 if ((boolean) dataToShow.get(position).get("isSent") ||
                         activity.getCurrentUser().getUserId().equals(dataToShow.get(position).get("id"))) {
-                    sunButton.setVisibility(View.GONE);
+                    sunButton.setVisibility(View.INVISIBLE);
                 } else {
                     // it is always the same listview, once imageview was hide
                     // even we change dataset it won't re-show, have to reset visibility each time
@@ -236,8 +237,9 @@ public class RankFragment extends Fragment {
 
         mAdapter.setViewBinder((view, data, textRepresentation) -> {
             if (view instanceof ImageView && data instanceof Bitmap) {
-                ImageView i = (ImageView) view;
-                i.setImageBitmap((Bitmap) data);
+                Glide.with(this)
+                        .load(data)
+                        .into((ImageView) view);
                 return true;
             }
             return false;
@@ -262,16 +264,17 @@ public class RankFragment extends Fragment {
                 rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.black));
                 switch (currentDuration) {
                     case BBH_DURATION_ALL:
-                        rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                        // done
                         break;
                     case BBH_DURATION_DAY:
                         rankButbtonbarDayBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                        rankButbtonbarDayBtn.setTypeface(rankButbtonbarDayBtn.getTypeface(), Typeface.BOLD);
+                        rankButbtonbarAllBtn.setTypeface(Typeface.create(rankButbtonbarAllBtn.getTypeface(), Typeface.NORMAL), Typeface.NORMAL);
                         break;
                     case BBH_DURATION_WEEK:
                         rankButbtonbarWeekBtn.setTextColor(getResources().getColor(R.color.primary_color));
-                        break;
-                    case BBH_DURATION_MONTH:
-                        rankButbtonbarMonthBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                        rankButbtonbarWeekBtn.setTypeface(rankButbtonbarWeekBtn.getTypeface(), Typeface.BOLD);
+                        rankButbtonbarAllBtn.setTypeface(Typeface.create(rankButbtonbarAllBtn.getTypeface(), Typeface.NORMAL), Typeface.NORMAL);
                         break;
                 }
             } else {
@@ -392,7 +395,7 @@ public class RankFragment extends Fragment {
             int leafId = json.getInt("id_leaf");
             boolean isSent = json.getBoolean("has_receive_sun_point");
 
-            Bitmap avatar = AvatarHelper.generateAvatar(activity, rabbitId, leafId, 4);
+            Bitmap avatar = AvatarHelper.generateAvatar(activity, rabbitId, leafId, 2);
 
             map.put("username", name);
             map.put("point", pt);
@@ -421,32 +424,35 @@ public class RankFragment extends Fragment {
     }
 
     @OnClick({R.id.rank_buttonbar_all_btn, R.id.rank_butbtonbar_day_btn,
-            R.id.rank_butbtonbar_week_btn, R.id.rank_butbtonbar_month_btn})
+            R.id.rank_butbtonbar_week_btn})
     void buttonBarBtnOnClick(View view) {
         rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.black));
         rankButbtonbarDayBtn.setTextColor(getResources().getColor(R.color.black));
         rankButbtonbarWeekBtn.setTextColor(getResources().getColor(R.color.black));
-        rankButbtonbarMonthBtn.setTextColor(getResources().getColor(R.color.black));
 
         switch (view.getId()) {
             case R.id.rank_buttonbar_all_btn:
                 currentDuration = BBH_DURATION_ALL;
                 rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                rankButbtonbarAllBtn.setTypeface(rankButbtonbarAllBtn.getTypeface(), Typeface.BOLD);
+                rankButbtonbarDayBtn.setTypeface(Typeface.create(rankButbtonbarDayBtn.getTypeface(), Typeface.NORMAL), Typeface.NORMAL);
+                rankButbtonbarWeekBtn.setTypeface(Typeface.create(rankButbtonbarWeekBtn.getTypeface(), Typeface.NORMAL), Typeface.NORMAL);
                 getData(currentDuration);
                 break;
             case R.id.rank_butbtonbar_day_btn:
                 currentDuration = BBH_DURATION_DAY;
                 rankButbtonbarDayBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                rankButbtonbarDayBtn.setTypeface(rankButbtonbarDayBtn.getTypeface(), Typeface.BOLD);
+                rankButbtonbarAllBtn.setTypeface(Typeface.create(rankButbtonbarAllBtn.getTypeface(), Typeface.NORMAL), Typeface.NORMAL);
+                rankButbtonbarWeekBtn.setTypeface(Typeface.create(rankButbtonbarWeekBtn.getTypeface(), Typeface.NORMAL), Typeface.NORMAL);
                 getData(currentDuration);
                 break;
             case R.id.rank_butbtonbar_week_btn:
                 currentDuration = BBH_DURATION_WEEK;
                 rankButbtonbarWeekBtn.setTextColor(getResources().getColor(R.color.primary_color));
-                getData(currentDuration);
-                break;
-            case R.id.rank_butbtonbar_month_btn:
-                currentDuration = BBH_DURATION_MONTH;
-                rankButbtonbarMonthBtn.setTextColor(getResources().getColor(R.color.primary_color));
+                rankButbtonbarWeekBtn.setTypeface(rankButbtonbarWeekBtn.getTypeface(), Typeface.BOLD);
+                rankButbtonbarAllBtn.setTypeface(Typeface.create(rankButbtonbarAllBtn.getTypeface(), Typeface.NORMAL), Typeface.NORMAL);
+                rankButbtonbarDayBtn.setTypeface(Typeface.create(rankButbtonbarDayBtn.getTypeface(), Typeface.NORMAL), Typeface.NORMAL);
                 getData(currentDuration);
                 break;
         }

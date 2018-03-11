@@ -133,7 +133,7 @@
             app:srcCompat="@drawable/catg_6_food"
             android:contentDescription="avatar preview" />
 
-        <Button
+        <io.bingbin.bingbinandroid.views.BingBinButton
             android:id="@+id/avatar_footer_ok_btn"
             android:layout_width="50dp"
             android:layout_height="wrap_content"

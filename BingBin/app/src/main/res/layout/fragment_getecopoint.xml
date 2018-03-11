@@ -63,7 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <io.bingbin.bingbinandroid.views.BingBinButton
         android:id="@+id/getecopoint_share_btn"
         android:layout_width="233dp"
         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <io.bingbin.bingbinandroid.views.BingBinButton
         android:id="@+id/getecopoint_myecopoint_btn"
         android:layout_width="233dp"
         android:layout_height="wrap_content"

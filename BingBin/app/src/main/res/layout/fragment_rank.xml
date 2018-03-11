@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Palmètre"
+                android:text="PALMARÈS"
                 android:textAlignment="center"
                 android:textColor="@color/primary_color"
                 android:textSize="24sp" />
@@ -41,7 +41,7 @@
                 android:text="5x"
                 android:textAlignment="center"
                 android:textColor="@color/primary_color"
-                android:textSize="24sp" />
+                android:textSize="18sp" />
 
             <ImageView
                 android:id="@+id/rank_title_sun_imageview"
@@ -65,47 +65,44 @@
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-            <Button
+            <io.bingbin.bingbinandroid.views.BingBinButton
                 android:id="@+id/rank_buttonbar_all_btn"
+                style="@style/bingbin_button_style"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                style="?android:attr/buttonStyle"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="Tout"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/gray"
+                android:textSize="18sp" />
 
-            <Button
+            <io.bingbin.bingbinandroid.views.BingBinButton
                 android:id="@+id/rank_butbtonbar_day_btn"
+                style="@style/bingbin_button_style"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                style="?android:attr/buttonStyle"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="Aujourd'hui"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/gray"
+                android:textSize="18sp" />
 
-            <Button
+            <io.bingbin.bingbinandroid.views.BingBinButton
                 android:id="@+id/rank_butbtonbar_week_btn"
+                style="@style/bingbin_button_style"
                 android:layout_width="120dp"
                 android:layout_height="match_parent"
-                style="?android:attr/buttonStyle"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="center"
-                android:text="Semaine" />
+                android:text="Semaine"
+                android:textColor="@color/gray"
+                android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/rank_butbtonbar_month_btn"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                style="?android:attr/buttonStyle"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:text="Mois" />
         </LinearLayout>
 
         <View
@@ -129,7 +126,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:divider="@null"
-                android:dividerHeight="0dp" />
+                android:dividerHeight="8dp" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

@@ -364,6 +364,7 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyYesnoConstraintLayout.setVisibility(View.GONE);
 
         classifyFinishConstraintLayout.post(() -> {
+            /*
             // adjust image size to improve layout
             int rectangleBottom = classifyFinishRectangle.getBottom();
             int recycleBtnBottom = classifyFinishRecycleItBtn.getBottom();
@@ -383,7 +384,12 @@ public class ClassifyActivity extends AppCompatActivity {
                     "rectangleBottom : " + rectangleBottom +
                             " recycleBtnBottom : " + recycleBtnBottom +
                             " imageHeight : " + imageHeight +
-                            " new height : " + layoutParams.height);
+                            " new height : " + layoutParams.height);*/
+
+            int imageHeight = classifyFinishTrashbinImageview.getHeight();
+            if(imageHeight < 100) {
+                classifyFinishLongtext.setTextSize(14);
+            }
         });
     }
 
