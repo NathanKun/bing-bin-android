@@ -453,9 +453,11 @@ public class EcoPointFragment extends Fragment {
 
             @Override
             public void onAnyError() {
-                if (ecopointHistorySwiperefresh != null) {
-                    ecopointHistorySwiperefresh.setRefreshing(false);
-                }
+                activity.runOnUiThread(() -> {
+                    if (ecopointHistorySwiperefresh != null) {
+                        ecopointHistorySwiperefresh.setRefreshing(false);
+                    }
+                });
             }
         };
 
