@@ -228,7 +228,7 @@ public class ClassifyActivity extends AppCompatActivity {
 
         // init btn "OUI"
         classifYesnoYesbtn.setOnClickListener((View view) -> {
-            category = Category.fromFrenchName(classifySelectSelectedTextview.getText().toString());
+            category = Category.fromName(classifyResultStr);
             BingBinCallbackAction action = new BingBinCallbackAction() {
                 @Override
                 public void onFailure() {
