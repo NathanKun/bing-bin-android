@@ -92,7 +92,7 @@ public class AvatarActivity extends AppCompatActivity {
 
         // rabbit grid items onClick listeners
         avatarRabbitGridview.setOnItemClickListener((parent, view, position, id) -> {
-            if (position <= maxAllowRabbitId) {
+            if (position < maxAllowRabbitId) {
                 selectedRabbitId = position + 1;
                 generateAvatar();
             } else {
@@ -102,7 +102,7 @@ public class AvatarActivity extends AppCompatActivity {
 
         // leaf grid items onClick listeners
         avatarLeafGridview.setOnItemClickListener((parent, view, position, id) -> {
-            if (position <= maxAllowLeafId) {
+            if (position < maxAllowLeafId) {
                 selectedLeafId = position + 1;
                 generateAvatar();
             } else {

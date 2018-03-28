@@ -13,7 +13,7 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "io.bingbin.bingbinandroid"
         minSdkVersion 22
@@ -65,8 +65,8 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.0'
 
     // Google Play Services
-    api 'com.google.android.gms:play-services-auth:11.8.0'
-    api 'com.google.firebase:firebase-core:11.8.0'
+    api 'com.google.android.gms:play-services-auth:12.0.0'
+    api 'com.google.firebase:firebase-core:12.0.0'
 
     // commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
