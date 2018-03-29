@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_ecopoint"
+        android:id="@+id/navigation_event"
         android:icon="@drawable/btn_ecopoint"
         android:title="" />
 
     <item
-        android:id="@+id/navigation_welcome"
+        android:id="@+id/navigation_recognition"
         android:icon="@drawable/btn_welcome"
         android:title="" />
 
     <item
-        android:id="@+id/navigation_rank"
+        android:id="@+id/navigation_forum"
         android:icon="@drawable/btn_rank"
         android:title="" />
 

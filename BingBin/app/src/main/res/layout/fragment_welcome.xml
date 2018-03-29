@@ -103,6 +103,16 @@
             app:fab_title="Changer mon avatar" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/welcome_fab_tutorial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/dark_primary_color"
+            app:fab_icon="@drawable/ic_help_outline_black_24dp"
+            app:fab_size="mini"
+            app:fab_title="Tutoriel" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/welcome_fab_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
