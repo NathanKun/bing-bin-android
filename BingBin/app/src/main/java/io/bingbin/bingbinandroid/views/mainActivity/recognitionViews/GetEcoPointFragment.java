@@ -50,6 +50,7 @@ public class GetEcoPointFragment extends Fragment {
     ConstraintLayout getecopointMasterLayout;
 
     private MainActivity activity;
+    private RecognitionFragment mainFragment;
     private Unbinder unbinder;
 
     public GetEcoPointFragment() {
@@ -71,6 +72,7 @@ public class GetEcoPointFragment extends Fragment {
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
         assert activity != null;
+        mainFragment = (RecognitionFragment) getParentFragment();
     }
 
     @OnClick(R.id.getecopoint_share_btn)
@@ -100,7 +102,7 @@ public class GetEcoPointFragment extends Fragment {
 
     @OnClick(R.id.getecopoint_myecopoint_btn)
     void myEcoPointOnClick(View view) {
-        activity.viewPager.setCurrentItem(0);
+        mainFragment.viewPager.setCurrentItem(0);
     }
 
     @Override

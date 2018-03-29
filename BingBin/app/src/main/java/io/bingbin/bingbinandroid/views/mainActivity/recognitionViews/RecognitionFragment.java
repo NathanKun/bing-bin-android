@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid.views.mainActivity;
+package io.bingbin.bingbinandroid.views.mainActivity.recognitionViews;
 
 
 import android.content.Intent;
@@ -17,14 +17,13 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.SwipeDirection;
-import io.bingbin.bingbinandroid.utils.BingBinMainViewPager;
-import io.bingbin.bingbinandroid.utils.ViewPagerAdapter;
+import io.bingbin.bingbinandroid.utils.CustomSwipeDirectionViewPager;
+import io.bingbin.bingbinandroid.utils.RecognitionViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.avatarActivity.AvatarActivity;
 import io.bingbin.bingbinandroid.views.classifyActivity.CameraActivity;
 import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import io.bingbin.bingbinandroid.views.infoActivity.InfoActivity;
-import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.EcoPointFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.GetEcoPointFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -43,8 +42,8 @@ public class RecognitionFragment extends Fragment {
     MainActivity activity;
 
     @BindView(R.id.recognition_viewpager)
-    public BingBinMainViewPager viewPager;
-    private ViewPagerAdapter adapter;
+    public CustomSwipeDirectionViewPager viewPager;
+    private RecognitionViewPagerAdapter adapter;
 
     private Unbinder unbinder;
 
@@ -66,7 +65,7 @@ public class RecognitionFragment extends Fragment {
 
         // init viewpager
         viewPager.addOnPageChangeListener(onPageChangeListner);
-        adapter = new ViewPagerAdapter(getChildFragmentManager());
+        adapter = new RecognitionViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
 

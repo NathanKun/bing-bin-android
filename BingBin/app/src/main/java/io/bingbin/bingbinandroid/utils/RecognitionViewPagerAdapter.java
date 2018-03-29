@@ -15,10 +15,10 @@ import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.WelcomeFrag
 /**
  * Adapter for ViewPager
  */
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+public class RecognitionViewPagerAdapter extends FragmentStatePagerAdapter {
     private final SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    public ViewPagerAdapter(FragmentManager fragmentManager) {
+    public RecognitionViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 

@@ -60,6 +60,7 @@ public class EcoPointFragment extends Fragment {
     final private String[] KEYS = new String[]{"date", "category", "point"};
     final private int[] IDS = new int[]{R.id.historylist_date, R.id.historylist_category, R.id.historylist_point};
 
+
     @BindView(R.id.ecopoint_avatar_imageview)
     ImageView ecopointAvatarImageview;
     @BindView(R.id.ecopoint_username_textview)
@@ -132,13 +133,21 @@ public class EcoPointFragment extends Fragment {
     @BindView(R.id.ecopoint_gridlayout)
     GridLayout ecopointGridlayout;
 
+    @SuppressWarnings("ConstantConditions")
+    private AppCompatImageView[] imageviews;
+
+    private final int[] bigImgIds = {R.drawable.catg_1_plastic, R.drawable.catg_2_metal, R.drawable.catg_3_cardboard,
+            R.drawable.catg_4_paper, R.drawable.catg_5_glass, R.drawable.catg_6_food,
+            R.drawable.catg_7_lightbulb, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
+            R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_12_medicine};
+
     private MainActivity activity;
+    private RecognitionFragment mainFragment;
     private Unbinder unbinder;
     private SimpleAdapter countDataListAdapter;
     private final ArrayList<Map<String, Object>> recycleHistoryDataToShow = new ArrayList<>();
     private boolean isShowingGrid;
     private int[] recycleCountDataToShow;
-    private AppCompatImageView[] imageviews;
     private Bitmap avatarBitmap;
 
     public EcoPointFragment() {
@@ -160,7 +169,6 @@ public class EcoPointFragment extends Fragment {
         super.onCreate(savedInstanceState);
         activity = (MainActivity) getActivity();
         assert activity != null;
-
     }
 
     @Override
@@ -169,6 +177,8 @@ public class EcoPointFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ecopoint, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        mainFragment = (RecognitionFragment) getParentFragment();
         return view;
     }
 
@@ -206,17 +216,6 @@ public class EcoPointFragment extends Fragment {
         ecopointCountSwiperefresh.setOnRefreshListener(() -> getRecycleByCategoryData(user.getToken()));
 
         // adjust grid icon size
-        imageviews = new AppCompatImageView[]{ecopointIconImg1, ecopointIconImg2, ecopointIconImg3,
-                ecopointIconImg4, ecopointIconImg5, ecopointIconImg6,
-                ecopointIconImg7, ecopointIconImg8, ecopointIconImg9,
-                ecopointIconImg10, ecopointIconImg11, ecopointIconImg12
-        };
-
-        int[] bigImgIds = {R.drawable.catg_1_plastic, R.drawable.catg_2_metal, R.drawable.catg_3_cardboard,
-                R.drawable.catg_4_paper, R.drawable.catg_5_glass, R.drawable.catg_6_food,
-                R.drawable.catg_7_lightbulb, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
-                R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_12_medicine};
-
         ecopointCountSwiperefresh.post(() -> {
             int maxHeight = ecopointCountSwiperefresh.getHeight();
             int numberHeight = ecopointCountText1.getHeight();
@@ -237,6 +236,12 @@ public class EcoPointFragment extends Fragment {
             target = target > width ? width : target;
 
             Log.d("Ecopoint grid newHeight", String.valueOf(target));
+
+            imageviews = new AppCompatImageView[]{ecopointIconImg1, ecopointIconImg2, ecopointIconImg3,
+                    ecopointIconImg4, ecopointIconImg5, ecopointIconImg6,
+                    ecopointIconImg7, ecopointIconImg8, ecopointIconImg9,
+                    ecopointIconImg10, ecopointIconImg11, ecopointIconImg12
+            };
 
             for (int i = 0; i < imageviews.length; i++) {
                 AppCompatImageView iv = imageviews[i];
@@ -259,7 +264,7 @@ public class EcoPointFragment extends Fragment {
         ecopointHistorySwiperefresh.setOnRefreshListener(() -> getRecycleHistoryData(user.getToken()));
 
         // add adapter to listview, link recycleHistoryDataToShow to adapter
-        countDataListAdapter = new SimpleAdapter(this.activity, recycleHistoryDataToShow, R.layout.listview_historylist,
+        countDataListAdapter = new SimpleAdapter(mainFragment.getContext(), recycleHistoryDataToShow, R.layout.listview_historylist,
                 KEYS, IDS);
         ecopointHistorylistView.setAdapter(countDataListAdapter);
 
@@ -273,7 +278,7 @@ public class EcoPointFragment extends Fragment {
 
 
         // ------ listener to change avatar ------
-        ecopointAvatarImageview.setOnClickListener((view -> activity.startAvatarActivity()));
+        ecopointAvatarImageview.setOnClickListener((view -> mainFragment.startAvatarActivity()));
 
 
         // ------ get data and show ------

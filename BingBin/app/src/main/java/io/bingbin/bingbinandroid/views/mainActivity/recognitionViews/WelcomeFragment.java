@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
+import io.bingbin.bingbinandroid.views.IntroActivity.IntroActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import studios.codelight.smartloginlibrary.LoginType;
@@ -36,6 +37,7 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
  */
 public class WelcomeFragment extends Fragment {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final int GALLERY_PICTURE = 233;
 
     @BindView(R.id.welcome_image_btn)
@@ -46,7 +48,9 @@ public class WelcomeFragment extends Fragment {
     TextView homeWelcomeTextview;
     @BindView(R.id.welcome_fab)
     FloatingActionsMenu welcomeFab;
+
     private MainActivity activity;
+    private RecognitionFragment mainFragment;
     private Unbinder unbinder;
 
     public WelcomeFragment() {
@@ -68,6 +72,7 @@ public class WelcomeFragment extends Fragment {
         // getUserVisibleHint(). This value is by default true, so
         setUserVisibleHint(false);
         this.activity = (MainActivity) getActivity();
+        mainFragment = (RecognitionFragment) getParentFragment();
     }
 
     @Override
@@ -118,13 +123,21 @@ public class WelcomeFragment extends Fragment {
     @OnClick(R.id.welcome_fab_avatar)
     void changeAvatarOnClick(View view) {
         welcomeFab.toggle();
-        activity.startAvatarActivity();
+        mainFragment.startAvatarActivity();
     }
 
     @OnClick(R.id.welcome_fab_info)
     void infoOnClick(View view) {
         welcomeFab.toggle();
-        activity.startInfoActivity();
+        mainFragment.startInfoActivity();
+    }
+
+    @OnClick(R.id.welcome_fab_tutorial)
+    void tutorialOnClick(View view) {
+        welcomeFab.toggle();
+        Intent intent = new Intent(activity, IntroActivity.class);
+        startActivity(intent);
+        activity.finish();
     }
 
 
@@ -138,6 +151,6 @@ public class WelcomeFragment extends Fragment {
     // button to start camera activity
     @OnClick(R.id.welcome_camera_btn)
     void cameraBtnOnClick(View view) {
-        activity.startCameraActivity();
+        mainFragment.startCameraActivity();
     }
 }

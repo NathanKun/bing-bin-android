@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import io.bingbin.bingbinandroid.views.mainActivity.forumViews.CollectionsFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.forumViews.MyPostsFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.forumViews.PostsFragment;
 import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.EcoPointFragment;
 import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.GetEcoPointFragment;
 import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.RankFragment;
@@ -15,17 +18,17 @@ import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.WelcomeFrag
 /**
  * Adapter for ViewPager
  */
-public class RecognitionViewPagerAdapter extends FragmentStatePagerAdapter {
+public class ForumViewPagerAdapter extends FragmentStatePagerAdapter {
     private final SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    public RecognitionViewPagerAdapter(FragmentManager fragmentManager) {
+    public ForumViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
     // Returns total number of pages
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     // Returns the fragment to display for that page
@@ -33,13 +36,11 @@ public class RecognitionViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return EcoPointFragment.newInstance();
+                return MyPostsFragment.newInstance();
             case 1:
-                return WelcomeFragment.newInstance();
+                return PostsFragment.newInstance();
             case 2:
-                return RankFragment.newInstance();
-            case 3:
-                return GetEcoPointFragment.newInstance();
+                return CollectionsFragment.newInstance();
             default:
                 return null;
         }

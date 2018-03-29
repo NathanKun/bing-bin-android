@@ -1,9 +1,8 @@
 package io.bingbin.bingbinandroid.views.mainActivity.forumViews;
 
 
-
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +10,19 @@ import android.view.ViewGroup;
 import io.bingbin.bingbinandroid.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment for my posted posts for ForumFragment in MainActivity
  *
+ * @author Junyang HE
  */
 public class MyPostsFragment extends Fragment {
 
 
     public MyPostsFragment() {
         // Required empty public constructor
+    }
+
+    public static MyPostsFragment newInstance() {
+        return new MyPostsFragment();
     }
 
 

@@ -13,11 +13,11 @@ import io.bingbin.bingbinandroid.models.SwipeDirection;
  * Created by NathanKun on 2018/2/16.
  */
 
-public class BingBinMainViewPager extends ViewPager {
+public class CustomSwipeDirectionViewPager extends ViewPager {
     private float x1;
     private SwipeDirection direction;
 
-    public BingBinMainViewPager(Context context, AttributeSet attrs) {
+    public CustomSwipeDirectionViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.direction = SwipeDirection.ALL;
     }
