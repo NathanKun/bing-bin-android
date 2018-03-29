@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.bingbin.bingbinandroid.views.mainActivity.WelcomeFragment"
+    tools:context="io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.WelcomeFragment"
     android:id="@+id/getecopoint_master_layout">
 
     <android.support.v7.widget.AppCompatImageView

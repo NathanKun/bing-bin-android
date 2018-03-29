@@ -58,7 +58,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".views.classifyActivity.ClassifyActivity"
+        <activity
+            android:name=".views.classifyActivity.ClassifyActivity"
             android:process=":classify" />
         <activity
             android:name=".views.instructionActivity.InstructionActivity"
@@ -79,6 +80,7 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
+        <activity android:name=".views.IntroActivity.IntroActivity"></activity>
     </application>
 
 </manifest>

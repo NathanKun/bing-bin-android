@@ -38,6 +38,7 @@ import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.BingBinCallback;
 import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
+import io.bingbin.bingbinandroid.views.IntroActivity.IntroActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import okhttp3.Response;
 import studios.codelight.smartloginlibrary.LoginType;
@@ -99,6 +100,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     JSONObject userData = null;
     private String token = null;
+    private boolean isNewUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +182,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             if (resultCode == RESULT_OK) {
                 String resultToken = data.getStringExtra("token");
                 Log.d("register activity", resultToken);
+                isNewUser = true;
                 token = resultToken;
                 // login directly
                 smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
@@ -336,7 +339,13 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     }
 
     private void toMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent;
+        if(isNewUser) {
+            intent = new Intent(this, IntroActivity.class);
+        } else {
+            //intent = new Intent(this, IntroActivity.class);
+            intent = new Intent(this, MainActivity.class);
+        }
         startActivity(intent);
         finish();
     }

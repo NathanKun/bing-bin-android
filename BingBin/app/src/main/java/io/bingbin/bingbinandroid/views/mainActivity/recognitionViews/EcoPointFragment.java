@@ -1,10 +1,8 @@
-package io.bingbin.bingbinandroid.views.mainActivity;
+package io.bingbin.bingbinandroid.views.mainActivity.recognitionViews;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -46,6 +44,7 @@ import io.bingbin.bingbinandroid.models.Category;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import io.bingbin.bingbinandroid.utils.BingBinCallback;
 import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
+import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import studios.codelight.smartloginlibrary.UserSessionManager;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 import studios.codelight.smartloginlibrary.util.UserUtil;
@@ -339,7 +338,7 @@ public class EcoPointFragment extends Fragment {
      *
      * @param token BingBinToken of the current user
      */
-    void getMyInfoToUpdateUserAndPoints(String token) {
+    public void getMyInfoToUpdateUserAndPoints(String token) {
         BingBinCallbackAction action = new BingBinCallbackAction() {
             @Override
             public void onFailure() {

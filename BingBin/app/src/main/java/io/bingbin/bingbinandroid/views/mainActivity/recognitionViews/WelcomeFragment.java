@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid.views.mainActivity;
+package io.bingbin.bingbinandroid.views.mainActivity.recognitionViews;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
+import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
 import studios.codelight.smartloginlibrary.SmartLoginFactory;
@@ -34,6 +35,8 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
  * @author Junyang HE
  */
 public class WelcomeFragment extends Fragment {
+
+    private final int GALLERY_PICTURE = 233;
 
     @BindView(R.id.welcome_image_btn)
     Button welcomeImageBtn;
@@ -129,7 +132,7 @@ public class WelcomeFragment extends Fragment {
     @OnClick(R.id.welcome_image_btn)
     void imageBtnOnClick(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        activity.startActivityForResult(intent, activity.GALLERY_PICTURE);
+        activity.startActivityForResult(intent, GALLERY_PICTURE);
     }
 
     // button to start camera activity

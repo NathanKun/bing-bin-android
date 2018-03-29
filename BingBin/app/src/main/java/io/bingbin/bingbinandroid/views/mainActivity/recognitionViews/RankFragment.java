@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid.views.mainActivity;
+package io.bingbin.bingbinandroid.views.mainActivity.recognitionViews;
 
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -26,7 +26,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +39,7 @@ import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.AvatarHelper;
 import io.bingbin.bingbinandroid.utils.BingBinCallback;
 import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
+import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 
 
 /**
@@ -54,7 +54,7 @@ public class RankFragment extends Fragment {
     final private String BBH_DURATION_ALL = "all";
     final private String BBH_DURATION_DAY = "day";
     final private String BBH_DURATION_WEEK = "week";
-    final private String BBH_DURATION_MONTH = "month";
+    //final private String BBH_DURATION_MONTH = "month";
 
     final private String[] KEYS = new String[]{"username", "point", "rank", "avatar"};
     final private int[] IDS = new int[]{R.id.listview_username,

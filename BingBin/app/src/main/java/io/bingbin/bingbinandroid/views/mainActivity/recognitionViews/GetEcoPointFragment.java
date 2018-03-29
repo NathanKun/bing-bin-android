@@ -1,4 +1,4 @@
-package io.bingbin.bingbinandroid.views.mainActivity;
+package io.bingbin.bingbinandroid.views.mainActivity.recognitionViews;
 
 import android.Manifest;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.CommonUtil;
+import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 
 import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 

@@ -40,4 +40,6 @@
     <string name="hint_register_password_different">Les mots de passe sont différents</string>
     <string name="hint_register_password_short">Le mots de passe est trop court</string>
     <string name="hint_register_name_long">Le pseudo est trop long</string>
+    <string name="intro_passer_textbutton"><![CDATA[->Passer]]></string>
+    <string name="intro_commercer_textbutton">Commencer</string>
 </resources>

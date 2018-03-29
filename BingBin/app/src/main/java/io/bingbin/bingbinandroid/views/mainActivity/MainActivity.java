@@ -32,6 +32,8 @@ import io.bingbin.bingbinandroid.views.classifyActivity.CameraActivity;
 import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import io.bingbin.bingbinandroid.views.infoActivity.InfoActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
+import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.EcoPointFragment;
+import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.GetEcoPointFragment;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLoginFactory;
 import studios.codelight.smartloginlibrary.UserSessionManager;
@@ -46,17 +48,17 @@ import studios.codelight.smartloginlibrary.users.SmartUser;
 @SuppressWarnings("FieldCanBeLocal")
 public class MainActivity extends AppCompatActivity {
 
-    protected final int GALLERY_PICTURE = 233;
+    private final int GALLERY_PICTURE = 233;
     private final int CLASSIFY = 6;
     private final int CHANGE_AVATAR = 6666;
 
-    final Handler handler = new Handler();
+    public final Handler handler = new Handler();
 
     @Inject
-    BingBinHttp bbh;
+    public BingBinHttp bbh;
 
     @BindView(R.id.viewpager)
-    BingBinMainViewPager viewPager;
+    public BingBinMainViewPager viewPager;
     @BindView(R.id.navigation)
     BottomNavigationViewEx navigation;
     @BindView(R.id.main_progress_bar)
@@ -77,14 +79,11 @@ public class MainActivity extends AppCompatActivity {
         currentUser = UserSessionManager.getCurrentUser(this);
         Log.d("Main activity user", currentUser.toString());
 
-        // init Fresco
-        /*if (!Fresco.hasBeenInitialized())
-            Fresco.initialize(this);*/
-
         // init viewpager
         viewPager.addOnPageChangeListener(onPageChangeListner);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(1);
 
         // init bottom navigation
         navigation.enableShiftingMode(false);
@@ -140,14 +139,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        adapter.getRegisteredFragment(3).onRequestPermissionsResult(
-                requestCode, permissions, grantResults);
-        Log.d("Permission", "main");
-    }*/
-
     // ============
     // Listeners
     // ============
@@ -157,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
+            /*switch (item.getItemId()) {
                 case R.id.navigation_ecopoint:
                     viewPager.setCurrentItem(0);
                     return true;
@@ -167,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_rank:
                     viewPager.setCurrentItem(2);
                     return true;
-            }
+            }*/
             return false;
         }
     };
@@ -182,14 +173,14 @@ public class MainActivity extends AppCompatActivity {
         // 滚动结束后触发
         @Override
         public void onPageSelected(int position) {
-            if (menuItem != null) {
+            /*if (menuItem != null) {
                 menuItem.setChecked(false);
-            }
+            }*/
             if (position >= 3) { // when forth/fifth page, disable swiping left and right
                 viewPager.setAllowedSwipeDirection(SwipeDirection.NONE);
             } else {
-                menuItem = navigation.getMenu().getItem(position); // for navigation, max index is 2
-                menuItem.setChecked(true);
+                /*menuItem = navigation.getMenu().getItem(position); // for navigation, max index is 2
+                menuItem.setChecked(true);*/
                 if (position == 2) { // when on third page, block swiping right
                     viewPager.setAllowedSwipeDirection(SwipeDirection.LEFT);
                 } else { // else allow all direction swiping
@@ -235,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, InfoActivity.class));
     }
 
-    void showLoader(boolean show) {
+    public void showLoader(boolean show) {
         if (show) {
             mainProgressBar.setVisibility(View.VISIBLE);
             enableInput(false);
@@ -245,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void enableInput(boolean enable) {
+    public void enableInput(boolean enable) {
         if (enable) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } else {
@@ -254,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void backToLoginActivity() {
+    public void backToLoginActivity() {
         runOnUiThread(() -> {
             Toast.makeText(this.getApplicationContext(),
                     "Session expiré", Toast.LENGTH_SHORT).show();
@@ -269,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void removeCurrentUserFromSession() {
+    public void removeCurrentUserFromSession() {
         if (currentUser != null) {
             SmartLoginFactory.build(LoginType.CustomLogin).logout(this);
         }

@@ -4,7 +4,7 @@
     android:id="@+id/ecopoint_masterlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.bingbin.bingbinandroid.views.mainActivity.WelcomeFragment">
+    tools:context="io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.WelcomeFragment">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/ecopoint_upperlayout"
