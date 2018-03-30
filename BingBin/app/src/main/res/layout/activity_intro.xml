@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.IntroActivity.IntroActivity">
+    tools:context=".views.introActivity.IntroActivity">
 
     <TextView
         android:id="@+id/intro_passer_textview"

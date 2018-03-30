@@ -2,6 +2,7 @@ package io.bingbin.bingbinandroid.views.mainActivity.forumViews;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -38,18 +39,29 @@ public class ForumFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_forum, container, false);
         unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle b) {
+        super.onActivityCreated(b);
+/*
         activity = (MainActivity) getActivity();
 
         // init viewpager
         adapter = new ForumViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1);
-        return view;
+        viewPager.setCurrentItem(1);*/
     }
 
 }

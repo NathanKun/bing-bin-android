@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.bingbin.bingbinandroid.R;
-import io.bingbin.bingbinandroid.views.IntroActivity.IntroActivity;
+import io.bingbin.bingbinandroid.views.introActivity.IntroActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import studios.codelight.smartloginlibrary.LoginType;

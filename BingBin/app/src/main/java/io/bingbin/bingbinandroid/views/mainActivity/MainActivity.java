@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.squareup.leakcanary.RefWatcher;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;

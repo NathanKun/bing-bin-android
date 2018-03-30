@@ -39,8 +39,6 @@ public class EventFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event, container, false);
         unbinder = ButterKnife.bind(this, view);
-
-        activity = (MainActivity) getActivity();
         return view;
     }
 
@@ -48,6 +46,14 @@ public class EventFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle b) {
+        super.onActivityCreated(b);
+/*
+        activity = (MainActivity) getActivity();*/
     }
 
 }

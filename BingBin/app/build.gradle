@@ -110,6 +110,10 @@ dependencies {
 
     // smart login
     implementation project(':smartloginlibrary')
+
+    // memory leak detection
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
 
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'

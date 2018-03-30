@@ -1,11 +1,11 @@
-package io.bingbin.bingbinandroid.views.IntroActivity;
+package io.bingbin.bingbinandroid.views.introActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,10 +13,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.glide.slider.library.SliderLayout;
 import com.glide.slider.library.SliderTypes.DefaultSliderView;
 import com.glide.slider.library.Tricks.ViewPagerEx;
+import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 

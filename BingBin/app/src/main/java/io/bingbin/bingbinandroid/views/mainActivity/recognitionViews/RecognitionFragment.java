@@ -60,6 +60,13 @@ public class RecognitionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recognition, container, false);
         unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle b) {
+        super.onActivityCreated(b);
 
         activity = (MainActivity) getActivity();
 
@@ -68,8 +75,7 @@ public class RecognitionFragment extends Fragment {
         adapter = new RecognitionViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
-
-        return view;
+        viewPager.setOffscreenPageLimit(2);
     }
 
     @Override

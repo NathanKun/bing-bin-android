@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.catprogrammer.android.utils.AnimationUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -38,7 +39,7 @@ import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.BingBinCallback;
 import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
-import io.bingbin.bingbinandroid.views.IntroActivity.IntroActivity;
+import io.bingbin.bingbinandroid.views.introActivity.IntroActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import okhttp3.Response;
 import studios.codelight.smartloginlibrary.LoginType;
@@ -438,5 +439,4 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
-
 }

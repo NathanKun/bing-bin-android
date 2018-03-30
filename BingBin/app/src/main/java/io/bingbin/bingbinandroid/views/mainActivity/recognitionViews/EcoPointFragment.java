@@ -130,8 +130,6 @@ public class EcoPointFragment extends Fragment {
     SwipeRefreshLayout ecopointHistorySwiperefresh;
     @BindView(R.id.ecopoint_count_swiperefresh)
     SwipeRefreshLayout ecopointCountSwiperefresh;
-    @BindView(R.id.ecopoint_gridlayout)
-    GridLayout ecopointGridlayout;
 
     @SuppressWarnings("ConstantConditions")
     private AppCompatImageView[] imageviews;
