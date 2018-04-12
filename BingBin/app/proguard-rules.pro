@@ -30,3 +30,10 @@
 # target API 低于 Android API 27，请添加：
 #```pro
 -dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
+
+# AgentWeb
+-keep class com.just.agentweb.** {
+    *;
+}
+-dontwarn com.just.agentweb.**
+-keepclassmembers class com.just.agentweb.sample.common.AndroidInterface{ *; }

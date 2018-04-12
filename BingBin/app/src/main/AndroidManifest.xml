@@ -80,7 +80,9 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <activity android:name=".views.introActivity.IntroActivity"></activity>
+        <activity android:name=".views.introActivity.IntroActivity" />
+        <activity android:name=".views.webActivity.WebActivity"
+            android:process=":webview" />
     </application>
 
 </manifest>
