@@ -7,14 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import io.bingbin.bingbinandroid.views.mainActivity.forumViews.CollectionsFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.forumViews.MyPostsFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.forumViews.PostsFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.EcoPointFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.GetEcoPointFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.RankFragment;
-import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.WelcomeFragment;
-
 /**
  * Adapter for ViewPager
  */

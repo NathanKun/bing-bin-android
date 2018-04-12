@@ -22,11 +22,7 @@ import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
  */
 public class ForumFragment extends Fragment {
 
-    MainActivity activity;
-
     @BindView(R.id.forum_viewpager)
-    public ViewPager viewPager;
-    private ForumViewPagerAdapter adapter;
 
     private Unbinder unbinder;
 
@@ -55,13 +51,6 @@ public class ForumFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle b) {
         super.onActivityCreated(b);
-/*
-        activity = (MainActivity) getActivity();
-
-        // init viewpager
-        adapter = new ForumViewPagerAdapter(getChildFragmentManager());
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1);*/
     }
 
 }
