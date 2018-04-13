@@ -1,6 +1,7 @@
 package io.bingbin.bingbinandroid.views.loginActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -344,7 +346,6 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         if(isNewUser) {
             intent = new Intent(this, IntroActivity.class);
         } else {
-            //intent = new Intent(this, IntroActivity.class);
             intent = new Intent(this, MainActivity.class);
         }
         startActivity(intent);
@@ -362,6 +363,16 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 break;
 
             case R.id.custom_signin_button:
+                // hide keyboard
+                View currentFocus = LoginActivity.this.getCurrentFocus();
+                if (currentFocus != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                    }
+                }
+                emailEditText.clearFocus();
+                passwordEditText.clearFocus();
                 String email = emailEditText.getText().toString();
                 String pwd = passwordEditText.getText().toString();
                 if (StringUtils.isAnyBlank(email, pwd)) {

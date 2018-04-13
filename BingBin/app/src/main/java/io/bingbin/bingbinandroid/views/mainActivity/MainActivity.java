@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,20 +13,17 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.squareup.leakcanary.RefWatcher;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
-import io.bingbin.bingbinandroid.models.SwipeDirection;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
-import io.bingbin.bingbinandroid.utils.CustomSwipeDirectionViewPager;
-import io.bingbin.bingbinandroid.utils.MainViewPagerAdapter;
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
+import io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.RecognitionFragment;
+import io.bingbin.bingbinandroid.views.webActivity.WebActivity;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLoginFactory;
 import studios.codelight.smartloginlibrary.UserSessionManager;
@@ -45,21 +43,18 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     public BingBinHttp bbh;
 
-    @BindView(R.id.navigation)
+    @BindView(R.id.main_navigation)
     BottomNavigationViewEx navigation;
     @BindView(R.id.main_progress_bar)
     ProgressBar mainProgressBar;
-    @BindView(R.id.main_viewpager)
-    CustomSwipeDirectionViewPager viewPager;
 
     private SmartUser currentUser;
     private boolean doubleBackToExitPressedOnce;
 
-    private MainViewPagerAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         ((BingBinApp) getApplication()).getNetComponent().inject(this);
         ButterKnife.bind(this);
@@ -72,13 +67,13 @@ public class MainActivity extends AppCompatActivity {
         navigation.enableItemShiftingMode(false);
         navigation.setTextVisibility(false);
         navigation.setSelectedItemId(R.id.navigation_recognition);
-
-        // init viewpager
-        viewPager.setAllowedSwipeDirection(SwipeDirection.NONE);
-        adapter = new MainViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1, false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        // load fragment
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_framelayout, RecognitionFragment.newInstance());
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     // back twice to exit
@@ -110,13 +105,14 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.navigation_event:
-                viewPager.setCurrentItem(0, false);
+                startActivity(makeWebActivityIntent("event"));
+                navigation.setSelectedItemId(R.id.navigation_recognition);
                 return true;
             case R.id.navigation_recognition:
-                viewPager.setCurrentItem(1, false);
                 return true;
             case R.id.navigation_forum:
-                viewPager.setCurrentItem(2, false);
+                startActivity(makeWebActivityIntent("forum"));
+                navigation.setSelectedItemId(R.id.navigation_recognition);
                 return true;
         }
         return false;
@@ -134,6 +130,13 @@ public class MainActivity extends AppCompatActivity {
     // ============
     // Methods
     // ============
+
+    private Intent makeWebActivityIntent(String toPage) {
+        Intent intent = new Intent(this, WebActivity.class);
+        intent.putExtra("token", currentUser.getToken());
+        intent.putExtra("toPage", toPage);
+        return intent;
+    }
 
     public void showLoader(boolean show) {
         if (show) {

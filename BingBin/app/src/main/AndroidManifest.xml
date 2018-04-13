@@ -65,8 +65,10 @@
             android:name=".views.instructionActivity.InstructionActivity"
             android:label="@string/title_activity_instruction"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".views.infoActivity.InfoActivity" />
-        <activity android:name=".views.avatarActivity.AvatarActivity" />
+        <activity android:name=".views.infoActivity.InfoActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".views.avatarActivity.AvatarActivity"
+            android:launchMode="singleTop"/>
         <activity android:name=".views.classifyActivity.CameraActivity" />
         <activity android:name=".views.classifyActivity.PreviewActivity" />
 
@@ -80,8 +82,11 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <activity android:name=".views.introActivity.IntroActivity" />
+        <activity android:name=".views.introActivity.IntroActivity"
+            android:launchMode="singleTop"/>
+
         <activity android:name=".views.webActivity.WebActivity"
+            android:launchMode="singleInstance"
             android:process=":webview" />
     </application>
 

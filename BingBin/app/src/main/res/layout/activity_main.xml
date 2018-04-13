@@ -7,19 +7,18 @@
     android:id="@+id/main_activity_masterlayout"
     tools:context="io.bingbin.bingbinandroid.views.mainActivity.MainActivity">
 
-    <io.bingbin.bingbinandroid.utils.CustomSwipeDirectionViewPager
-        android:id="@+id/main_viewpager"
+    <FrameLayout
+        android:id="@+id/main_framelayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="0dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintBottom_toTopOf="@+id/main_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <io.bingbin.bingbinandroid.views.BottomNavigationViewEx
-        android:id="@+id/navigation"
+        android:id="@+id/main_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
