@@ -1,9 +1,11 @@
 package io.bingbin.bingbinandroid.views.mainActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Process;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SmartUser currentUser;
     private boolean doubleBackToExitPressedOnce;
+    private RecognitionFragment recognitionFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
         // load fragment
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_framelayout, RecognitionFragment.newInstance());
+        recognitionFragment = RecognitionFragment.newInstance();
+        transaction.replace(R.id.main_framelayout, recognitionFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -81,13 +87,27 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
-            return;
+
+            Intent intent = new Intent("finish_web_activity");
+            sendBroadcast(intent);
+
+            // kill WebActivity
+            /*ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            if(am != null) {
+                List<ActivityManager.RunningAppProcessInfo> processes = am.getRunningAppProcesses();
+                for (ActivityManager.RunningAppProcessInfo info : processes) {
+                    if(info.processName.equals("io.bingbin.bingbinandroid:webview")) {
+                        Process.killProcess(info.pid);
+                    }
+                }
+            }*/
+            finish();
+        } else {
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this.getApplicationContext(), "Press BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            handler.postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
         }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this.getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        handler.postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -105,14 +125,17 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.navigation_event:
+                navigation.getMenu().getItem(1).setChecked(true);
+                navigation.getMenu().getItem(0).setChecked(false);
                 startActivity(makeWebActivityIntent("event"));
-                navigation.setSelectedItemId(R.id.navigation_recognition);
                 return true;
             case R.id.navigation_recognition:
+                recognitionFragment.toWelcomeFragment();
                 return true;
             case R.id.navigation_forum:
+                navigation.getMenu().getItem(1).setChecked(true);
+                navigation.getMenu().getItem(2).setChecked(false);
                 startActivity(makeWebActivityIntent("forum"));
-                navigation.setSelectedItemId(R.id.navigation_recognition);
                 return true;
         }
         return false;
@@ -133,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Intent makeWebActivityIntent(String toPage) {
         Intent intent = new Intent(this, WebActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.putExtra("token", currentUser.getToken());
         intent.putExtra("toPage", toPage);
         return intent;

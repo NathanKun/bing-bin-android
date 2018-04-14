@@ -164,4 +164,8 @@ public class RecognitionFragment extends Fragment {
     public void startInfoActivity() {
         startActivity(new Intent(activity, InfoActivity.class));
     }
+
+    public void toWelcomeFragment() {
+        viewPager.setCurrentItem(1);
+    }
 }

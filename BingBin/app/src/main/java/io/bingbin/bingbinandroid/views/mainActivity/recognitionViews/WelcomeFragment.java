@@ -145,7 +145,7 @@ public class WelcomeFragment extends Fragment {
     @OnClick(R.id.welcome_image_btn)
     void imageBtnOnClick(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        activity.startActivityForResult(intent, GALLERY_PICTURE);
+        mainFragment.startActivityForResult(intent, GALLERY_PICTURE);
     }
 
     // button to start camera activity

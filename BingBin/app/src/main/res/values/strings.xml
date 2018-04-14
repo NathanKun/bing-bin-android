@@ -42,7 +42,4 @@
     <string name="hint_register_name_long">Le pseudo est trop long</string>
     <string name="intro_passer_textbutton"><![CDATA[->Passer]]></string>
     <string name="intro_commercer_textbutton">Commencer</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
