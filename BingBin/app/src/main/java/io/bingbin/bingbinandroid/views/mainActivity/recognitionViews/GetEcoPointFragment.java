@@ -147,19 +147,19 @@ public class GetEcoPointFragment extends Fragment {
     }
 
     public  boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 22) {
+        if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v("Permission","Permission is granted");
+                Log.d("Permission","WRITE_EXTERNAL_STORAGE Permission is granted");
                 return true;
             } else {
-                Log.v("Permission","Permission is revoked");
+                Log.d("Permission","WRITE_EXTERNAL_STORAGE Permission is revoked");
                 this.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
-            Log.v("Permission","Permission is granted");
+            Log.v("Permission","WRITE_EXTERNAL_STORAGE Permission is granted");
             return true;
         }
     }
