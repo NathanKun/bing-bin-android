@@ -26,6 +26,7 @@ import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesWith
 class WebActivity : AppCompatActivity() {
     private val _event = "event"
     private val _forum = "forum"
+    private val _baseUrl = "https://forum.bingbin.io"
 
     private lateinit var mAgentWeb: AgentWeb
     private lateinit var currentPage: String
@@ -103,7 +104,7 @@ class WebActivity : AppCompatActivity() {
                 .useDefaultIndicator()
                 .createAgentWeb()
                 .ready()
-                .go("https://forum.bingbin.io?bbt=$token&toPage=$toPage")
+                .go("$_baseUrl?bbt=$token&toPage=$toPage")
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -123,16 +124,13 @@ class WebActivity : AppCompatActivity() {
         SmartLocation.with(this).location(LocationGooglePlayServicesWithFallbackProvider(this))
                 .oneFix()
                 .start({
-                    Log.d("geocoding", it.toString())
+                    Log.d("geocoding", "location object get: $it")
                     SmartLocation.with(this).geocoding()
                             .reverse(it, { _: Location, results: MutableList<Address> ->
-                                Log.d("geocoding", results.toString())
-                                Log.d("geocoding", "size=${results.size}")
-
+                                Log.d("geocoding", "address list size=${results.size}")
 
                                 if (results.size > 0) {
                                     for (adr in results) {
-                                        Log.d("geocoding", "adr=$adr")
                                         if (adr.locality != null && adr.locality.isNotEmpty()) {
                                             currentCity = adr.locality
                                         }
@@ -141,9 +139,10 @@ class WebActivity : AppCompatActivity() {
                                     currentCity = ""
                                 }
 
-                                Log.d("geocoding", "currentCity=$currentCity")
-                                mAgentWeb.jsAccessEntrace.callJs("console.log('call from android')")
-                                mAgentWeb.jsAccessEntrace.callJs("window['outsideSetLocation']($currentCity)")
+                                Log.d("geocoding", "currentCity: $currentCity")
+                                mAgentWeb.jsAccessEntrace.callJs("window['outsideSetLocation']($currentCity)", {
+                                    Log.d("geocoding", "result: $it")
+                                })
                             }
                             )
                 })
@@ -152,7 +151,7 @@ class WebActivity : AppCompatActivity() {
     private fun loadPage(page: String) {
         if (currentPage != page) {
             currentPage = page
-            val url = "https://forum.bingbin.io?bbt=$token&toPage=$page"
+            val url = "$_baseUrl?bbt=$token&toPage=$page"
             mAgentWeb.urlLoader.loadUrl(url)
         }
     }
