@@ -34,13 +34,13 @@ class WebActivity : AppCompatActivity() {
 
     private val _event = "event"
     private val _forum = "forum"
-    private val _file_perm = 2
+    private val _fileRequestCode = 1
+    private val _filePermissionRequestCode = 2
+    private val _uploadFileType = "image/*"
+    private val _baseUrl = "https://forum.bingbin.io"
 
-    private val ASWV_F_TYPE = "image/*"
-
-    private var asw_cam_message: String? = null
-    private var asw_file_path: ValueCallback<Array<Uri>>? = null
-    private val asw_file_req = 1
+    private var cameraMessage: String? = null
+    private var filePath: ValueCallback<Array<Uri>>? = null
 
     private lateinit var mAgentWeb: AgentWeb
     private lateinit var currentPage: String
@@ -120,19 +120,19 @@ class WebActivity : AppCompatActivity() {
                     //Handling input[type="file"] requests for android API 21+
                     override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams): Boolean {
                         checkFilePermissionGranted()
-                        if (asw_file_path != null) {
-                            asw_file_path!!.onReceiveValue(null)
+                        if (filePath != null) {
+                            filePath!!.onReceiveValue(null)
                         }
-                        asw_file_path = filePathCallback
+                        filePath = filePathCallback
                         val contentSelectionIntent = Intent(Intent.ACTION_GET_CONTENT)
                         contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE)
-                        contentSelectionIntent.type = ASWV_F_TYPE
+                        contentSelectionIntent.type = _uploadFileType
                         val intentArray: Array<Intent?> = arrayOfNulls(0)
                         val chooserIntent = Intent(Intent.ACTION_CHOOSER)
                         chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent)
                         chooserIntent.putExtra(Intent.EXTRA_TITLE, "File Chooser")
                         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray)
-                        startActivityForResult(chooserIntent, asw_file_req)
+                        startActivityForResult(chooserIntent, _fileRequestCode)
 
                         return true
                     }
@@ -144,7 +144,7 @@ class WebActivity : AppCompatActivity() {
                 }))
                 .createAgentWeb()
                 .ready()
-                .go("https://forum.bingbin.io?bbt=$token&toPage=$toPage")
+                .go("$_baseUrl?bbt=$token&toPage=$toPage")
 
 
         mAgentWeb.jsInterfaceHolder.addJavaObject("android", AndroidInterface(this))
@@ -188,7 +188,7 @@ class WebActivity : AppCompatActivity() {
     private fun loadPage(page: String) {
         if (currentPage != page) {
             currentPage = page
-            val url = "https://forum.bingbin.io?bbt=$token&toPage=$page"
+            val url = "$_baseUrl?bbt=$token&toPage=$page"
             mAgentWeb.urlLoader.loadUrl(url)
         }
     }
@@ -249,7 +249,7 @@ class WebActivity : AppCompatActivity() {
 
         //Checking for storage permission to write images for upload
         if (!checkPermission(2) && !checkPermission(3)) {
-            ActivityCompat.requestPermissions(this@WebActivity, perms, _file_perm)
+            ActivityCompat.requestPermissions(this@WebActivity, perms, _filePermissionRequestCode)
         }
     }
 
@@ -280,13 +280,13 @@ class WebActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this@WebActivity, R.color.primary_color)
         var results: Array<Uri>? = null
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == asw_file_req) {
-                if (null == asw_file_path) {
+            if (requestCode == _fileRequestCode) {
+                if (null == filePath) {
                     return
                 }
                 if (intent == null) {
-                    if (asw_cam_message != null) {
-                        results = arrayOf(Uri.parse(asw_cam_message))
+                    if (cameraMessage != null) {
+                        results = arrayOf(Uri.parse(cameraMessage))
                     }
                 } else {
                     val dataString = intent.dataString
@@ -296,8 +296,8 @@ class WebActivity : AppCompatActivity() {
                 }
             }
         }
-        asw_file_path!!.onReceiveValue(results)
-        asw_file_path = null
+        filePath!!.onReceiveValue(results)
+        filePath = null
     }
 
 
