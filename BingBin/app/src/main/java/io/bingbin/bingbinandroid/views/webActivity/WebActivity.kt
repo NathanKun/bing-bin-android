@@ -1,6 +1,7 @@
 package io.bingbin.bingbinandroid.views.webActivity
 
 import android.Manifest
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,12 +9,16 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Location
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.WindowManager
+import android.webkit.*
 import android.widget.LinearLayout
 import com.just.agentweb.AgentWeb
 import io.bingbin.bingbinandroid.R
@@ -24,8 +29,18 @@ import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesWith
 
 
 class WebActivity : AppCompatActivity() {
+
+    private val TAG = MainActivity::class.java.simpleName
+
     private val _event = "event"
     private val _forum = "forum"
+    private val _file_perm = 2
+
+    private val ASWV_F_TYPE = "image/*"
+
+    private var asw_cam_message: String? = null
+    private var asw_file_path: ValueCallback<Array<Uri>>? = null
+    private val asw_file_req = 1
 
     private lateinit var mAgentWeb: AgentWeb
     private lateinit var currentPage: String
@@ -98,12 +113,42 @@ class WebActivity : AppCompatActivity() {
 
         // init web view
         val webViewLayout: LinearLayout = findViewById(R.id.web_webview_layout)
-        mAgentWeb = AgentWeb.with(this)
+        mAgentWeb = AgentWeb.with(this@WebActivity)
                 .setAgentWebParent(webViewLayout, LinearLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
+                .setWebChromeClient((object : WebChromeClient() {
+                    //Handling input[type="file"] requests for android API 21+
+                    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams): Boolean {
+                        checkFilePermissionGranted()
+                        if (asw_file_path != null) {
+                            asw_file_path!!.onReceiveValue(null)
+                        }
+                        asw_file_path = filePathCallback
+                        val contentSelectionIntent = Intent(Intent.ACTION_GET_CONTENT)
+                        contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE)
+                        contentSelectionIntent.type = ASWV_F_TYPE
+                        val intentArray: Array<Intent?> = arrayOfNulls(0)
+                        val chooserIntent = Intent(Intent.ACTION_CHOOSER)
+                        chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent)
+                        chooserIntent.putExtra(Intent.EXTRA_TITLE, "File Chooser")
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray)
+                        startActivityForResult(chooserIntent, asw_file_req)
+
+                        return true
+                    }
+
+                    override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
+                        android.util.Log.d("WebViewConsole", consoleMessage.message())
+                        return true
+                    }
+                }))
                 .createAgentWeb()
                 .ready()
                 .go("https://forum.bingbin.io?bbt=$token&toPage=$toPage")
+
+
+        mAgentWeb.jsInterfaceHolder.addJavaObject("android", AndroidInterface(this))
+        //Handler().postDelayed({ this.getLocation() }, 10000L)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -115,24 +160,16 @@ class WebActivity : AppCompatActivity() {
         loadPage(intent.getStringExtra("toPage"))
     }
 
-
-    private fun getLocation() {
+    fun getLocation() {
         lastLocation = SmartLocation.with(this).location().lastLocation
-        Log.d("geocoding", "last location $lastLocation")
 
         SmartLocation.with(this).location(LocationGooglePlayServicesWithFallbackProvider(this))
                 .oneFix()
                 .start({
-                    Log.d("geocoding", it.toString())
                     SmartLocation.with(this).geocoding()
                             .reverse(it, { _: Location, results: MutableList<Address> ->
-                                Log.d("geocoding", results.toString())
-                                Log.d("geocoding", "size=${results.size}")
-
-
                                 if (results.size > 0) {
                                     for (adr in results) {
-                                        Log.d("geocoding", "adr=$adr")
                                         if (adr.locality != null && adr.locality.isNotEmpty()) {
                                             currentCity = adr.locality
                                         }
@@ -142,8 +179,7 @@ class WebActivity : AppCompatActivity() {
                                 }
 
                                 Log.d("geocoding", "currentCity=$currentCity")
-                                mAgentWeb.jsAccessEntrace.callJs("console.log('call from android')")
-                                mAgentWeb.jsAccessEntrace.callJs("window['outsideSetLocation']($currentCity)")
+                                mAgentWeb.jsAccessEntrace.callJs("window['outsideSetLocation'].zone.run(() => {window['outsideSetLocation'].component.outsideSetLocation('$currentCity')})")
                             }
                             )
                 })
@@ -156,6 +192,16 @@ class WebActivity : AppCompatActivity() {
             mAgentWeb.urlLoader.loadUrl(url)
         }
     }
+
+    //Creating image file for upload
+    /*@Throws(IOException::class)
+    private fun createImage(): File {
+        @SuppressLint("SimpleDateFormat")
+        val fileName = SimpleDateFormat("yyyy_mm_ss").format(Date())
+        val newName = "file_" + fileName + "_"
+        val sdDirectory = File("${Environment.getExternalStorageDirectory()}${File.separator}BingBin")
+        return File.createTempFile(newName, ".jpg", sdDirectory)
+    }*/
 
     override fun onPause() {
         mAgentWeb.webLifeCycle.onPause()
@@ -186,27 +232,83 @@ class WebActivity : AppCompatActivity() {
 
     private fun isGPSPermissionGranted(): Boolean {
         return if (Build.VERSION.SDK_INT >= 23) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.d("Permission", "ACCESS_FINE_LOCATION Permission is granted")
+            if (checkPermission(1)) {
                 true
             } else {
-                Log.d("Permission", "ACCESS_FINE_LOCATION Permission is revoked")
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
                 false
             }
         } else { //permission is automatically granted on sdk<23 upon installation
-            Log.v("Permission", "ACCESS_FINE_LOCATION Permission is granted")
             true
         }
+    }
+
+    //Checking permission for storage and camera for writing and uploading images
+    private fun checkFilePermissionGranted() {
+        val perms = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+
+        //Checking for storage permission to write images for upload
+        if (!checkPermission(2) && !checkPermission(3)) {
+            ActivityCompat.requestPermissions(this@WebActivity, perms, _file_perm)
+        }
+    }
+
+    //Checking if particular permission is given or not
+    private fun checkPermission(permission: Int): Boolean {
+        when (permission) {
+            1 -> return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+            2 -> return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+
+            3 -> return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        }
+        return false
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         Log.v("Permission", "Permission: " + permissions[0] + " was " + grantResults[0])
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //resume tasks needing this permission
             getLocation()
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(this@WebActivity, R.color.primary_color)
+        var results: Array<Uri>? = null
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == asw_file_req) {
+                if (null == asw_file_path) {
+                    return
+                }
+                if (intent == null) {
+                    if (asw_cam_message != null) {
+                        results = arrayOf(Uri.parse(asw_cam_message))
+                    }
+                } else {
+                    val dataString = intent.dataString
+                    if (dataString != null) {
+                        results = arrayOf(Uri.parse(dataString))
+                    }
+                }
+            }
+        }
+        asw_file_path!!.onReceiveValue(results)
+        asw_file_path = null
+    }
+
+
+    private class AndroidInterface
+    (private var context: WebActivity) {
+
+        // call in js: window.android.getLocation();
+        @JavascriptInterface
+        fun getLocation() {
+            context.getLocation()
+        }
+    }
 }
+
