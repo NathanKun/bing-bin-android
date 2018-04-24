@@ -160,7 +160,7 @@ class WebActivity : AppCompatActivity() {
         loadPage(intent.getStringExtra("toPage"))
     }
 
-    fun getLocation() {
+    private fun getLocation() {
         lastLocation = SmartLocation.with(this).location().lastLocation
 
         SmartLocation.with(this).location(LocationGooglePlayServicesWithFallbackProvider(this))
@@ -185,6 +185,14 @@ class WebActivity : AppCompatActivity() {
                 })
     }
 
+    private fun clearCache() {
+        val lastPage = currentPage
+        currentPage = "blank"
+        mAgentWeb.urlLoader.loadUrl("about:blank")
+        mAgentWeb.clearWebCache()
+        loadPage(lastPage)
+    }
+
     private fun loadPage(page: String) {
         if (currentPage != page) {
             currentPage = page
@@ -192,6 +200,8 @@ class WebActivity : AppCompatActivity() {
             mAgentWeb.urlLoader.loadUrl(url)
         }
     }
+
+
 
     //Creating image file for upload
     /*@Throws(IOException::class)
@@ -308,6 +318,12 @@ class WebActivity : AppCompatActivity() {
         @JavascriptInterface
         fun getLocation() {
             context.getLocation()
+        }
+
+        // call in js: window.android.clearCache();
+        @JavascriptInterface
+        fun clearCache() {
+            context.clearCache()
         }
     }
 }
