@@ -21,6 +21,7 @@ import android.view.WindowManager
 import android.webkit.*
 import android.widget.LinearLayout
 import com.just.agentweb.AgentWeb
+import com.just.agentweb.AgentWebConfig
 import io.bingbin.bingbinandroid.R
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity
@@ -29,8 +30,6 @@ import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesWith
 
 
 class WebActivity : AppCompatActivity() {
-
-    private val TAG = MainActivity::class.java.simpleName
 
     private val _event = "event"
     private val _forum = "forum"
@@ -46,6 +45,9 @@ class WebActivity : AppCompatActivity() {
     private lateinit var currentPage: String
     private lateinit var token: String
     private lateinit var navigation: BottomNavigationViewEx
+    private var smartLocationLocation: SmartLocation.LocationControl? = null
+    private var smartLocationGeoCoding: SmartLocation.GeocodingControl? = null
+    private var locationProvider: LocationGooglePlayServicesWithFallbackProvider? = null
 
     private var currentCity: String = ""
     private var lastLocation: Location? = null
@@ -77,6 +79,7 @@ class WebActivity : AppCompatActivity() {
         }
         false
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,9 +149,14 @@ class WebActivity : AppCompatActivity() {
                 .ready()
                 .go("$_baseUrl?bbt=$token&toPage=$toPage")
 
-
         mAgentWeb.jsInterfaceHolder.addJavaObject("android", AndroidInterface(this))
-        //Handler().postDelayed({ this.getLocation() }, 10000L)
+
+        // smart location
+        locationProvider = LocationGooglePlayServicesWithFallbackProvider(this)
+        smartLocationLocation = SmartLocation.with(this)
+                .location(locationProvider)
+                .oneFix()
+        smartLocationGeoCoding = SmartLocation.with(this).geocoding()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -161,35 +169,35 @@ class WebActivity : AppCompatActivity() {
     }
 
     private fun getLocation() {
-        lastLocation = SmartLocation.with(this).location().lastLocation
+        lastLocation = smartLocationLocation!!.lastLocation
 
-        SmartLocation.with(this).location(LocationGooglePlayServicesWithFallbackProvider(this))
-                .oneFix()
-                .start({
-                    SmartLocation.with(this).geocoding()
-                            .reverse(it, { _: Location, results: MutableList<Address> ->
-                                if (results.size > 0) {
-                                    for (adr in results) {
-                                        if (adr.locality != null && adr.locality.isNotEmpty()) {
-                                            currentCity = adr.locality
-                                        }
-                                    }
-                                } else {
-                                    currentCity = ""
+        smartLocationLocation!!.start({
+            smartLocationGeoCoding!!
+                    .reverse(it, { _: Location, results: MutableList<Address> ->
+                        if (results.size > 0) {
+                            for (adr in results) {
+                                if (adr.locality != null && adr.locality.isNotEmpty()) {
+                                    currentCity = adr.locality
                                 }
-
-                                Log.d("geocoding", "currentCity=$currentCity")
-                                mAgentWeb.jsAccessEntrace.callJs("window['outsideSetLocation'].zone.run(() => {window['outsideSetLocation'].component.outsideSetLocation('$currentCity')})")
                             }
-                            )
-                })
+                        } else {
+                            currentCity = ""
+                        }
+
+                        Log.d("geocoding", "currentCity=$currentCity")
+                        mAgentWeb.jsAccessEntrace.callJs("window['outsideSetLocation'].zone.run(() => {window['outsideSetLocation'].component.outsideSetLocation('$currentCity')})")
+                    }
+                    )
+        })
     }
 
     private fun clearCache() {
         val lastPage = currentPage
         currentPage = "blank"
         mAgentWeb.urlLoader.loadUrl("about:blank")
-        mAgentWeb.clearWebCache()
+        val tmp: String = AgentWebConfig.getCookiesByUrl(_baseUrl)
+        mAgentWeb.clearWebCache() // this will clear cookies also
+        AgentWebConfig.syncCookie(_baseUrl, tmp)
         loadPage(lastPage)
     }
 
@@ -200,7 +208,6 @@ class WebActivity : AppCompatActivity() {
             mAgentWeb.urlLoader.loadUrl(url)
         }
     }
-
 
 
     //Creating image file for upload
@@ -232,6 +239,15 @@ class WebActivity : AppCompatActivity() {
     override fun onDestroy() {
         mAgentWeb.webLifeCycle.onDestroy()
         super.onDestroy()
+        smartLocationLocation!!.stop()
+        smartLocationGeoCoding!!.stop()
+        locationProvider!!.stop()
+        locationProvider = null
+        smartLocationGeoCoding = null
+        smartLocationLocation = null
+
+        // LocationGooglePlayServicesProvider.context leaks
+        android.os.Process.killProcess(android.os.Process.myPid())
     }
 
     override fun onBackPressed() {
@@ -309,6 +325,7 @@ class WebActivity : AppCompatActivity() {
         filePath!!.onReceiveValue(results)
         filePath = null
     }
+
 
 
     private class AndroidInterface

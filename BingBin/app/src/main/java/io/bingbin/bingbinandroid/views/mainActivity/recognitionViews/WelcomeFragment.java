@@ -97,7 +97,7 @@ public class WelcomeFragment extends Fragment {
     }
 
     @OnClick(R.id.welcome_fab_logout)
-    void logoutOnClick(View view) {
+    void logoutOnClick() {
         welcomeFab.toggle();
         SmartUser currentUser = activity.getCurrentUser();
         SmartLogin smartLogin;
@@ -111,6 +111,8 @@ public class WelcomeFragment extends Fragment {
             }
             boolean result = smartLogin.logout(activity);
             if (result) {
+                Intent broadcast = new Intent("finish_web_activity");
+                activity.sendBroadcast(broadcast);
                 Intent intent = new Intent(activity, LoginActivity.class);
                 startActivity(intent);
                 activity.finish();
@@ -121,19 +123,19 @@ public class WelcomeFragment extends Fragment {
     }
 
     @OnClick(R.id.welcome_fab_avatar)
-    void changeAvatarOnClick(View view) {
+    void changeAvatarOnClick() {
         welcomeFab.toggle();
         mainFragment.startAvatarActivity();
     }
 
     @OnClick(R.id.welcome_fab_info)
-    void infoOnClick(View view) {
+    void infoOnClick() {
         welcomeFab.toggle();
         mainFragment.startInfoActivity();
     }
 
     @OnClick(R.id.welcome_fab_tutorial)
-    void tutorialOnClick(View view) {
+    void tutorialOnClick() {
         welcomeFab.toggle();
         Intent intent = new Intent(activity, IntroActivity.class);
         startActivity(intent);
@@ -143,14 +145,14 @@ public class WelcomeFragment extends Fragment {
 
     // button to start gallery
     @OnClick(R.id.welcome_image_btn)
-    void imageBtnOnClick(View view) {
+    void imageBtnOnClick() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         mainFragment.startActivityForResult(intent, GALLERY_PICTURE);
     }
 
     // button to start camera activity
     @OnClick(R.id.welcome_camera_btn)
-    void cameraBtnOnClick(View view) {
+    void cameraBtnOnClick() {
         mainFragment.startCameraActivity();
     }
 }

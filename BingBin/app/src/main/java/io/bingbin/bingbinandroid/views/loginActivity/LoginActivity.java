@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.AppCompatImageView;
@@ -23,7 +24,6 @@ import android.widget.Toast;
 
 import com.catprogrammer.android.utils.AnimationUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -131,28 +131,31 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         constraintSet.applyTo(loginMasterlayout);
 
         loginMasterlayout.post(
-            () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show grass
-                    () -> AnimationUtil.revealView(loginLogo, true, // show logo
-                            () -> {
-                                currentUser = UserSessionManager.getCurrentUser(this);
-                                if (currentUser != null) {
-                                    Log.d("Smart Login", "Logged in user: " + currentUser.toString());
-                                    toMainActivity();
-                                } else {                // move up logo
-                                // start constraint layout auto animation
-                                TransitionManager.beginDelayedTransition(loginMasterlayout);
-                                // clear connection just added to move up logo
-                                constraintSet.clone(loginMasterlayout);
-                                constraintSet.clear(R.id.login_logo_layout, ConstraintSet.BOTTOM);
-                                constraintSet.applyTo(loginMasterlayout);
+                () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show grass
+                        () -> AnimationUtil.revealView(loginLogo, true, // show logo
+                                () -> {
+                                    currentUser = UserSessionManager.getCurrentUser(this);
+                                    if (currentUser != null) {
+                                        Log.d("Smart Login", "Logged in user: " + currentUser.toString());
+                                        toMainActivity();
+                                    } else {                // move up logo
+                                        // start constraint layout auto animation
+                                        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+                                        if (powerManager != null && !powerManager.isPowerSaveMode()) {
+                                            TransitionManager.beginDelayedTransition(loginMasterlayout);
+                                        }
+                                        // clear connection just added to move up logo
+                                        constraintSet.clone(loginMasterlayout);
+                                        constraintSet.clear(R.id.login_logo_layout, ConstraintSet.BOTTOM);
+                                        constraintSet.applyTo(loginMasterlayout);
 
-                                (new Handler()).postDelayed(
-                                        () -> AnimationUtil.revealView(loginCardview,
-                                                true, null),
-                                        1000);
-                                }
-                            })
-            )
+                                        (new Handler()).postDelayed(
+                                                () -> AnimationUtil.revealView(loginCardview,
+                                                        true, null),
+                                                1000);
+                                    }
+                                })
+                )
         );
 
 
@@ -196,14 +199,14 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     /**
      * Call when social login success, doing normal login or register success
-     *
+     * <p>
      * If social login success, user will be a SmartGoogleUser or a SmartFacebookUser
-     *     then, use social token to do a second bingbin login, and return a SmartUser with bingbin info
-     *
+     * then, use social token to do a second bingbin login, and return a SmartUser with bingbin info
+     * <p>
      * If normal login or normal sign up finish, user will be a new SmartUser()
-     *     then, will do a direct bingbin login, and return a SmartUser with bingbin info
+     * then, will do a direct bingbin login, and return a SmartUser with bingbin info
      *
-     * @param user  SmartGoogleUser, SmartFacebookUser or new SmartUser()
+     * @param user SmartGoogleUser, SmartFacebookUser or new SmartUser()
      */
     @Override
     public void onLoginSuccess(SmartUser user) {
@@ -298,7 +301,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 }
 
                 @Override
-                public void onValid(JSONObject json) throws JSONException{
+                public void onValid(JSONObject json) throws JSONException {
                     // get user data from json obj and populate to SmartUser
                     SmartUser u = UserUtil.populateBingBinUser(json, token);
                     // set user session
@@ -314,7 +317,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 }
 
                 @Override
-                public void onAnyError() { }
+                public void onAnyError() {
+                }
             };
 
             bbh.getMyInfo(new BingBinCallback(action), token);
@@ -343,7 +347,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     private void toMainActivity() {
         Intent intent;
-        if(isNewUser) {
+        if (isNewUser) {
             intent = new Intent(this, IntroActivity.class);
         } else {
             intent = new Intent(this, MainActivity.class);
@@ -366,7 +370,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 // hide keyboard
                 View currentFocus = LoginActivity.this.getCurrentFocus();
                 if (currentFocus != null) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (imm != null) {
                         imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
                     }

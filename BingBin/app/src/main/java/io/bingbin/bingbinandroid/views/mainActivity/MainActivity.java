@@ -91,16 +91,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent("finish_web_activity");
             sendBroadcast(intent);
 
-            // kill WebActivity
-            /*ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            if(am != null) {
-                List<ActivityManager.RunningAppProcessInfo> processes = am.getRunningAppProcesses();
-                for (ActivityManager.RunningAppProcessInfo info : processes) {
-                    if(info.processName.equals("io.bingbin.bingbinandroid:webview")) {
-                        Process.killProcess(info.pid);
-                    }
-                }
-            }*/
             finish();
         } else {
             this.doubleBackToExitPressedOnce = true;
