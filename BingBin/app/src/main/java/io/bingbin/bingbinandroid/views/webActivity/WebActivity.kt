@@ -17,6 +17,8 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.KeyEvent
+import android.view.MenuItem
 import android.view.WindowManager
 import android.webkit.*
 import android.widget.LinearLayout
@@ -54,30 +56,24 @@ class WebActivity : AppCompatActivity() {
 
     // bottom navigation listener
     private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {
-        when (it.itemId) {
+
+        return@OnNavigationItemSelectedListener when (it.itemId) {
             R.id.navigation_web_event -> run {
-                navigation.menu.getItem(0).isChecked = true
-                navigation.menu.getItem(1).isChecked = false
-                navigation.menu.getItem(2).isChecked = false
                 loadPage(_event)
                 return@run true
             }
             R.id.navigation_web_recognition -> run {
-                navigation.menu.getItem(0).isChecked = false
-                navigation.menu.getItem(1).isChecked = true
-                navigation.menu.getItem(2).isChecked = false
-                onBackPressed()
+                backToMainActivity()
                 return@run true
             }
             R.id.navigation_web_forum -> run {
-                navigation.menu.getItem(0).isChecked = false
-                navigation.menu.getItem(1).isChecked = false
-                navigation.menu.getItem(2).isChecked = true
                 loadPage(_forum)
                 return@run true
             }
+            else -> run {
+                return@run false
+            }
         }
-        false
     }
 
 
@@ -111,6 +107,7 @@ class WebActivity : AppCompatActivity() {
         navigation.enableShiftingMode(false)
         navigation.enableItemShiftingMode(false)
         navigation.setTextVisibility(false)
+        navigation.enableAnimation(false)
         navigation.selectedItemId = if (toPage == _event) R.id.navigation_web_event else R.id.navigation_web_forum
         navigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
 
@@ -185,20 +182,22 @@ class WebActivity : AppCompatActivity() {
                         }
 
                         Log.d("geocoding", "currentCity=$currentCity")
-                        mAgentWeb.jsAccessEntrace.callJs("window['outsideSetLocation'].zone.run(() => {window['outsideSetLocation'].component.outsideSetLocation('$currentCity')})")
+                        mAgentWeb.jsAccessEntrace.callJs("window['common-provider'].zone.run(() => {window['common-provider'].component.outsideSetLocation('$currentCity')})")
                     }
                     )
         })
     }
 
     private fun clearCache() {
-        val lastPage = currentPage
-        currentPage = "blank"
-        mAgentWeb.urlLoader.loadUrl("about:blank")
-        val tmp: String = AgentWebConfig.getCookiesByUrl(_baseUrl)
-        mAgentWeb.clearWebCache() // this will clear cookies also
-        AgentWebConfig.syncCookie(_baseUrl, tmp)
-        loadPage(lastPage)
+        runOnUiThread {
+            val lastPage = currentPage
+            currentPage = "blank"
+            mAgentWeb.urlLoader.loadUrl("about:blank")
+            val tmp: String = AgentWebConfig.getCookiesByUrl(_baseUrl)
+            mAgentWeb.clearWebCache() // this will clear cookies also
+            AgentWebConfig.syncCookie(_baseUrl, tmp)
+            loadPage(lastPage)
+        }
     }
 
     private fun loadPage(page: String) {
@@ -251,9 +250,26 @@ class WebActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        //backToMainActivity()
+    }
+
+    private fun backToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            when (keyCode) {
+                KeyEvent.KEYCODE_BACK -> run {
+                    mAgentWeb.jsAccessEntrace.callJs("window['common-provider'].zone.run(() => {window['common-provider'].component.outsideBackPress('$currentCity')})")
+                    return@run true
+                }
+            }
+
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     private fun isGPSPermissionGranted(): Boolean {
@@ -325,7 +341,6 @@ class WebActivity : AppCompatActivity() {
         filePath!!.onReceiveValue(results)
         filePath = null
     }
-
 
 
     private class AndroidInterface

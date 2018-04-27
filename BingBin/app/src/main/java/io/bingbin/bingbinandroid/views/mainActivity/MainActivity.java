@@ -10,6 +10,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.enableShiftingMode(false);
         navigation.enableItemShiftingMode(false);
         navigation.setTextVisibility(false);
+        navigation.enableAnimation(false);
         navigation.setSelectedItemId(R.id.navigation_recognition);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -115,16 +117,12 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.navigation_event:
-                navigation.getMenu().getItem(1).setChecked(true);
-                navigation.getMenu().getItem(0).setChecked(false);
                 startActivity(makeWebActivityIntent("event"));
                 return true;
             case R.id.navigation_recognition:
                 recognitionFragment.toWelcomeFragment();
                 return true;
             case R.id.navigation_forum:
-                navigation.getMenu().getItem(1).setChecked(true);
-                navigation.getMenu().getItem(2).setChecked(false);
                 startActivity(makeWebActivityIntent("forum"));
                 return true;
         }
