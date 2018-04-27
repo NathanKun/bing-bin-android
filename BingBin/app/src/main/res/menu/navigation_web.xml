@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/navigation_web_event"
-        android:icon="@drawable/btn_ecopoint"
+        android:icon="@drawable/btn_event"
         android:title="" />
 
     <item
@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/navigation_web_forum"
-        android:icon="@drawable/btn_rank"
+        android:icon="@drawable/btn_forum"
         android:title="" />
 
 </menu>
