@@ -126,6 +126,7 @@ public class ClassifyActivity extends AppCompatActivity {
     private Bitmap blurImg;
 
     AppCompatImageView[] iconsImageviews;
+    private String classifyResultStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +201,7 @@ public class ClassifyActivity extends AppCompatActivity {
      */
     private void initComponents(Bitmap bitmap) {
         // classify result
-        String classifyResultStr = ClassifyHelper.classify(this, bitmap);
+        classifyResultStr = ClassifyHelper.classify(this, bitmap);
 
         /*
          * YesNo
@@ -228,7 +229,6 @@ public class ClassifyActivity extends AppCompatActivity {
 
         // init btn "OUI"
         classifYesnoYesbtn.setOnClickListener((View view) -> {
-            category = Category.fromName(classifyResultStr);
             BingBinCallbackAction action = new BingBinCallbackAction() {
                 @Override
                 public void onFailure() {
@@ -275,6 +275,10 @@ public class ClassifyActivity extends AppCompatActivity {
                 }
             };
 
+            category = Category.fromName(classifyResultStr);
+            if(category.equals(Category.OTHER)) {
+                category = Category.fromFrenchName(classifyResultStr);
+            }
 
             showLoader(true);
             bbh.uploadscan(new BingBinCallback(action),
@@ -303,8 +307,8 @@ public class ClassifyActivity extends AppCompatActivity {
 
                 int[] bigImgIds = {R.drawable.catg_1_plastic, R.drawable.catg_2_metal, R.drawable.catg_3_cardboard,
                         R.drawable.catg_4_paper, R.drawable.catg_5_glass, R.drawable.catg_6_food,
-                        R.drawable.catg_7_lightbulb, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
-                        R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_12_medicine};
+                        R.drawable.catg_13_cigarette, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
+                        R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_14_human};
 
                 iconsImageviews = new AppCompatImageView[] {classifySelectImg1, classifySelectImg2, classifySelectImg3,
                         classifySelectImg4, classifySelectImg5, classifySelectImg6,
@@ -326,6 +330,7 @@ public class ClassifyActivity extends AppCompatActivity {
             classifySelectConstraintLayout.setVisibility(View.GONE);
 
             classifyYesnoResultTextview.setText(classifySelectSelectedTextview.getText());
+            setClassifyResultStr(classifySelectSelectedTextview.getText().toString());
             classifyYesnoConstraintLayout.setVisibility(View.VISIBLE);
         });
 
@@ -423,8 +428,8 @@ public class ClassifyActivity extends AppCompatActivity {
                 catgName = Category.getFrenchNameById(6);
                 break;
             case R.id.classify_select_img_7:
-                res = R.drawable.catg_7_lightbulb;
-                catgName = Category.getFrenchNameById(7);
+                res = R.drawable.catg_13_cigarette;
+                catgName = Category.getFrenchNameById(13);
                 break;
             case R.id.classify_select_img_8:
                 res = R.drawable.catg_8_cumbersome;
@@ -443,13 +448,17 @@ public class ClassifyActivity extends AppCompatActivity {
                 catgName = Category.getFrenchNameById(11);
                 break;
             case R.id.classify_select_img_12:
-                res = R.drawable.catg_12_medicine;
-                catgName = Category.getFrenchNameById(12);
+                res = R.drawable.catg_14_human;
+                catgName = Category.getFrenchNameById(14);
                 break;
         }
         Glide.with(this)
                 .load(res)
                 .into(classifySelectSelectedImageview);
         classifySelectSelectedTextview.setText(catgName);
+    }
+
+    private void setClassifyResultStr(String str) {
+        classifyResultStr = str;
     }
 }

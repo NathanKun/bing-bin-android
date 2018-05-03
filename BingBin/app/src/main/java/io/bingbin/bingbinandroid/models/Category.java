@@ -14,11 +14,13 @@ public enum Category {
     GLASS("Verre", TrashBin.GREEN, 5, "35 kg de verre sont recyclé chaque seconde"),
     FOOD("Déchet menager", TrashBin.COMPOST, 6, "Met le dans le compost et récupère des engrais plus tard"),
     LIGHTBULB("Ampoule", TrashBin.SUPERMARKET, 7, "Les supermarchés récuppèrent de s ampoules"),
-    CUMBERSOME("Encombrant", TrashBin.LEBONCOIN, 8, "Vent ton produit ou appel SMDO 0. 44 38 29 00"),
-    ELECTRONIC("Equipement électronique", TrashBin.LEBONCOIN, 9, "Vent ton produit ou appel SMDO 0. 44 38 29 00"),
+    CUMBERSOME("Encombrant", TrashBin.BBCERCLE, 8, "Donne a quelqu'un dans le cercle"),
+    ELECTRONIC("Equipement électronique", TrashBin.BBCERCLE, 9, "Donne a quelqu'un dans le cercle"),
     BATTERY("Pile", TrashBin.SUPERMARKET, 10, "5000 ans pour décomposer une pile"),
     CLOTHE("Vêtements usés", TrashBin.CLOTHE, 11, "11 kg de textiles achetés par habitant par an"),
     MEDICINE("Médicament", TrashBin.PHARMACY, 12, "Les médicaments non utilisés présentent des risques d'intoxications par ingestion accidentelle"),
+    CIGARETTE("Cigarette", TrashBin.CIGARETTE, 13, "(j’ai toujours pas la poubelle de mégot du festival) 目前还不知道香烟对应的垃圾桶长什么样"),
+    HUMAN("Humain", TrashBin.HUMAN, 14, "500 kg de déchets produit par personne par jour"),
     OTHER("Autre", TrashBin.OTHER, 99, "Il faut que Bing Bin apprenne plus pour le valoriser");
 
     private final String frenchName;

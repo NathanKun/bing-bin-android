@@ -17,6 +17,9 @@ public enum TrashBin {
     PHARMACY(R.drawable.trashbin_pharmacy, "Pharmacie"),
     LEBONCOIN(R.drawable.trashbin_leboncoin, "Leboncoin"),
     CLOTHE(R.drawable.trashbin_clothes, "Le relais"),
+    CIGARETTE(R.drawable.trashbin_cigarette, "?????????"),
+    HUMAN(R.drawable.trashbin_human, "Un humain, \njette le !"),
+    BBCERCLE(R.drawable.bingbin_icon_no_bg, "BB CERCLE"),
     OTHER(R.drawable.trashbin_black, "Autre");
 
     private final int imageResource;

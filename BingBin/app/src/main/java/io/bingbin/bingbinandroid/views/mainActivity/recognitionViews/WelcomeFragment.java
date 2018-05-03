@@ -1,6 +1,9 @@
 package io.bingbin.bingbinandroid.views.mainActivity.recognitionViews;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -28,6 +31,8 @@ import studios.codelight.smartloginlibrary.SmartLoginFactory;
 import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
 import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.users.SmartUser;
+
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 
 /**
@@ -153,6 +158,35 @@ public class WelcomeFragment extends Fragment {
     // button to start camera activity
     @OnClick(R.id.welcome_camera_btn)
     void cameraBtnOnClick() {
-        mainFragment.startCameraActivity();
+        if (isStoragePermissionGranted()) {
+            mainFragment.startCameraActivity();
+        }
+    }
+
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.d("Permission", "WRITE_EXTERNAL_STORAGE Permission is granted");
+                return true;
+            } else {
+                Log.d("Permission", "WRITE_EXTERNAL_STORAGE Permission is revoked");
+                this.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v("Permission", "WRITE_EXTERNAL_STORAGE Permission is granted");
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.v("Permission", "Permission: " + permissions[0] + " was " + grantResults[0]);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //resume tasks needing this permission
+            cameraBtnOnClick();
+        }
     }
 }

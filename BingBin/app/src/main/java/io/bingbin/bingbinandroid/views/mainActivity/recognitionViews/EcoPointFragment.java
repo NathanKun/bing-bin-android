@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -136,8 +135,8 @@ public class EcoPointFragment extends Fragment {
 
     private final int[] bigImgIds = {R.drawable.catg_1_plastic, R.drawable.catg_2_metal, R.drawable.catg_3_cardboard,
             R.drawable.catg_4_paper, R.drawable.catg_5_glass, R.drawable.catg_6_food,
-            R.drawable.catg_7_lightbulb, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
-            R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_12_medicine};
+            R.drawable.catg_13_cigarette, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
+            R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_14_human};
 
     private MainActivity activity;
     private RecognitionFragment mainFragment;
@@ -224,7 +223,7 @@ public class EcoPointFragment extends Fragment {
 
             int width = 200;
             WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
-            if (wm  != null) {
+            if (wm != null) {
                 Display display = wm.getDefaultDisplay();
                 Point size = new Point();
                 display.getSize(size);
@@ -253,7 +252,6 @@ public class EcoPointFragment extends Fragment {
                         .into(iv);
             }
         });
-
 
 
         // ------ listview ------
@@ -566,7 +564,7 @@ public class EcoPointFragment extends Fragment {
      * @throws JSONException json exception
      */
     private void transformRecycleCountArrayToData(JSONArray array) throws JSONException {
-        recycleCountDataToShow = new int[12];
+        recycleCountDataToShow = new int[14];
 
         // copy json array data to an array
         for (int i = 0; i < array.length(); i++) {
@@ -574,7 +572,7 @@ public class EcoPointFragment extends Fragment {
             int type_trash = json.getInt("type_trash");
             int quantity = json.getInt("quantity");
 
-            if (type_trash <= 12) {
+            if (type_trash <= 14) {
                 recycleCountDataToShow[type_trash - 1] = quantity;
             } // ignore 99 (other)
         }
@@ -591,7 +589,13 @@ public class EcoPointFragment extends Fragment {
         activity.runOnUiThread(() -> {
             for (int i = 0; i < 12; i++) {
                 if (textViews[i] != null) {
-                    textViews[i].setText(String.valueOf(recycleCountDataToShow[i]));
+                    if (i == 6) { // text7 is cigarette but id = 13
+                        textViews[i].setText(String.valueOf(recycleCountDataToShow[12]));
+                    } else if (i == 11) { // text12 is cigarette but id = 14
+                        textViews[i].setText(String.valueOf(recycleCountDataToShow[13]));
+                    } else {
+                        textViews[i].setText(String.valueOf(recycleCountDataToShow[i]));
+                    }
                 }
             }
             if (ecopointCountSwiperefresh != null) {

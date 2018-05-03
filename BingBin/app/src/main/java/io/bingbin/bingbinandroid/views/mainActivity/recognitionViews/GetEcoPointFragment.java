@@ -76,7 +76,7 @@ public class GetEcoPointFragment extends Fragment {
     }
 
     @OnClick(R.id.getecopoint_share_btn)
-    void shareOnClick(View view) {
+    void shareOnClick() {
         if(isStoragePermissionGranted()) {
             String shareSubject = "Trion mieux, vivons mieux - Bing Bin";
             String shareBody = "Bing Bin app reconnaît vos déchets et vous propose la poubelle appropriée. \n" +
@@ -101,7 +101,7 @@ public class GetEcoPointFragment extends Fragment {
     }
 
     @OnClick(R.id.getecopoint_myecopoint_btn)
-    void myEcoPointOnClick(View view) {
+    void myEcoPointOnClick() {
         mainFragment.viewPager.setCurrentItem(0);
     }
 
@@ -140,7 +140,7 @@ public class GetEcoPointFragment extends Fragment {
             shareImg.recycle();
         }
         else {
-            Log.e("Share","Couldn't create target directory.");
+            Log.e("saveShareImage","Couldn't create target directory.");
         }
 
         return filepath;
@@ -170,7 +170,7 @@ public class GetEcoPointFragment extends Fragment {
         Log.v("Permission","Permission: " + permissions[0] + " was " + grantResults[0]);
         if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
             //resume tasks needing this permission
-            shareOnClick(null);
+            shareOnClick();
         }
     }
 }
