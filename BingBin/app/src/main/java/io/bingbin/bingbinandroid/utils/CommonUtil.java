@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
+import android.os.Environment;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -19,7 +20,6 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,38 +137,36 @@ public abstract class CommonUtil {
      * Write bitmap associated with a url to disk cache
      */
     public static String saveBitmap(Context context, Bitmap bitmap) {
-        //Write file
-        String filename = (new SimpleDateFormat("yyyyMMdd-HHmmssSSS", Locale.FRANCE).format(new Date())) + ".JPEG";
-        FileOutputStream stream;
-        try {
-            stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            //Cleanup
-            stream.close();
-            bitmap.recycle();
-
-            return filename;
-        } catch (IOException e) {
-            e.printStackTrace();
+        final String dirpath = Environment.getExternalStorageDirectory() + File.separator + "BingBin";
+        final String filename = (new SimpleDateFormat("yyyyMMdd-HHmmssSSS", Locale.FRANCE).format(new Date())) + ".JPEG";
+        final String filepath = dirpath + File.separator + filename;
+        File dir = new File(dirpath);
+        boolean doSave = true;
+        if (!dir.exists()) {
+            doSave = dir.mkdirs();
+        }
+        if (doSave) {
+            saveBitmapToFile(dir,filename, bitmap, 100);
+            return filepath;
+        }
+        else {
+            Log.e("saveBitmap","Couldn't create target directory.");
         }
         return null;
     }
 
-    public static Bitmap loadBitmap(Context context, String filename) {
-        return loadBitmap(context, filename, 1);
+    public static Bitmap loadBitmap(Context context, String filepath) {
+        return loadBitmap(context, filepath, 1);
     }
 
-    public static Bitmap loadBitmap(Context context, String filename, int sample) {
+    public static Bitmap loadBitmap(Context context, String filepath, int sample) {
         Bitmap bmp = null;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = sample;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-
         try {
-            FileInputStream is = context.openFileInput(filename);
-            bmp = BitmapFactory.decodeStream(is, null, options);
-            is.close();
+            bmp = BitmapFactory.decodeFile(filepath, options);
         } catch (Exception e) {
             e.printStackTrace();
         }
