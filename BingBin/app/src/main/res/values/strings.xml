@@ -42,4 +42,5 @@
     <string name="hint_register_name_long">Le pseudo est trop long</string>
     <string name="intro_passer_textbutton"><![CDATA[->Passer]]></string>
     <string name="intro_commercer_textbutton">Commencer</string>
+    <string name="musical_festival_opening">musical festival opening</string>
 </resources>

@@ -3,6 +3,7 @@ package io.bingbin.bingbinandroid.views.loginActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -18,6 +19,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -95,6 +97,10 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     ConstraintLayout loginMasterlayout;
     @BindView(R.id.login_bottomimageslayout)
     ConstraintLayout loginBottomimageslayout;
+    @BindView(R.id.music_opening_img)
+    ImageView musicOpeningImg;
+    @BindView(R.id.music_opening_img2)
+    ImageView musicOpeningImg2;
 
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
@@ -138,26 +144,60 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                                     if (currentUser != null) {
                                         Log.d("Smart Login", "Logged in user: " + currentUser.toString());
                                         toMainActivity();
-                                    } else {                // move up logo
-                                        // start constraint layout auto animation
-                                        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-                                        if (powerManager != null && !powerManager.isPowerSaveMode()) {
-                                            TransitionManager.beginDelayedTransition(loginMasterlayout);
-                                        }
-                                        // clear connection just added to move up logo
-                                        constraintSet.clone(loginMasterlayout);
-                                        constraintSet.clear(R.id.login_logo_layout, ConstraintSet.BOTTOM);
-                                        constraintSet.applyTo(loginMasterlayout);
+                                    } else {
+                                        /*
+                                         * musical festival special start
+                                         */
+                                        musicOpeningImg.setImageDrawable(getDrawable(R.drawable.music_open_1));
+                                        musicOpeningImg2.setImageDrawable(getDrawable(R.drawable.music_open_2));
+                                        AnimationUtil.revealView(musicOpeningImg, true, 2000, // fade in iv1 with img 1 in 2s
+                                                () -> AnimationUtil.revealView(musicOpeningImg2, true, 3000, // fade in iv2 with img 2 in 3s to cover iv1
+                                                        () -> {
+                                                            ((BitmapDrawable) musicOpeningImg.getDrawable()).getBitmap().recycle();
+                                                            musicOpeningImg.setImageDrawable(getDrawable(R.drawable.music_open_3)); // set iv1 to img 3
+                                                            AnimationUtil.revealView(musicOpeningImg2, false, 3000, // delay 3s, fade out img 2 in 3s, so that img1 with img 3 re-show
+                                                                    () -> (new Handler()).postDelayed(() -> AnimationUtil.revealView(musicOpeningImg, false, 3000, // fade out iv1 to re-show normal UI
+                                                                            () -> {
+                                                                                ((BitmapDrawable) musicOpeningImg.getDrawable()).getBitmap().recycle();
+                                                                                ((BitmapDrawable) musicOpeningImg2.getDrawable()).getBitmap().recycle();
+                                                                                System.gc();
 
-                                        (new Handler()).postDelayed(
-                                                () -> AnimationUtil.revealView(loginCardview,
-                                                        true, null),
-                                                1000);
+                                                                                /* original start */
+
+                                                                                // move up logo
+                                                                                // start constraint layout auto animation
+                                                                                PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+                                                                                if (powerManager != null) {
+                                                                                    if (!powerManager.isPowerSaveMode()) {
+                                                                                        TransitionManager.beginDelayedTransition(loginMasterlayout);
+                                                                                    }
+                                                                                } else {
+                                                                                    TransitionManager.beginDelayedTransition(loginMasterlayout);
+                                                                                }
+
+                                                                                // clear connection just added to move up logo
+                                                                                constraintSet.clone(loginMasterlayout);
+                                                                                constraintSet.clear(R.id.login_logo_layout, ConstraintSet.BOTTOM);
+                                                                                constraintSet.applyTo(loginMasterlayout);
+
+                                                                                (new Handler()).postDelayed(
+                                                                                        () -> AnimationUtil.revealView(loginCardview,
+                                                                                                true, null),
+                                                                                        1000);
+
+                                                                                /* original end */
+
+                                                                            }), 3000));
+                                                        }));
+                                        /*
+                                         * musical festival special end
+                                         */
+
+                                        /* original code goes here */
+
                                     }
-                                })
-                )
-        );
-
+                                }
+                        )));
 
     }
 

@@ -31,6 +31,7 @@ public abstract class AnimationUtil {
     // show or hide a view
     public static void revealView(View view, boolean show, int duration, Runnable onAnimationEnd) {
         if(show) {
+            view.setVisibility(View.INVISIBLE);
             view.setAlpha(0f);
             view.setVisibility(View.VISIBLE);
         } else {
