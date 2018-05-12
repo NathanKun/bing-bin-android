@@ -131,11 +131,15 @@ public class RecognitionFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Log.d("Classify End", "To trier fragment");
                 int ecoPoint = data.getIntExtra("ecopoint", 0);
+                boolean tobbcercle = data.getBooleanExtra("tobbcercle", false);
                 if (ecoPoint == 0) {
                     Log.e("ecopoint gain", "ecopoint gain 0");
                 }
                 viewPager.setCurrentItem(3);
                 ((GetEcoPointFragment) adapter.getRegisteredFragment(3)).setEcoPoint(ecoPoint);
+                if(tobbcercle) {
+                    activity.toBBCercle();
+                }
             } else {
                 Log.d("Classify End", "CANCEL");
             }

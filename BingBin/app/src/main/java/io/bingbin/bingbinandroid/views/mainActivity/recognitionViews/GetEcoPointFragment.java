@@ -75,6 +75,15 @@ public class GetEcoPointFragment extends Fragment {
         mainFragment = (RecognitionFragment) getParentFragment();
     }
 
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_getecopoint, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
     @OnClick(R.id.getecopoint_share_btn)
     void shareOnClick() {
         if(isStoragePermissionGranted()) {
@@ -103,15 +112,6 @@ public class GetEcoPointFragment extends Fragment {
     @OnClick(R.id.getecopoint_myecopoint_btn)
     void myEcoPointOnClick() {
         mainFragment.viewPager.setCurrentItem(0);
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_getecopoint, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
     }
 
     @Override

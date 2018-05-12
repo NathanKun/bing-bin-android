@@ -38,23 +38,15 @@ public class PreviewActivity extends AppCompatActivity {
                 .into(previewImageview);
     }
 
-    @OnClick({R.id.preview_retry_btn, R.id.preview_ok_btn})
+    @OnClick(R.id.preview_ok_btn)
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.preview_retry_btn:
-                backToCamera();
-                break;
-
-            case R.id.preview_ok_btn:
-                // go to classify activity
-                Intent intent = new Intent(this, ClassifyActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT); // pass result to classify activity
-                intent.putExtra("filename", filename);
-                startActivity(intent);
-                finish();
-                previewImg.recycle();
-                break;
-        }
+        // go to classify activity
+        Intent intent = new Intent(this, ClassifyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT); // pass result to classify activity
+        intent.putExtra("filename", filename);
+        startActivity(intent);
+        finish();
+        previewImg.recycle();
     }
 
     @Override

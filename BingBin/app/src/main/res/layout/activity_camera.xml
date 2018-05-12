@@ -6,13 +6,28 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
+    <ImageButton
+        android:id="@+id/camera_flash"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="30dp"
+        android:elevation="5dp"
+        android:background="@color/transparent"
+        android:contentDescription="flash btn"
+        android:scaleType="fitXY"
+        android:src="@drawable/cam_action_flash_auto"
+        android:visibility="visible" />
+
     <com.wonderkiln.camerakit.CameraView
         android:id="@+id/camera_cameraview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/camera_control_layout"
-        android:adjustViewBounds="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/camera_control_layout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,9 +36,9 @@
     <RelativeLayout
         android:id="@+id/camera_control_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/primary_color"
+        android:background="@color/dark_primary_color"
         android:elevation="0dp"
         android:paddingBottom="0dp"
         android:paddingLeft="0dp"
@@ -35,30 +50,17 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/camera_flash"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="20dp"
-            android:background="@color/primary_color"
-            android:contentDescription="flash btn"
-            android:scaleType="fitXY"
-            android:visibility="visible"
-            android:src="@drawable/cam_action_flash_auto" />
-
-        <ImageButton
             android:id="@+id/camera_stillshot"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:background="@color/primary_color"
+            android:layout_margin="5dp"
+            android:background="@color/dark_primary_color"
             android:contentDescription="stillshot btn"
             android:scaleType="fitXY"
             android:visibility="visible"
-            android:src="@drawable/cam_action_stillshot" />
+            android:src="@drawable/btn_welcome" />
 
     </RelativeLayout>
 

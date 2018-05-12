@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <!-- YesNo -->
@@ -27,7 +27,7 @@
         android:id="@+id/classify_yesno_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,8 +38,8 @@
             android:layout_width="0dp"
             android:layout_height="152dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginStart="48dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/classify_result_rectangle"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:text="catg"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintEnd_toEndOf="@+id/classify_yesno_rectangle"
@@ -120,33 +120,37 @@
             android:layout_marginBottom="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="64dp"
             android:background="@drawable/classify_result_rectangle"
             android:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.496" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <io.bingbin.bingbinandroid.views.BingBinTextView
             android:id="@+id/classify_select_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:text="Dis nous ce que c'est ...."
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/primary_color"
             android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/classify_select_rectangle"
             app:layout_constraintEnd_toEndOf="@+id/classify_select_rectangle"
             app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle"
-            app:layout_constraintTop_toTopOf="@+id/classify_select_rectangle" />
+            app:layout_constraintTop_toTopOf="@+id/classify_select_rectangle"
+            app:layout_constraintVertical_bias="0.100000024" />
 
         <LinearLayout
             android:id="@+id/classify_select_selectedbar_layout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
@@ -175,8 +179,8 @@
 
         <GridLayout
             android:id="@+id/classify_select_grid_gridlayout"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
+            android:layout_width="170dp"
+            android:layout_height="200dp"
             android:layout_margin="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
@@ -343,11 +347,13 @@
         android:id="@+id/classify_finish_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
 
         <io.bingbin.bingbinandroid.views.BingBinTextView
@@ -403,26 +409,11 @@
             android:id="@+id/classify_finish_trier_btn"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="32dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:elevation="1dp"
             android:text="@string/btn_trier"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/classify_finish_recycle_btn"
-            app:layout_constraintEnd_toEndOf="@+id/classify_finish_rectangle"
-            app:layout_constraintStart_toStartOf="@+id/classify_finish_rectangle" />
-
-        <io.bingbin.bingbinandroid.views.BingBinButton
-            android:id="@+id/classify_finish_recycle_btn"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="@color/lightblue"
-            android:elevation="1dp"
-            android:text="@string/recycle_it"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/classify_finish_rectangle"
             app:layout_constraintEnd_toEndOf="@+id/classify_finish_rectangle"

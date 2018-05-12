@@ -189,4 +189,8 @@ public class MainActivity extends AppCompatActivity {
             SmartLoginFactory.build(LoginType.CustomLogin).logout(this);
         }
     }
+
+    public void toBBCercle() {
+        navigation.setCurrentItem(2);
+    }
 }

@@ -130,10 +130,11 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         loginCardview.setVisibility(View.INVISIBLE);
         loginBottomimageslayout.setVisibility(View.INVISIBLE);
 
-        // First put logo on center
+        // First put logo on 1/3 height
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(loginMasterlayout);
         constraintSet.connect(R.id.login_logo_layout, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        constraintSet.setVerticalBias(R.id.login_logo_layout, 0.333f);
         constraintSet.applyTo(loginMasterlayout);
 
         loginMasterlayout.post(
@@ -158,11 +159,13 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                                                             AnimationUtil.revealView(musicOpeningImg2, false, 3000, // delay 3s, fade out img 2 in 3s, so that img1 with img 3 re-show
                                                                     () -> (new Handler()).postDelayed(() -> AnimationUtil.revealView(musicOpeningImg, false, 3000, // fade out iv1 to re-show normal UI
                                                                             () -> {
-                                                                                ((BitmapDrawable) musicOpeningImg.getDrawable()).getBitmap().recycle();
-                                                                                ((BitmapDrawable) musicOpeningImg2.getDrawable()).getBitmap().recycle();
-                                                                                System.gc();
+                                                                                (new Handler()).postDelayed(() -> {
+                                                                                    ((BitmapDrawable) musicOpeningImg.getDrawable()).getBitmap().recycle();
+                                                                                    ((BitmapDrawable) musicOpeningImg2.getDrawable()).getBitmap().recycle();
+                                                                                    System.gc();
+                                                                                }, 3000);
 
-                                                                                /* original start */
+                                                                                /* original code start */
 
                                                                                 // move up logo
                                                                                 // start constraint layout auto animation
@@ -185,7 +188,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                                                                                                 true, null),
                                                                                         1000);
 
-                                                                                /* original end */
+                                                                                /* original code end */
 
                                                                             }), 3000));
                                                         }));

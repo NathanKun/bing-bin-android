@@ -9,4 +9,6 @@
     <color name="lightblue">#66CCFF</color>
     <color name="gray">#4d4d4d</color>
     <color name="black_semi_transparent">#B2000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="fab_open_bg_color">#F6EEDC</color>
 </resources>

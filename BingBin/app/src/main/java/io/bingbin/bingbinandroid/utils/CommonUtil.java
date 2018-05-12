@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Common utils
@@ -107,6 +108,33 @@ public abstract class CommonUtil {
         renderScript.destroy();
 
         return source;
+    }
+
+    //毛玻璃
+    public static Bitmap maoboliBlur(Bitmap bitmap){
+
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Bitmap result = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        int color;
+
+        Random rnd = new Random();
+        int iModel = 5;
+        int i = width - iModel;
+        while (i > 1)
+        {
+            int j = height - iModel;
+            while (j > 1)
+            {
+                int iPos = rnd.nextInt(100000) % iModel;
+                color = bitmap.getPixel(i + iPos, j + iPos);
+                result.setPixel(i, j, color);
+                j = j - 1;
+            }
+            i = i - 1;
+        }
+        return result;
     }
 
     /**
