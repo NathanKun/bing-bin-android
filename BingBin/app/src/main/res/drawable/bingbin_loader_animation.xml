@@ -2,14 +2,34 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="false">
 
-    <item android:drawable="@drawable/bingbin_icon_no_bg" android:duration="50" />
-    <rotate
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:drawable="@drawable/bingbin_icon_no_bg"
-        android:pivotX="50%"
-        android:pivotY="50%"
-        android:fromDegrees="0"
-        android:toDegrees="360"
-        android:repeatCount="infinite" />
+    <item android:drawable="@drawable/progressbar_indeterminate1" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate2" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate3" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate4" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate5" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate6" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate7" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate8" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate9" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate10" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate11" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate12" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate13" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate14" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate15" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate16" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate17" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate18" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate19" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate20" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate21" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate22" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate23" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate24" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate25" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate26" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate27" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate28" android:duration="35" />
+    <item android:drawable="@drawable/progressbar_indeterminate29" android:duration="35" />
 
 </animation-list>
