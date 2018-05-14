@@ -161,7 +161,9 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                                                                             () -> {
                                                                                 (new Handler()).postDelayed(() -> {
                                                                                     ((BitmapDrawable) musicOpeningImg.getDrawable()).getBitmap().recycle();
+                                                                                    musicOpeningImg.setImageDrawable(null);
                                                                                     ((BitmapDrawable) musicOpeningImg2.getDrawable()).getBitmap().recycle();
+                                                                                    musicOpeningImg2.setImageDrawable(null);
                                                                                     System.gc();
                                                                                 }, 3000);
 

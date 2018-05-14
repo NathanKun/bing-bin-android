@@ -19,7 +19,7 @@ public enum Category {
     BATTERY("Pile", TrashBin.SUPERMARKET, 10, "5000 ans pour décomposer une pile"),
     CLOTHE("Vêtements usés", TrashBin.CLOTHE, 11, "11 kg de textiles achetés par habitant par an"),
     MEDICINE("Médicament", TrashBin.PHARMACY, 12, "Les médicaments non utilisés présentent des risques d'intoxications par ingestion accidentelle"),
-    CIGARETTE("Cigarette", TrashBin.CIGARETTE, 13, "(j’ai toujours pas la poubelle de mégot du festival) 目前还不知道香烟对应的垃圾桶长什么样"),
+    CIGARETTE("Cigarette", TrashBin.CIGARETTE, 13, "Il y a 25 cendriers sur les lieux"),
     HUMAN("Humain", TrashBin.HUMAN, 14, "500 kg de déchets produit par personne par jour"),
     OTHER("Autre", TrashBin.OTHER, 99, "Il faut que Bing Bin apprenne plus pour le valoriser");
 
