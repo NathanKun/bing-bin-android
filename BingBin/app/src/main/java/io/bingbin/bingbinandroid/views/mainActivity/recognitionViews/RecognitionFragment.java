@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -132,6 +133,11 @@ public class RecognitionFragment extends Fragment {
                 Log.d("Classify End", "To trier fragment");
                 int ecoPoint = data.getIntExtra("ecopoint", 0);
                 boolean tobbcercle = data.getBooleanExtra("tobbcercle", false);
+                boolean logout = data.getBooleanExtra("logout", false);
+                if(logout) {
+                    Toast.makeText(activity, "Error", Toast.LENGTH_LONG).show();
+                    activity.backToLoginActivity();
+                }
                 if (ecoPoint == 0) {
                     Log.e("ecopoint gain", "ecopoint gain 0");
                 }

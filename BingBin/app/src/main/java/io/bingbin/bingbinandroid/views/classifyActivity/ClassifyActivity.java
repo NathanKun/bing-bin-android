@@ -9,7 +9,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +44,7 @@ import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 import io.bingbin.bingbinandroid.utils.CommonUtil;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import studios.codelight.smartloginlibrary.UserSessionManager;
+import studios.codelight.smartloginlibrary.users.SmartUser;
 
 public class ClassifyActivity extends AppCompatActivity {
 
@@ -287,9 +287,19 @@ public class ClassifyActivity extends AppCompatActivity {
             }
 
             showLoader(true);
-            bbh.uploadscan(new BingBinCallback(action),
-                    UserSessionManager.getCurrentUser(this).getToken(),
-                    category.name(), String.valueOf(category.getCategoryId()), bitmap);
+            SmartUser user = UserSessionManager.getCurrentUser(this);
+            if(user != null) {
+                bbh.uploadscan(new BingBinCallback(action),
+                        user.getToken(),
+                        category.name(), String.valueOf(category.getCategoryId()), bitmap);
+            } else {
+                Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
+                intent.putExtra("tobbcercle", false);
+                intent.putExtra("logout", true);
+                setResult(RESULT_OK, intent);
+                finish();
+                blurImg.recycle();
+            }
         });
 
         // init btn "NON"
