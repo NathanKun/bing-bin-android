@@ -19,8 +19,8 @@ android {
         applicationId "io.bingbin.bingbinandroid"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 1805221201
-        versionName "0.5.7"
+        versionCode 1805221202
+        versionName "0.5.8"
         //renderscriptTargetApi 27
         //renderscriptSupportModeEnabled true
     }
