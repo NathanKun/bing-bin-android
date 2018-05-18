@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,7 +25,7 @@
             android:contentDescription="ecopoint fragment avatar"
             android:src="@drawable/rabbit_1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintHorizontal_bias="0.05"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -84,23 +83,23 @@
                 android:text="666"
                 android:textAlignment="center"
                 android:textColor="@color/primary_color"
-                android:textSize="15sp" />
+                android:textSize="24sp" />
 
             <ImageView
                 android:id="@+id/ecopoint_sunimage_imageview"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:contentDescription="ecopoint fragment sun image"
                 android:src="@drawable/sun" />
         </LinearLayout>
 
-        <io.bingbin.bingbinandroid.views.BingBinBoldTextView
+        <io.bingbin.bingbinandroid.views.BingBinTextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:text="MON TRI"
             android:textColor="@color/primary_color"
             android:textSize="24sp"
@@ -201,8 +200,9 @@
                 android:layout_rowWeight="5"
                 android:scaleType="fitCenter" />
 
+            <!-- switched with 7 -->
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/ecopoint_icon_img_7"
+                android:id="@+id/ecopoint_icon_img_10"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_column="0"
@@ -234,8 +234,9 @@
                 android:layout_rowWeight="5"
                 android:scaleType="fitCenter" />
 
+            <!-- switched with 10 -->
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/ecopoint_icon_img_10"
+                android:id="@+id/ecopoint_icon_img_7"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_column="0"
@@ -277,7 +278,8 @@
                 android:layout_row="1"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_2"
@@ -289,7 +291,8 @@
                 android:layout_row="1"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_3"
@@ -301,7 +304,8 @@
                 android:layout_row="1"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_4"
@@ -313,7 +317,8 @@
                 android:layout_row="3"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_5"
@@ -325,7 +330,8 @@
                 android:layout_row="3"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_6"
@@ -337,10 +343,12 @@
                 android:layout_row="3"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
+            <!-- switched with 7 -->
             <io.bingbin.bingbinandroid.views.BingBinTextView
-                android:id="@+id/ecopoint_count_text_7"
+                android:id="@+id/ecopoint_count_text_10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
@@ -349,7 +357,8 @@
                 android:layout_row="5"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_8"
@@ -361,7 +370,8 @@
                 android:layout_row="5"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_9"
@@ -373,10 +383,12 @@
                 android:layout_row="5"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
+            <!-- switched with 10 -->
             <io.bingbin.bingbinandroid.views.BingBinTextView
-                android:id="@+id/ecopoint_count_text_10"
+                android:id="@+id/ecopoint_count_text_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
@@ -385,7 +397,8 @@
                 android:layout_row="7"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_11"
@@ -397,7 +410,8 @@
                 android:layout_row="7"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
 
             <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/ecopoint_count_text_12"
@@ -409,7 +423,8 @@
                 android:layout_row="7"
                 android:layout_rowWeight="1"
                 android:text="@string/placeholder_space"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/primary_color" />
         </GridLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>

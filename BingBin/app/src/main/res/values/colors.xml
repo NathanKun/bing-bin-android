@@ -10,5 +10,11 @@
     <color name="gray">#4d4d4d</color>
     <color name="black_semi_transparent">#B2000000</color>
     <color name="transparent">#00000000</color>
-    <color name="fab_open_bg_color">#F6EEDC</color>
+    <color name="bingbin_bg_color">#F6EEDC</color>
+
+    <color name="trashbin_black">#4d4d4d</color>
+    <color name="trashbin_yellow">#f0ae1a</color>
+    <color name="trashbin_pink">#f17176</color>
+    <color name="trashbin_green">#219473</color>
+    <color name="trashbin_blue">#228cc6</color>
 </resources>

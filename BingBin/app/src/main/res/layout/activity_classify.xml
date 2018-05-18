@@ -30,8 +30,17 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/classify_yesno_vertical_guildline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
         <View
             android:id="@+id/classify_yesno_rectangle"
@@ -49,39 +58,38 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.871" />
 
-        <LinearLayout
-            android:id="@+id/classify_yesno_buttonbar_layout"
-            android:layout_width="wrap_content"
+        <io.bingbin.bingbinandroid.views.BingBinButton
+            android:id="@+id/classify_yesno_yes_btn"
+            style="@style/bingbin_button_style"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Oui"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/classify_yesno_rectangle"
+            app:layout_constraintEnd_toStartOf="@+id/classify_yesno_vertical_guildline"
+            app:layout_constraintStart_toStartOf="@+id/classify_yesno_rectangle"
+            app:layout_constraintTop_toBottomOf="@+id/classify_yesno_result_textview" />
+
+        <io.bingbin.bingbinandroid.views.BingBinButton
+            android:id="@+id/classify_yesno_no_btn"
+            style="@style/bingbin_button_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:backgroundTint="@color/red"
+            android:text="Non"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/classify_yesno_rectangle"
             app:layout_constraintEnd_toEndOf="@+id/classify_yesno_rectangle"
-            app:layout_constraintStart_toStartOf="@+id/classify_yesno_rectangle"
-            app:layout_constraintTop_toBottomOf="@+id/classify_yesno_result_textview">
-
-            <io.bingbin.bingbinandroid.views.BingBinButton
-                android:id="@+id/classify_yesno_yes_btn"
-                style="@style/bingbin_button_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Oui"
-                android:textColor="@color/white" />
-
-            <io.bingbin.bingbinandroid.views.BingBinButton
-                android:id="@+id/classify_yesno_no_btn"
-                style="@style/bingbin_button_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:backgroundTint="@color/red"
-                android:text="Non"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
+            app:layout_constraintStart_toStartOf="@+id/classify_yesno_vertical_guildline"
+            app:layout_constraintTop_toBottomOf="@+id/classify_yesno_result_textview" />
 
         <io.bingbin.bingbinandroid.views.BingBinTextView
             android:id="@+id/classify_yesno_result_textview"
@@ -137,7 +145,7 @@
             android:layout_margin="8dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:text="Dis nous ce que c'est ...."
+            android:text="Dis nous ce que c'est"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/primary_color"
@@ -179,15 +187,16 @@
 
         <GridLayout
             android:id="@+id/classify_select_grid_gridlayout"
-            android:layout_width="170dp"
-            android:layout_height="200dp"
-            android:layout_margin="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="16dp"
             android:columnCount="3"
             android:rowCount="5"
             android:useDefaultMargins="false"
+            app:layout_constraintBottom_toTopOf="@+id/classify_select_confirm_btn"
             app:layout_constraintEnd_toEndOf="@+id/classify_select_rectangle"
             app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle"
             app:layout_constraintTop_toBottomOf="@+id/classify_select_selectedbar_layout">
@@ -254,8 +263,9 @@
                 android:layout_row="1"
                 android:scaleType="fitCenter" />
 
+            <!-- switched with 7 -->
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/classify_select_img_7"
+                android:id="@+id/classify_select_img_10"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_column="0"
@@ -285,8 +295,9 @@
                 android:layout_row="2"
                 android:scaleType="fitCenter" />
 
+            <!-- switched with 11 -->
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/classify_select_img_10"
+                android:id="@+id/classify_select_img_7"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_column="0"
@@ -329,18 +340,18 @@
 
         <io.bingbin.bingbinandroid.views.BingBinButton
             android:id="@+id/classify_select_confirm_btn"
+            style="@style/bingbin_button_style"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:text="Confirmer"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/classify_select_rectangle"
             app:layout_constraintEnd_toEndOf="@+id/classify_select_rectangle"
-            app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle"
-            app:layout_constraintTop_toBottomOf="@+id/classify_select_grid_gridlayout" />
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="@+id/classify_select_rectangle" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -356,19 +367,33 @@
         app:layout_constraintVertical_bias="0.0">
 
 
-        <io.bingbin.bingbinandroid.views.BingBinTextView
+        <android.support.constraint.Guideline
+            android:id="@+id/classify_finish_horizontal_25_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/classify_finish_horizontal_55_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.55" />
+
+        <io.bingbin.bingbinandroid.views.BingBinBoldTextView
             android:id="@+id/classify_finish_title_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:elevation="1dp"
             android:maxLines="2"
-            android:text="category"
+            android:text="CATEGORY"
             android:textAlignment="center"
             android:textColor="@color/primary_color"
-            android:textSize="24sp"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@+id/classify_finish_horizontal_25_guideline"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/classify_finish_rectangle" />
 
@@ -376,34 +401,36 @@
             android:id="@+id/classify_finish_trashbin_imageview"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="64dp"
             android:layout_marginStart="64dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:contentDescription="@string/trashbin_image_description"
             android:elevation="1dp"
             android:src="@drawable/trashbin_green"
-            app:layout_constraintBottom_toTopOf="@+id/classify_finish_longtext"
+            app:layout_constraintBottom_toTopOf="@+id/classify_finish_horizontal_55_guideline"
             app:layout_constraintEnd_toEndOf="@+id/classify_finish_rectangle"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/classify_finish_rectangle"
-            app:layout_constraintTop_toBottomOf="@+id/classify_finish_title_textview" />
+            app:layout_constraintTop_toTopOf="@+id/classify_finish_horizontal_25_guideline"
+            app:layout_constraintVertical_bias="0.3" />
 
         <io.bingbin.bingbinandroid.views.BingBinTextView
             android:id="@+id/classify_finish_longtext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:layout_marginEnd="32dp"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
             android:elevation="1dp"
             android:ems="10"
             android:text="Les médicaments non utilisés présentent des risques d'intoxications par ingestion accidentelle"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/gray"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/classify_finish_trier_btn"
             app:layout_constraintEnd_toEndOf="@+id/classify_finish_rectangle"
-            app:layout_constraintStart_toStartOf="@+id/classify_finish_rectangle" />
+            app:layout_constraintStart_toStartOf="@+id/classify_finish_rectangle"
+            app:layout_constraintTop_toTopOf="@+id/classify_finish_horizontal_55_guideline" />
 
         <io.bingbin.bingbinandroid.views.BingBinButton
             android:id="@+id/classify_finish_trier_btn"
@@ -424,8 +451,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="64dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="64dp"
             android:background="@drawable/classify_result_rectangle"
             android:elevation="0dp"
@@ -442,7 +469,6 @@
     <ProgressBar
         android:id="@+id/classify_progress_bar"
         style="Widget.ProgressBar.Large"
-        android:indeterminateDrawable="@drawable/bingbin_progress_indeterminate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -452,6 +478,7 @@
         android:layout_marginTop="8dp"
         android:elevation="10dp"
         android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/bingbin_progress_indeterminate"
         android:indeterminateTintMode="src_atop"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

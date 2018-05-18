@@ -17,8 +17,8 @@
     <string name="facebook_app_id">***REMOVED***</string>
     <string name="fb_login_protocol_scheme">fb***REMOVED***</string>
 
-    <string name="sign_in_facebook">Facebook</string>
-    <string name="sign_in_google">Google</string>
+    <string name="sign_in_facebook">FACEBOOK</string>
+    <string name="sign_in_google">GOOGLE</string>
     <string name="logout_text">DECONNEXION</string>
 
     <string name="camera_retry">Réessayer</string>
@@ -44,4 +44,5 @@
     <string name="intro_commercer_textbutton">Commencer</string>
     <string name="musical_festival_opening">musical festival opening</string>
     <string name="ok">OK</string>
+    <string name="getecopoint_points_placeholder"><![CDATA[<3]]></string>
 </resources>

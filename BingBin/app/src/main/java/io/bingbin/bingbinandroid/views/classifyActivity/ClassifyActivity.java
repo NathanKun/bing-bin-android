@@ -9,6 +9,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -371,12 +372,42 @@ public class ClassifyActivity extends AppCompatActivity {
      * @param category category enum
      */
     private void showFinishLayout(Category category, int ecoPoint) {
-        String title = category.getTrashbin().getFrenchName();
+        String title = category.getTrashbin().getFrenchName().toUpperCase();
 
         classifyFinishTitleTextview.setText(title);
         classifyFinishLongtext.setText(category.getText());
         if (category.getTrashbin() == TrashBin.BBCERCLE) {
             classifyFinishTrierBtn.setText(R.string.ok);
+        }
+
+        // set title color depends on trashbin
+        switch (category.getTrashbin()) {
+            case BLUE:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_blue));
+                break;
+            case PINK:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_pink));
+                break;
+            case BLACK:
+            case HUMAN:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_black));
+                break;
+            case GREEN:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_green));
+                break;
+            case YELLOW:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_yellow));
+                break;
+            case BBCERCLE:
+            case OTHER:
+            case CLOTHE:
+            case COMPOST:
+            case PHARMACY:
+            case CIGARETTE:
+            case LEBONCOIN:
+            case SUPERMARKET:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.primary_color));
+                break;
         }
 
         Glide.with(this)
@@ -398,8 +429,10 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyYesnoConstraintLayout.setVisibility(View.GONE);
 
         classifyFinishConstraintLayout.post(() -> {
-            int imageHeight = classifyFinishTrashbinImageview.getHeight();
-            if (imageHeight < 100) {
+            // check if btn covered text
+            final int btnTop = classifyFinishTrierBtn.getTop();
+            final int longTextBottom = classifyFinishLongtext.getBottom();
+            if (longTextBottom > btnTop) {
                 classifyFinishLongtext.setTextSize(14);
             }
         });

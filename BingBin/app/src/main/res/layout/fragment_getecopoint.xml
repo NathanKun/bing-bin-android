@@ -6,90 +6,81 @@
     tools:context="io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.WelcomeFragment"
     android:id="@+id/getecopoint_master_layout">
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/getecopoint_footer_image"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="bottom_grass"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/bottom_grass" />
-
     <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/getecopoint_ecopoint_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:text="Eco Point"
+        android:text="ÉCO POINTS"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/getecopoint_ecopoint_got_textview"
+        android:textColor="@color/primary_color"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.88" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/getecopoint_ecopoint_got_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="233"
+        android:layout_marginTop="8dp"
+        android:text="@string/getecopoint_points_placeholder"
         android:textAlignment="center"
         android:textColor="@color/primary_color"
-        android:textSize="50sp"
-        app:layout_constraintBottom_toTopOf="@+id/getecopoint_longtext_textView"
+        android:textSize="160sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.19999999" />
 
     <io.bingbin.bingbinandroid.views.BingBinTextView
         android:id="@+id/getecopoint_longtext_textView"
         android:layout_width="233dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Triez bien le produit,\nil va être recyclé grâce à vous.\nMerci beaucoup."
+        android:layout_marginTop="32dp"
+        android:text="Triez bien le produit, il sera recyclé grâce à vous. Merci beaucoup."
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/getecopoint_share_btn"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/getecopoint_ecopoint_got_textview" />
 
     <io.bingbin.bingbinandroid.views.BingBinButton
         android:id="@+id/getecopoint_share_btn"
-        android:layout_width="233dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Partage"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/getecopoint_myecopoint_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <io.bingbin.bingbinandroid.views.BingBinButton
-        android:id="@+id/getecopoint_myecopoint_btn"
         android:layout_width="233dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/lightblue"
-        android:text="Mes eco points"
+        android:text="Partage"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/getecopoint_footer_image"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.66999996" />
+        app:layout_constraintVertical_bias="0.8" />
+
+    <io.bingbin.bingbinandroid.views.BingBinButton
+        android:id="@+id/getecopoint_myecopoint_btn"
+        android:layout_width="233dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/lightblue"
+        android:text="MON TRI"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/getecopoint_share_btn" />
 </android.support.constraint.ConstraintLayout>

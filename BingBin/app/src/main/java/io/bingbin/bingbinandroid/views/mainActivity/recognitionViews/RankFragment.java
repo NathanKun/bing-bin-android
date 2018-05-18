@@ -1,6 +1,7 @@
 package io.bingbin.bingbinandroid.views.mainActivity.recognitionViews;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,8 +73,8 @@ public class RankFragment extends Fragment {
     Button rankButbtonbarWeekBtn;
     @BindView(R.id.ranking_sendsun_layout)
     ConstraintLayout rankingSendsunLayout;
-    @BindView(R.id.rank_title_suncount)
-    TextView rankTitleSuncount;
+    /*@BindView(R.id.rank_title_suncount)
+    TextView rankTitleSuncount;*/
 
     private MainActivity activity;
     private Unbinder unbinder;
@@ -117,8 +118,8 @@ public class RankFragment extends Fragment {
         assert activity != null;
 
         // show user sunPt count
-        String sunPoint = activity.getCurrentUser().getSunPoint() + "x";
-        rankTitleSuncount.setText(sunPoint);
+        /*String sunPoint = activity.getCurrentUser().getSunPoint() + "x";
+        rankTitleSuncount.setText(sunPoint);*/
 
         // Make AllBtn green, look likes clicked
         rankButbtonbarAllBtn.setTextColor(getResources().getColor(R.color.primary_color));
@@ -135,6 +136,12 @@ public class RankFragment extends Fragment {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
 
+                // set odd row background color
+                if (position % 2 == 1) {
+                    view.setBackgroundColor(getResources().getColor(R.color.white));
+                }
+
+                // set sun btn listener
                 ImageView sunButton = view.findViewById(R.id.listview_sun);
                 sunButton.setOnClickListener((v) -> {
                     Log.d("selected user id", (String) dataToShow.get(position).get("id"));
