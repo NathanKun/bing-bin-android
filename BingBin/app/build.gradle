@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 android {
 
     defaultConfig {
@@ -19,8 +23,8 @@ android {
         applicationId "io.bingbin.bingbinandroid"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 1805221202
-        versionName "0.5.8"
+        versionCode 1805221203
+        versionName "0.5.9"
         //renderscriptTargetApi 27
         //renderscriptSupportModeEnabled true
     }
@@ -46,6 +50,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+kapt {
+    generateStubs = true
 }
 
 dependencies {
@@ -75,21 +83,21 @@ dependencies {
 
     // butterknife view injection
     implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // dagger2 dependency injection
     compileOnly 'com.google.dagger:dagger-android:2.15'
     implementation 'com.google.dagger:dagger-android-support:2.15'
     // if you use the support libraries
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.15'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.15'
+    kapt 'com.google.dagger:dagger-android-processor:2.15'
+    kapt 'com.google.dagger:dagger-compiler:2.15'
 
     // fb login
     implementation 'com.facebook.android:facebook-login:4.32.0'
 
     // Glide image framwork
     implementation 'com.github.bumptech.glide:glide:4.7.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
     // okhttp http client
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -136,6 +144,3 @@ repositories {
 }
 
 apply plugin: 'com.google.gms.google-services'
-
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
