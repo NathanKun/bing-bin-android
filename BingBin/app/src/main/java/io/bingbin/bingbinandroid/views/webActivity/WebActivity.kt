@@ -18,17 +18,19 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.KeyEvent
-import android.view.MenuItem
 import android.view.WindowManager
 import android.webkit.*
 import android.widget.LinearLayout
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.AgentWebConfig
+import io.bingbin.bingbinandroid.BingBinApp
 import io.bingbin.bingbinandroid.R
+import io.bingbin.bingbinandroid.utils.BingBinHttp
 import io.bingbin.bingbinandroid.views.BottomNavigationViewEx
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity
 import io.nlopez.smartlocation.SmartLocation
 import io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesWithFallbackProvider
+import javax.inject.Inject
 
 
 class WebActivity : AppCompatActivity() {
@@ -53,6 +55,9 @@ class WebActivity : AppCompatActivity() {
 
     private var currentCity: String = ""
     private var lastLocation: Location? = null
+
+    @Inject
+    lateinit var bbh: BingBinHttp
 
     // bottom navigation listener
     private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {
@@ -80,6 +85,8 @@ class WebActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
+
+        (application as BingBinApp).netComponent.inject(this)
 
         // broadcast receiver for ending this activity when MainActivity end
         val broadcastReceiver = object : BroadcastReceiver() {
@@ -193,7 +200,7 @@ class WebActivity : AppCompatActivity() {
             val lastPage = currentPage
             currentPage = "blank"
             mAgentWeb.urlLoader.loadUrl("about:blank")
-            val tmp: String = AgentWebConfig.getCookiesByUrl(_baseUrl)
+            val tmp: String = AgentWebConfig.getCookiesByUrl(_baseUrl) ?: ""
             mAgentWeb.clearWebCache() // this will clear cookies also
             AgentWebConfig.syncCookie(_baseUrl, tmp)
             loadPage(lastPage)
@@ -226,6 +233,26 @@ class WebActivity : AppCompatActivity() {
 
     override fun onResume() {
         mAgentWeb.webLifeCycle.onResume()
+        // get forum version
+        Thread({
+            val tag = "forum_version"
+            val newVersion = bbh.forumVersion
+            val prefs = this.getSharedPreferences(tag, 0)
+            val savedVersion = prefs!!.getString(tag, "")
+
+            Log.d("forumVersion", "newVersion = ${newVersion ?: "null"}")
+            Log.d("forumVersion", "savedVersion = $savedVersion")
+
+            if (newVersion !== null) {
+                if (newVersion != savedVersion) {
+                    val editor = prefs.edit()
+                    editor.putString(tag, newVersion)
+                    editor.apply()
+                    clearCache()
+                    Log.d("forumVersion", "reloaded")
+                }
+            }
+        }).start()
 
         // get current location
         if (isGPSPermissionGranted()) {

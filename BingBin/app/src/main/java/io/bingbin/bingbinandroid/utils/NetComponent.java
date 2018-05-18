@@ -8,6 +8,7 @@ import io.bingbin.bingbinandroid.views.classifyActivity.ClassifyActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.LoginActivity;
 import io.bingbin.bingbinandroid.views.loginActivity.RegisterActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
+import io.bingbin.bingbinandroid.views.webActivity.WebActivity;
 
 /**
  * Dagger component
@@ -22,4 +23,5 @@ public interface NetComponent {
     void inject(RegisterActivity activity);
     void inject(ClassifyActivity activity);
     void inject(AvatarActivity activity);
+    void inject(WebActivity activity);
 }
