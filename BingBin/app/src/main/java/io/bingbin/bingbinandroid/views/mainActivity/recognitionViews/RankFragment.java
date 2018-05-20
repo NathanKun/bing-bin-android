@@ -139,6 +139,8 @@ public class RankFragment extends Fragment {
                 // set odd row background color
                 if (position % 2 == 1) {
                     view.setBackgroundColor(getResources().getColor(R.color.white));
+                } else {
+                    view.setBackgroundColor(getResources().getColor(R.color.transparent));
                 }
 
                 // set sun btn listener
@@ -407,7 +409,8 @@ public class RankFragment extends Fragment {
 
             map.put("username", name);
             map.put("point", pt);
-            map.put("rank", rank);
+            //map.put("rank", rank);
+            map.put("rank", i + 1);
             map.put("avatar", avatar);
             map.put("id", id);
             map.put("isSent", isSent);
