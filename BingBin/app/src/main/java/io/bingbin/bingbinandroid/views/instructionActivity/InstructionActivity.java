@@ -7,9 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.squareup.leakcanary.RefWatcher;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
 

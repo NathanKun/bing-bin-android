@@ -1,9 +1,12 @@
 package io.bingbin.bingbinandroid.views.loginActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.AppCompatImageView;
@@ -13,8 +16,10 @@ import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +43,7 @@ import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.utils.BingBinCallback;
 import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
+import io.bingbin.bingbinandroid.views.introActivity.IntroActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import okhttp3.Response;
 import studios.codelight.smartloginlibrary.LoginType;
@@ -91,6 +97,10 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     ConstraintLayout loginMasterlayout;
     @BindView(R.id.login_bottomimageslayout)
     ConstraintLayout loginBottomimageslayout;
+    @BindView(R.id.music_opening_img)
+    ImageView musicOpeningImg;
+    @BindView(R.id.music_opening_img2)
+    ImageView musicOpeningImg2;
 
     SmartUser currentUser;
     GoogleSignInClient mGoogleSignInClient;
@@ -99,6 +109,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     JSONObject userData = null;
     private String token = null;
+    private boolean isNewUser = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,37 +130,79 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
         loginCardview.setVisibility(View.INVISIBLE);
         loginBottomimageslayout.setVisibility(View.INVISIBLE);
 
-        // First put logo on center
+        // First put logo on 1/3 height
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(loginMasterlayout);
         constraintSet.connect(R.id.login_logo_layout, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        constraintSet.setVerticalBias(R.id.login_logo_layout, 0.333f);
         constraintSet.applyTo(loginMasterlayout);
 
         loginMasterlayout.post(
-            () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show grass
-                    () -> AnimationUtil.revealView(loginLogo, true, // show logo
-                            () -> {
-                                currentUser = UserSessionManager.getCurrentUser(this);
-                                if (currentUser != null) {
-                                    Log.d("Smart Login", "Logged in user: " + currentUser.toString());
-                                    toMainActivity();
-                                } else {                // move up logo
-                                // start constraint layout auto animation
-                                TransitionManager.beginDelayedTransition(loginMasterlayout);
-                                // clear connection just added to move up logo
-                                constraintSet.clone(loginMasterlayout);
-                                constraintSet.clear(R.id.login_logo_layout, ConstraintSet.BOTTOM);
-                                constraintSet.applyTo(loginMasterlayout);
+                () -> AnimationUtil.revealView(loginBottomimageslayout, true,  // show grass
+                        () -> AnimationUtil.revealView(loginLogo, true, // show logo
+                                () -> {
+                                    currentUser = UserSessionManager.getCurrentUser(this);
+                                    if (currentUser != null) {
+                                        Log.d("Smart Login", "Logged in user: " + currentUser.toString());
+                                        toMainActivity();
+                                    } else {
+                                        /*
+                                         * musical festival special start
+                                         */
+                                        musicOpeningImg.setImageDrawable(getDrawable(R.drawable.music_open_1));
+                                        musicOpeningImg2.setImageDrawable(getDrawable(R.drawable.music_open_2));
+                                        AnimationUtil.revealView(musicOpeningImg, true, 2000, // fade in iv1 with img 1 in 2s
+                                                () -> AnimationUtil.revealView(musicOpeningImg2, true, 3000, // fade in iv2 with img 2 in 3s to cover iv1
+                                                        () -> {
+                                                            ((BitmapDrawable) musicOpeningImg.getDrawable()).getBitmap().recycle();
+                                                            musicOpeningImg.setImageDrawable(getDrawable(R.drawable.music_open_3)); // set iv1 to img 3
+                                                            AnimationUtil.revealView(musicOpeningImg2, false, 3000, // delay 3s, fade out img 2 in 3s, so that img1 with img 3 re-show
+                                                                    () -> (new Handler()).postDelayed(() -> AnimationUtil.revealView(musicOpeningImg, false, 3000, // fade out iv1 to re-show normal UI
+                                                                            () -> {
+                                                                                (new Handler()).postDelayed(() -> {
+                                                                                    ((BitmapDrawable) musicOpeningImg.getDrawable()).getBitmap().recycle();
+                                                                                    musicOpeningImg.setImageDrawable(null);
+                                                                                    ((BitmapDrawable) musicOpeningImg2.getDrawable()).getBitmap().recycle();
+                                                                                    musicOpeningImg2.setImageDrawable(null);
+                                                                                    System.gc();
+                                                                                }, 3000);
 
-                                (new Handler()).postDelayed(
-                                        () -> AnimationUtil.revealView(loginCardview,
-                                                true, null),
-                                        1000);
+                                                                                /* original code start */
+
+                                                                                // move up logo
+                                                                                // start constraint layout auto animation
+                                                                                PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+                                                                                if (powerManager != null) {
+                                                                                    if (!powerManager.isPowerSaveMode()) {
+                                                                                        TransitionManager.beginDelayedTransition(loginMasterlayout);
+                                                                                    }
+                                                                                } else {
+                                                                                    TransitionManager.beginDelayedTransition(loginMasterlayout);
+                                                                                }
+
+                                                                                // clear connection just added to move up logo
+                                                                                constraintSet.clone(loginMasterlayout);
+                                                                                constraintSet.clear(R.id.login_logo_layout, ConstraintSet.BOTTOM);
+                                                                                constraintSet.applyTo(loginMasterlayout);
+
+                                                                                (new Handler()).postDelayed(
+                                                                                        () -> AnimationUtil.revealView(loginCardview,
+                                                                                                true, null),
+                                                                                        1000);
+
+                                                                                /* original code end */
+
+                                                                            }), 3000));
+                                                        }));
+                                        /*
+                                         * musical festival special end
+                                         */
+
+                                        /* original code goes here */
+
+                                    }
                                 }
-                            })
-            )
-        );
-
+                        )));
 
     }
 
@@ -180,6 +233,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             if (resultCode == RESULT_OK) {
                 String resultToken = data.getStringExtra("token");
                 Log.d("register activity", resultToken);
+                isNewUser = true;
                 token = resultToken;
                 // login directly
                 smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
@@ -190,14 +244,14 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
 
     /**
      * Call when social login success, doing normal login or register success
-     *
+     * <p>
      * If social login success, user will be a SmartGoogleUser or a SmartFacebookUser
-     *     then, use social token to do a second bingbin login, and return a SmartUser with bingbin info
-     *
+     * then, use social token to do a second bingbin login, and return a SmartUser with bingbin info
+     * <p>
      * If normal login or normal sign up finish, user will be a new SmartUser()
-     *     then, will do a direct bingbin login, and return a SmartUser with bingbin info
+     * then, will do a direct bingbin login, and return a SmartUser with bingbin info
      *
-     * @param user  SmartGoogleUser, SmartFacebookUser or new SmartUser()
+     * @param user SmartGoogleUser, SmartFacebookUser or new SmartUser()
      */
     @Override
     public void onLoginSuccess(SmartUser user) {
@@ -292,7 +346,7 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 }
 
                 @Override
-                public void onValid(JSONObject json) throws JSONException{
+                public void onValid(JSONObject json) throws JSONException {
                     // get user data from json obj and populate to SmartUser
                     SmartUser u = UserUtil.populateBingBinUser(json, token);
                     // set user session
@@ -308,7 +362,8 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 }
 
                 @Override
-                public void onAnyError() { }
+                public void onAnyError() {
+                }
             };
 
             bbh.getMyInfo(new BingBinCallback(action), token);
@@ -336,7 +391,12 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
     }
 
     private void toMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent;
+        if (isNewUser) {
+            intent = new Intent(this, IntroActivity.class);
+        } else {
+            intent = new Intent(this, MainActivity.class);
+        }
         startActivity(intent);
         finish();
     }
@@ -352,6 +412,16 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
                 break;
 
             case R.id.custom_signin_button:
+                // hide keyboard
+                View currentFocus = LoginActivity.this.getCurrentFocus();
+                if (currentFocus != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                    }
+                }
+                emailEditText.clearFocus();
+                passwordEditText.clearFocus();
                 String email = emailEditText.getText().toString();
                 String pwd = passwordEditText.getText().toString();
                 if (StringUtils.isAnyBlank(email, pwd)) {
@@ -429,5 +499,4 @@ public class LoginActivity extends Activity implements SmartLoginCallbacks {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
-
 }

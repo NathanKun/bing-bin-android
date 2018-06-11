@@ -3,6 +3,9 @@ package io.bingbin.bingbinandroid.utils;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -19,6 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Http connection class for BingBin
@@ -31,6 +35,30 @@ import okhttp3.Response;
 public class BingBinHttp {
     private final OkHttpClient client = new OkHttpClient();
     private final String baseUrl = "https://bingbin.io/index.php/";
+
+    public String getForumVersion() throws IOException {
+        Request build = new Request.Builder()
+                .url("https://forum.bingbin.io/assets/version.json")
+                .build();
+        Response res = client.newCall(build)
+                .execute();
+        if(res.isSuccessful()) {
+            ResponseBody resBody = res.body();
+            if (resBody != null) {
+                String body = resBody.string();
+                try {
+                    JSONObject json = new JSONObject(body);
+                    return json.getString("version");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
 
     // app/registerValidation
     public void register(BingBinCallback callback, String email, String firstname, String password) {

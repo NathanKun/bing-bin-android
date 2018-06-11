@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_activity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:id="@+id/main_activity_masterlayout"
     tools:context="io.bingbin.bingbinandroid.views.mainActivity.MainActivity">
 
-    <io.bingbin.bingbinandroid.utils.BingBinMainViewPager
-        android:id="@+id/viewpager"
+    <FrameLayout
+        android:id="@+id/main_framelayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_above="@+id/navigation"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        android:layout_margin="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/main_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <io.bingbin.bingbinandroid.views.BottomNavigationViewEx
-        android:id="@+id/navigation"
+        android:id="@+id/main_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -51,5 +50,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 </android.support.constraint.ConstraintLayout>

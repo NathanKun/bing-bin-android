@@ -13,15 +13,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context="io.bingbin.bingbinandroid.views.mainActivity.RankFragment">
+        tools:context="io.bingbin.bingbinandroid.views.mainActivity.recognitionViews.RankFragment">
 
         <RelativeLayout
             android:id="@+id/rank_title_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="32dp">
 
-            <io.bingbin.bingbinandroid.views.BingBinBoldTextView
+            <io.bingbin.bingbinandroid.views.BingBinTextView
                 android:id="@+id/rank_title_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,28 +30,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/primary_color"
                 android:textSize="24sp" />
-
-            <io.bingbin.bingbinandroid.views.BingBinTextView
-                android:id="@+id/rank_title_suncount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="8dp"
-                android:layout_toStartOf="@+id/rank_title_sun_imageview"
-                android:text="5x"
-                android:textAlignment="center"
-                android:textColor="@color/primary_color"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/rank_title_sun_imageview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="rank sun symbo"
-                android:src="@drawable/sun" />
 
         </RelativeLayout>
 
@@ -105,18 +83,11 @@
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/rank_seperator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="0dp"
-            android:background="@color/primary_color" />
-
         <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/rank_swiperefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp">

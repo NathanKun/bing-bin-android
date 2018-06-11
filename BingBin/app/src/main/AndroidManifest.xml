@@ -9,6 +9,8 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -27,6 +29,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity android:name=".views.loginActivity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,21 +59,22 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
-        <activity android:name=".views.classifyActivity.ClassifyActivity"
+        <activity
+            android:name=".views.classifyActivity.ClassifyActivity"
             android:process=":classify" />
         <activity
             android:name=".views.instructionActivity.InstructionActivity"
-            android:label="@string/title_activity_instruction"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_instruction"/>
         <activity android:name=".views.infoActivity.InfoActivity" />
-        <activity android:name=".views.avatarActivity.AvatarActivity" />
+        <activity
+            android:name=".views.avatarActivity.AvatarActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".views.classifyActivity.CameraActivity" />
         <activity android:name=".views.classifyActivity.PreviewActivity" />
+        <activity android:name=".views.introActivity.IntroActivity" />
+        <activity
+            android:name=".views.webActivity.WebActivity"
+            android:process=":webview" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

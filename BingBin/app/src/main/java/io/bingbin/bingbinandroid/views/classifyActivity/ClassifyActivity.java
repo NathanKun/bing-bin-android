@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
@@ -35,17 +36,20 @@ import butterknife.OnClick;
 import io.bingbin.bingbinandroid.BingBinApp;
 import io.bingbin.bingbinandroid.R;
 import io.bingbin.bingbinandroid.models.Category;
+import io.bingbin.bingbinandroid.models.TrashBin;
 import io.bingbin.bingbinandroid.utils.BingBinCallback;
 import io.bingbin.bingbinandroid.utils.BingBinCallbackAction;
 import io.bingbin.bingbinandroid.utils.BingBinHttp;
 import io.bingbin.bingbinandroid.utils.ClassifyHelper;
 import io.bingbin.bingbinandroid.utils.CommonUtil;
-import io.bingbin.bingbinandroid.views.instructionActivity.InstructionActivity;
 import io.bingbin.bingbinandroid.views.mainActivity.MainActivity;
 import studios.codelight.smartloginlibrary.UserSessionManager;
+import studios.codelight.smartloginlibrary.users.SmartUser;
 
 public class ClassifyActivity extends AppCompatActivity {
 
+    @BindView(R.id.classify_select_rectangle)
+    View classifySelectRectangle;
     private Category category;
 
     @Inject
@@ -66,8 +70,6 @@ public class ClassifyActivity extends AppCompatActivity {
     ImageView classifyFinishTrashbinImageview;
     @BindView(R.id.classify_finish_trier_btn)
     Button classifyFinishTrierBtn;
-    @BindView(R.id.classify_finish_recycle_btn)
-    Button classifyFinishRecycleItBtn;
     @BindView(R.id.classify_finish_rectangle)
     View classifyFinishRectangle;
     @BindView(R.id.classify_finish_constraintlayout)
@@ -89,8 +91,8 @@ public class ClassifyActivity extends AppCompatActivity {
     GridLayout classifySelectGridGridlayout;
     @BindView(R.id.classify_select_constraintlayout)
     ConstraintLayout classifySelectConstraintLayout;
-    @BindView(R.id.classify_select_rectangle)
-    View classifySelectRectangle;
+    @BindView(R.id.classify_yesno_rectangle)
+    View classifyYesnoRectangle;
 
     @BindView(R.id.classify_select_img_1)
     AppCompatImageView classifySelectImg1;
@@ -126,6 +128,7 @@ public class ClassifyActivity extends AppCompatActivity {
     private Bitmap blurImg;
 
     AppCompatImageView[] iconsImageviews;
+    private String classifyResultStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,12 +139,13 @@ public class ClassifyActivity extends AppCompatActivity {
 
         classifyYesnoConstraintLayout.setVisibility(View.INVISIBLE);
         classifyFinishConstraintLayout.setVisibility(View.INVISIBLE);
+        classifySelectConstraintLayout.setVisibility(View.INVISIBLE);
         showLoader(true);
 
         (new Thread(() -> {
             Intent intent = getIntent();
             Uri uri = intent.getParcelableExtra("uri");
-            if(uri != null) { // from gallery
+            if (uri != null) { // from gallery
                 try {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
@@ -161,7 +165,7 @@ public class ClassifyActivity extends AppCompatActivity {
                         int imgWidth = options.outWidth;
                         int imgHeigh = options.outHeight;
                         int sample = 1;
-                        while(imgWidth > sample * screenWidth || imgHeigh > sample * screenHeight) {
+                        while (imgWidth > sample * screenWidth || imgHeigh > sample * screenHeight) {
                             sample *= 2;
                         }
 
@@ -200,35 +204,37 @@ public class ClassifyActivity extends AppCompatActivity {
      */
     private void initComponents(Bitmap bitmap) {
         // classify result
-        String classifyResultStr = ClassifyHelper.classify(this, bitmap);
+        classifyResultStr = ClassifyHelper.classify(this, bitmap);
 
         /*
          * YesNo
          */
 
         // run after layout rendered, show blurred image and category result
-        classifyYesnoConstraintLayout.post((() -> {
+        classifyYesnoConstraintLayout.post((() -> (new Thread(() -> {
             final int ivWidth = classifyBlurimgImageview.getMeasuredWidth();
             final int ivHeight = classifyBlurimgImageview.getMeasuredHeight();
             Log.d("blur", String.valueOf(ivWidth));
             Log.d("blur", String.valueOf(ivHeight));
 
-            blurImg = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-            // bitmap.recycle(); // image will be upload later, should not recycle here
-            blurImg = CommonUtil.rsBlur(ClassifyActivity.this, blurImg, 25);
+            //blurImg = bitmap.copy(Bitmap.Config.RGB_565, true);
+            blurImg = Bitmap.createScaledBitmap(bitmap, 512, 512 * bitmap.getHeight() / bitmap.getWidth(), true);
+            //blurImg = CommonUtil.rsBlur(ClassifyActivity.this, blurImg, 25);
+            blurImg = CommonUtil.maoboliBlur(blurImg);
 
-            Glide.with(this)
-                    .load(blurImg)
-                    .into(classifyBlurimgImageview);
-            classifyYesnoResultTextview.setText(Category.getFrenchNameByName(classifyResultStr));
+            runOnUiThread(() -> {
+                Glide.with(this)
+                        .load(blurImg)
+                        .into(classifyBlurimgImageview);
+                classifyYesnoResultTextview.setText(Category.getFrenchNameByName(classifyResultStr));
 
-            classifyYesnoConstraintLayout.setVisibility(View.VISIBLE);
-            showLoader(false);
-        }));
+                classifyYesnoConstraintLayout.setVisibility(View.VISIBLE);
+                showLoader(false);
+            });
+        })).run()));
 
         // init btn "OUI"
         classifYesnoYesbtn.setOnClickListener((View view) -> {
-            category = Category.fromName(classifyResultStr);
             BingBinCallbackAction action = new BingBinCallbackAction() {
                 @Override
                 public void onFailure() {
@@ -257,7 +263,7 @@ public class ClassifyActivity extends AppCompatActivity {
                 @Override
                 public void onTokenNotValid(String errorStr) {
                     runOnUiThread(() -> Toast.makeText(ClassifyActivity.this.getApplicationContext(),
-                        errorStr, Toast.LENGTH_SHORT).show());
+                            errorStr, Toast.LENGTH_SHORT).show());
                 }
 
                 @Override
@@ -275,11 +281,25 @@ public class ClassifyActivity extends AppCompatActivity {
                 }
             };
 
+            category = Category.fromName(classifyResultStr);
+            if (category.equals(Category.OTHER)) {
+                category = Category.fromFrenchName(classifyResultStr);
+            }
 
             showLoader(true);
-            bbh.uploadscan(new BingBinCallback(action),
-                    UserSessionManager.getCurrentUser(this).getToken(),
-                    category.name(), String.valueOf(category.getCategoryId()), bitmap);
+            SmartUser user = UserSessionManager.getCurrentUser(this);
+            if(user != null) {
+                bbh.uploadscan(new BingBinCallback(action),
+                        user.getToken(),
+                        category.name(), String.valueOf(category.getCategoryId()), bitmap);
+            } else {
+                Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
+                intent.putExtra("tobbcercle", false);
+                intent.putExtra("logout", true);
+                setResult(RESULT_OK, intent);
+                finish();
+                blurImg.recycle();
+            }
         });
 
         // init btn "NON"
@@ -292,7 +312,10 @@ public class ClassifyActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams params = classifySelectGridGridlayout.getLayoutParams();
                 params.height = classifySelectConfirmBtn.getTop()
                         - classifySelectSelectedbarLayout.getBottom() - 75;
-                params.width = classifySelectRectangle.getWidth();
+
+                final int widthMin = classifySelectImg1.getWidth() * 4;
+                final int widthIdea = (int) (classifySelectRectangle.getWidth() * 0.7);
+                params.width = widthIdea > widthMin ? widthIdea : widthMin;
 
                 if (params.height >= 340) {
                     classifySelectGridGridlayout.setLayoutParams(params);
@@ -303,15 +326,15 @@ public class ClassifyActivity extends AppCompatActivity {
 
                 int[] bigImgIds = {R.drawable.catg_1_plastic, R.drawable.catg_2_metal, R.drawable.catg_3_cardboard,
                         R.drawable.catg_4_paper, R.drawable.catg_5_glass, R.drawable.catg_6_food,
-                        R.drawable.catg_7_lightbulb, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
-                        R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_12_medicine};
+                        R.drawable.catg_13_cigarette, R.drawable.catg_8_cumbersome, R.drawable.catg_9_electronic,
+                        R.drawable.catg_10_battery, R.drawable.catg_11_clothe, R.drawable.catg_14_human};
 
-                iconsImageviews = new AppCompatImageView[] {classifySelectImg1, classifySelectImg2, classifySelectImg3,
+                iconsImageviews = new AppCompatImageView[]{classifySelectImg1, classifySelectImg2, classifySelectImg3,
                         classifySelectImg4, classifySelectImg5, classifySelectImg6,
                         classifySelectImg7, classifySelectImg8, classifySelectImg9,
                         classifySelectImg10, classifySelectImg11, classifySelectImg12};
 
-                for(int i = 0; i < iconsImageviews.length; i++) {
+                for (int i = 0; i < iconsImageviews.length; i++) {
                     Glide.with(classifySelectGridGridlayout)
                             .load(bigImgIds[i])
                             .into(iconsImageviews[i]);
@@ -326,7 +349,25 @@ public class ClassifyActivity extends AppCompatActivity {
             classifySelectConstraintLayout.setVisibility(View.GONE);
 
             classifyYesnoResultTextview.setText(classifySelectSelectedTextview.getText());
+            setClassifyResultStr(classifySelectSelectedTextview.getText().toString());
+
+            // check if category name text is longer than the rectangle
+            classifyYesnoConstraintLayout.setVisibility(View.INVISIBLE);
+            classifyYesnoResultTextview.measure(0, 0);       //must call measure!
+            final int newWidth = classifyYesnoResultTextview.getMeasuredWidth();
+            if (newWidth > classifyYesnoRectangle.getWidth()) {
+                ViewGroup.LayoutParams params = classifyYesnoRectangle.getLayoutParams();
+                params.width = (int) (newWidth * 1.1);
+                classifyYesnoRectangle.setLayoutParams(params);
+
+                // recenter the yse-no-rectangle
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(classifyYesnoConstraintLayout);
+                constraintSet.setHorizontalBias(R.id.classify_yesno_rectangle, 0.5f);
+                constraintSet.applyTo(classifyYesnoConstraintLayout);
+            }
             classifyYesnoConstraintLayout.setVisibility(View.VISIBLE);
+
         });
 
         /*
@@ -341,10 +382,43 @@ public class ClassifyActivity extends AppCompatActivity {
      * @param category category enum
      */
     private void showFinishLayout(Category category, int ecoPoint) {
-        String title = category.getTrashbin().getFrenchName();
+        String title = category.getTrashbin().getFrenchName().toUpperCase();
 
         classifyFinishTitleTextview.setText(title);
         classifyFinishLongtext.setText(category.getText());
+        if (category.getTrashbin() == TrashBin.BBCERCLE) {
+            classifyFinishTrierBtn.setText(R.string.ok);
+        }
+
+        // set title color depends on trashbin
+        switch (category.getTrashbin()) {
+            case BLUE:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_blue));
+                break;
+            case PINK:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_pink));
+                break;
+            case BLACK:
+            case HUMAN:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_black));
+                break;
+            case GREEN:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_green));
+                break;
+            case YELLOW:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.trashbin_yellow));
+                break;
+            case BBCERCLE:
+            case OTHER:
+            case CLOTHE:
+            case COMPOST:
+            case PHARMACY:
+            case CIGARETTE:
+            case LEBONCOIN:
+            case SUPERMARKET:
+                classifyFinishTitleTextview.setTextColor(getResources().getColor(R.color.primary_color));
+                break;
+        }
 
         Glide.with(this)
                 .load(category.getTrashbin().getImageResource())
@@ -353,22 +427,22 @@ public class ClassifyActivity extends AppCompatActivity {
         classifyFinishTrierBtn.setOnClickListener(view -> {
             Intent intent = new Intent(ClassifyActivity.this, MainActivity.class);
             intent.putExtra("ecopoint", ecoPoint);
+            if (category.getTrashbin() == TrashBin.BBCERCLE) {
+                intent.putExtra("tobbcercle", true);
+            }
             setResult(RESULT_OK, intent);
             finish();
             blurImg.recycle();
-        });
-        classifyFinishRecycleItBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(ClassifyActivity.this, InstructionActivity.class);
-            intent.putExtra("category", category);
-            startActivity(intent);
         });
 
         classifyFinishConstraintLayout.setVisibility(View.VISIBLE);
         classifyYesnoConstraintLayout.setVisibility(View.GONE);
 
         classifyFinishConstraintLayout.post(() -> {
-            int imageHeight = classifyFinishTrashbinImageview.getHeight();
-            if(imageHeight < 100) {
+            // check if btn covered text
+            final int btnTop = classifyFinishTrierBtn.getTop();
+            final int longTextBottom = classifyFinishLongtext.getBottom();
+            if (longTextBottom > btnTop) {
                 classifyFinishLongtext.setTextSize(14);
             }
         });
@@ -423,8 +497,8 @@ public class ClassifyActivity extends AppCompatActivity {
                 catgName = Category.getFrenchNameById(6);
                 break;
             case R.id.classify_select_img_7:
-                res = R.drawable.catg_7_lightbulb;
-                catgName = Category.getFrenchNameById(7);
+                res = R.drawable.catg_13_cigarette;
+                catgName = Category.getFrenchNameById(13);
                 break;
             case R.id.classify_select_img_8:
                 res = R.drawable.catg_8_cumbersome;
@@ -443,13 +517,17 @@ public class ClassifyActivity extends AppCompatActivity {
                 catgName = Category.getFrenchNameById(11);
                 break;
             case R.id.classify_select_img_12:
-                res = R.drawable.catg_12_medicine;
-                catgName = Category.getFrenchNameById(12);
+                res = R.drawable.catg_14_human;
+                catgName = Category.getFrenchNameById(14);
                 break;
         }
         Glide.with(this)
                 .load(res)
                 .into(classifySelectSelectedImageview);
         classifySelectSelectedTextview.setText(catgName);
+    }
+
+    private void setClassifyResultStr(String str) {
+        classifyResultStr = str;
     }
 }

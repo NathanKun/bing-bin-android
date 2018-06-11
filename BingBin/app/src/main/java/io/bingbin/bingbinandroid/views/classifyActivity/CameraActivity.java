@@ -38,8 +38,9 @@ public class CameraActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         cameraView.setMethod(CameraKit.Constants.METHOD_STANDARD);
-        cameraView.setCropOutput(false);
+        cameraView.setCropOutput(true);
         cameraView.setJpegQuality(100);
+        cameraView.setPermissions(CameraKit.Constants.PERMISSIONS_PICTURE);
         cameraView.setFlash(CameraKit.Constants.FLASH_AUTO);
         cameraView.setFocus(CameraKit.Constants.FOCUS_TAP);
     }

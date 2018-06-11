@@ -21,9 +21,9 @@
     <RelativeLayout
         android:id="@+id/preview_control_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/primary_color"
+        android:background="@color/dark_primary_color"
         android:elevation="0dp"
         android:paddingBottom="0dp"
         android:paddingLeft="0dp"
@@ -34,29 +34,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <io.bingbin.bingbinandroid.views.BingBinButton
-            android:id="@+id/preview_retry_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"
-            android:background="@color/primary_color"
-            android:elevation="0dp"
-            android:text="@string/camera_retry"
-            android:textColor="@color/white" />
-
-        <io.bingbin.bingbinandroid.views.BingBinButton
+        <ImageButton
             android:id="@+id/preview_ok_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:background="@color/primary_color"
-            android:elevation="0dp"
-            android:text="@string/camera_ok"
-            android:textColor="@color/white" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="@color/dark_primary_color"
+            android:contentDescription="camera ok btn"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            android:src="@drawable/btn_camera_ok" />
 
     </RelativeLayout>
 

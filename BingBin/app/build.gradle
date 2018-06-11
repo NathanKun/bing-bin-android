@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
 android {
+
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
     }
@@ -18,8 +23,8 @@ android {
         applicationId "io.bingbin.bingbinandroid"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 22
-        versionName "0.4.11"
+        versionCode 1805221204
+        versionName "0.5.10"
         //renderscriptTargetApi 27
         //renderscriptSupportModeEnabled true
     }
@@ -47,57 +52,62 @@ android {
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // google support
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:exifinterface:27.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:cardview-v7:27.1.0'
-    implementation 'com.android.support:customtabs:27.1.0'
-    implementation 'com.android.support:design:27.1.0'
-    implementation 'com.android.support:support-v4:27.1.0'
-    implementation 'com.android.support:recyclerview-v7:27.1.0'
-    implementation 'com.android.support:support-v13:27.1.0'
-    implementation 'com.android.support:recyclerview-v7:27.1.0'
-    implementation 'com.android.support:support-media-compat:27.1.0'
-    implementation 'com.android.support:support-v4:27.1.0'
+    implementation 'com.android.support:appcompat-v7:'  +support_version
+    implementation 'com.android.support:exifinterface:'  +support_version
+    implementation 'com.android.support:cardview-v7:'  +support_version
+    implementation 'com.android.support:customtabs:'  +support_version
+    implementation 'com.android.support:design:'  +support_version
+    implementation 'com.android.support:support-v4:'  +support_version
+    implementation 'com.android.support:recyclerview-v7:'  +support_version
+    implementation 'com.android.support:support-v13:'  +support_version
+    implementation 'com.android.support:recyclerview-v7:'  +support_version
+    implementation 'com.android.support:support-media-compat:'  +support_version
+    implementation 'com.android.support:support-v4:'  +support_version
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
     // Google Play Services
-    api 'com.google.android.gms:play-services-auth:12.0.0'
-    api 'com.google.firebase:firebase-core:12.0.0'
+    api 'com.google.android.gms:play-services-auth:' + google_play_version
+    api 'com.google.android.gms:play-services-location:' + google_play_version
+    api 'com.google.firebase:firebase-core:' + google_play_version
 
     // commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
 
     // butterknife view injection
     implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // dagger2 dependency injection
-    compileOnly 'com.google.dagger:dagger-android:2.11'
-    implementation 'com.google.dagger:dagger-android-support:2.11'
+    compileOnly 'com.google.dagger:dagger-android:2.15'
+    implementation 'com.google.dagger:dagger-android-support:2.15'
     // if you use the support libraries
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    kapt 'com.google.dagger:dagger-android-processor:2.15'
+    kapt 'com.google.dagger:dagger-compiler:2.15'
 
     // fb login
-    implementation 'com.facebook.android:facebook-login:4.28.0'
+    implementation 'com.facebook.android:facebook-login:4.32.0'
 
     // Glide image framwork
-    implementation 'com.github.bumptech.glide:glide:4.6.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
     // okhttp http client
-    implementation 'com.squareup.okhttp3:okhttp:3.7.0'
-    implementation 'com.squareup.okio:okio:1.12.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okio:okio:1.14.0'
 
     // jsoup html parser
     //implementation 'org.jsoup:jsoup:1.10.1'
 
     // tensorflow nnet
-    implementation 'org.tensorflow:tensorflow-android:1.6.0'
+    implementation 'org.tensorflow:tensorflow-android:1.7.0'
 
     // camerakit
     implementation 'com.wonderkiln:camerakit:0.13.1'
@@ -105,8 +115,22 @@ dependencies {
     // floating action button
     implementation 'com.getbase:floatingactionbutton:1.10.1'
 
+    // image slider
+    implementation "com.github.firdausmaulan:GlideSlider:1.3.1"
+
+    // webview
+    implementation 'com.just.agentweb:agentweb:4.0.2'
+
+    // get location and geocoding
+    implementation 'io.nlopez.smartlocation:library:3.3.3'
+
     // smart login
     implementation project(':smartloginlibrary')
+
+    // memory leak detection
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
