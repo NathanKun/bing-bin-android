@@ -14,8 +14,8 @@
  limitations under the License.
 -->
 <resources>
-    <string name="facebook_app_id">***REMOVED***</string>
-    <string name="fb_login_protocol_scheme">fb***REMOVED***</string>
+    <string name="facebook_app_id">131305744244577</string>
+    <string name="fb_login_protocol_scheme">fb131305744244577</string>
 
     <string name="sign_in_facebook">FACEBOOK</string>
     <string name="sign_in_google">GOOGLE</string>
