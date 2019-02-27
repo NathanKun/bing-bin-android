@@ -6,7 +6,7 @@
     <string name="sign_in">CONNEXION</string>
     <string name="sign_up_button">S\'INSCRIRE</string>
 
-    <!--<string name="facebook_app_id">***REMOVED***</string>-->
+    <!--<string name="facebook_app_id">x</string>-->
 
     <string name="logging_holder">Logging in…</string>
     <string name="getting_data">Getting User Info…</string>
